@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
-@Table
+@Table(name = "DAY_OF_WEEK")
 public class DayOfWeek implements Serializable {
 
     private static final long serialVersionUID = 8939642071168789374L;
@@ -20,10 +20,10 @@ public class DayOfWeek implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Byte id;
 
-    @Column
+    @Column(name = "DAY_OF_WEEK_NAME")
     private String name;
 
-    @Column
+    @Column(name = "DAY_OF_WEEK_SHORT_NAME")
     private String shortName;
 
     public DayOfWeek(WeekDay weekDay) {
