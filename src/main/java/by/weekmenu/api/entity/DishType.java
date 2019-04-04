@@ -25,5 +25,5 @@ public class DishType implements Serializable {
     private String name;
 
     @Column(name = "DISH_TYPE_PRIORITY")
-    private Byte priority;
+    private Integer priority;
 }
