@@ -18,6 +18,7 @@ public class DayOfWeek implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "DAY_OF_WEEK_ID")
     private Byte id;
 
     @Column(name = "DAY_OF_WEEK_NAME")
