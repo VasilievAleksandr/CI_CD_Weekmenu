@@ -1,15 +1,19 @@
 package by.weekmenu.api.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "id")
 @Entity
 @Table(name = "DAY_OF_WEEK")
 public class DayOfWeek implements Serializable {
@@ -27,6 +31,9 @@ public class DayOfWeek implements Serializable {
     @Column(name = "DAY_OF_WEEK_SHORT_NAME")
     private String shortName;
 
+    @OneToMany(mappedBy = "dayOfWeek", cascade = CascadeType.ALL)
+    private Set<DailyMenuStatistics> dailyMenuStatistics = new HashSet<>();
+
     public DayOfWeek(WeekDay weekDay) {
         this.name = weekDay.getFullName();
         this.shortName = weekDay.getName();
@@ -35,13 +42,13 @@ public class DayOfWeek implements Serializable {
 
 enum WeekDay {
 
-    Monday("ПН", "Понедельник"),
-    Tuesday("ВТ", "Вторник"),
-    Wednesday("СР", "Среда"),
-    Thursday("ЧТ", "Четверг"),
-    Friday("ПТ", "Пятница"),
-    Saturday("СБ", "Суббота"),
-    Sunday("ВС", "Воскресенье");
+    MONDAY("ПН", "Понедельник"),
+    TUESDAY("ВТ", "Вторник"),
+    WEDNESDAY("СР", "Среда"),
+    THURSDAY("ЧТ", "Четверг"),
+    FRIDAY("ПТ", "Пятница"),
+    SATURDAY("СБ", "Суббота"),
+    SUNDAY("ВС", "Воскресенье");
 
     private final String name;
     private final String fullName;

@@ -1,5 +1,6 @@
 package by.weekmenu.api.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = {"id", "priority"})
 @Entity
 @Table(name = "DISH_TYPE")
 public class DishType implements Serializable {

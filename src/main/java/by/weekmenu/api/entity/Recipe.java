@@ -1,5 +1,6 @@
 package by.weekmenu.api.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,10 +9,13 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = {"id", "imageLink", "menuRecipes"})
 @Entity
 @Table(name = "RECIPE")
 public class Recipe implements Serializable {
@@ -50,10 +54,19 @@ public class Recipe implements Serializable {
     @Column(name = "RECIPE_IMAGE_LINK")
     private String imageLink;
 
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    private Set<MenuRecipe> menuRecipes = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "RECIPE_COOKING_METHOD_ID")
     @Valid
     private CookingMethod cookingMethod;
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    private Set<CookingStep> cookingSteps = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "RECIPE_OWNERSHIP_ID")
