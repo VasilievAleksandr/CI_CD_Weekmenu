@@ -20,15 +20,15 @@ public class MenuCategory implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MENU_CATEGORY_ID")
+    @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "MENU_CATEGORY_NAME")
+    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "MENU_CATEGORY_PRIORITY")
+    @Column(name = "PRIORITY")
     private Integer priority;
 
-    @Column(name = "MENU_CATEGORY_IMAGE_LINK")
+    @Column(name = "IMAGE_LINK")
     private String imageLink;
 }

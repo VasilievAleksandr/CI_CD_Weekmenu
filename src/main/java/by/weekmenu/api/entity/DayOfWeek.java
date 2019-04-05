@@ -22,13 +22,13 @@ public class DayOfWeek implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "DAY_OF_WEEK_ID")
+    @Column(name = "ID")
     private Byte id;
 
-    @Column(name = "DAY_OF_WEEK_NAME")
+    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "DAY_OF_WEEK_SHORT_NAME")
+    @Column(name = "SHORT_NAME")
     private String shortName;
 
     @OneToMany(mappedBy = "dayOfWeek", cascade = CascadeType.ALL)
