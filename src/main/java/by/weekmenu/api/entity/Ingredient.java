@@ -6,40 +6,43 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import javax.validation.Valid;
+import lombok.EqualsAndHashCode;
 
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = {"id", "recipeIngredient"})
 @Entity
-@Table
+@Table (name = "INGREDIENT")
 public class Ingredient implements Serializable {
 
     private static final long serialVersionUID = 1001642071168789374L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ingredientId;
+    @Column(name = "INGREDIENT_ID")
+    private Integer id;
 
-    @Column
+    @Column(name = "INGREDIENT_NAME")
     private String name;
 
-    @Column
-    private int price;
+    @Column(name = "INGREDIENT_PRICE")
+    private BigDecimal price;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "ingredient", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<RecipeIngredient> recipeIngredient = new HashSet<RecipeIngredient>();
+
+    @ManyToOne
+    @JoinColumn(name = "UNIT_OF_MEASURE_ID")
+    @Valid
     private UnitOfMeasure unitOfMeasure;
 
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "ingredients", cascade = CascadeType.ALL)
-    private Set<RecipeIngredient> recipeIngredient = new HashSet<RecipeIngredient>();
-       
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "ingredients", cascade = CascadeType.ALL)
-    private Set<Ownership> ownership = new HashSet<Ownership>();
-
-    public Ingredient(String name, int price) {
-        this.name = name;
-        this.price = price;
-    }
-
+    @ManyToOne
+    @JoinColumn(name = "OWNERSHIP_ID")
+    @Valid
+    private Ownership ownership;
 }

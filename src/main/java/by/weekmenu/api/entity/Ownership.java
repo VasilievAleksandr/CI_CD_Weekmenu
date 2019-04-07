@@ -6,41 +6,27 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import lombok.EqualsAndHashCode;
 
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = {"id"})
 @Entity
-@Table
+@Table (name = "OWNERSHIP")
 public class Ownership implements Serializable {
 
     private static final long serialVersionUID = 1002642071168789374L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ownershipId;
+    @Column(name = "OWNERSHIP_ID")
+    private Long id;
 
-    @Column
+    @Column (name = "OWNERSHIP_NAME")
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "Ownership_Ingredient", 
-        joinColumns = { @JoinColumn(name = "ownershipId") }, 
-        inverseJoinColumns = { @JoinColumn(name = "ingredientId") }
-    )
-    private Set<Ingredient> ingredients = new HashSet<Ingredient>();
-    
-    @OneToMany(mappedBy = "ownership", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Recipe> recipe = new HashSet<Recipe>();
-    
-//    @OneToMany(mappedBy = "ownership", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private Set<Menu> menu = new HashSet<Menu>();
-    
     public Ownership(String name) {
         this.name = name;
     }
-
 }

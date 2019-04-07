@@ -6,39 +6,41 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import javax.validation.Valid;
+import lombok.EqualsAndHashCode;
 
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = {"id", "imageLink", "recipe"})
 @Entity
-@Table
+@Table(name = "COOKING_STEP")
 public class CookingStep implements Serializable {
 
     private static final long serialVersionUID = 1004642071168789374L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cookingStepId;
+    @Column(name = "COOKING_STEP_ID")
+    private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "recipeId", nullable = false)
-    private Recipe recipe;
+    @Column(name = "COOKING_STEP_PRIORITY")
+    private Integer priority;
 
-    @Column
-    private int priority;
-
-    @Column
+    @Column(name = "COOKING_STEP_DESCRIPTION")
     private String description;
 
-    @Column
+    @Column(name = "COOKING_STEP_IMAGELINK")
     private String imageLink;
 
-    public CookingStep(int priority, String description, String imageLink) {
+    @ManyToOne
+    @JoinColumn(name = "COOKING_STEP_RECIPE_ID")
+    @Valid
+    private Recipe recipe;
+
+    public CookingStep(Integer priority, String description, String imageLink) {
         this.priority = priority;
         this.description = description;
         this.imageLink = imageLink;
     }
-
 }
