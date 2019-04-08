@@ -23,9 +23,12 @@ public class DishType implements Serializable {
     @Column(name = "ID")
     private Byte id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", unique = true)
     private String name;
 
     @Column(name = "PRIORITY")
     private Integer priority;
+
+    @Column(name = "IS_ACTIVE")
+    private Boolean isActive;
 }

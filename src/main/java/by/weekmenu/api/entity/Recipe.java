@@ -27,7 +27,7 @@ public class Recipe implements Serializable {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", unique = true)
     private String name;
 
     @Column(name = "PRICE")
@@ -53,6 +53,9 @@ public class Recipe implements Serializable {
 
     @Column(name = "IMAGE_LINK")
     private String imageLink;
+
+    @Column(name = "IS_ACTIVE")
+    private Boolean isActive;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private Set<RecipeIngredient> recipeIngredients = new HashSet<>();

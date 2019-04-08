@@ -25,10 +25,10 @@ public class DayOfWeek implements Serializable {
     @Column(name = "ID")
     private Byte id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", unique = true)
     private String name;
 
-    @Column(name = "SHORT_NAME")
+    @Column(name = "SHORT_NAME", unique = true)
     private String shortName;
 
     @OneToMany(mappedBy = "dayOfWeek", cascade = CascadeType.ALL)

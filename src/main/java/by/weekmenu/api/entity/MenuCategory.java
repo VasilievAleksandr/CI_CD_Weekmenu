@@ -23,7 +23,7 @@ public class MenuCategory implements Serializable {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", unique = true)
     private String name;
 
     @Column(name = "PRIORITY")
@@ -31,4 +31,7 @@ public class MenuCategory implements Serializable {
 
     @Column(name = "IMAGE_LINK")
     private String imageLink;
+
+    @Column(name = "IS_ACTIVE")
+    private Boolean isActive;
 }

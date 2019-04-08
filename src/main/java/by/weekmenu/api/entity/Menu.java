@@ -28,6 +28,9 @@ public class Menu implements Serializable {
     @Column(name = "ID")
     private Long id;
 
+    @Column(name = "NAME", unique = true)
+    private String name;
+
     @Column(name = "CALORIES")
     private Integer calories;
 
@@ -42,6 +45,9 @@ public class Menu implements Serializable {
 
     @Column(name = "PRICE")
     private BigDecimal price;
+
+    @Column(name = "IS_ACTIVE")
+    private Boolean isActive;
 
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     private Set<MenuRecipe> menuRecipes = new HashSet<>();
