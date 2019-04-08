@@ -21,26 +21,26 @@ public class MenuRecipe implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MENU_RECIPE_ID")
+    @Column(name = "ID")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "MENU_RECIPE_MENU_ID")
+    @JoinColumn(name = "MENU_ID")
     @Valid
     private Menu menu;
 
     @ManyToOne
-    @JoinColumn(name = "MENU_RECIPE_RECIPE_ID")
+    @JoinColumn(name = "RECIPE_ID")
     @Valid
     private Recipe recipe;
 
     @ManyToOne
-    @JoinColumn(name = "MENU_RECIPE_DISH_TYPE_ID")
+    @JoinColumn(name = "DISH_TYPE_ID")
     @Valid
     private DishType dishType;
 
     @ManyToOne
-    @JoinColumn(name = "MENU_RECIPE_DAY_OF_WEEK_ID")
+    @JoinColumn(name = "DAY_OF_WEEK_ID")
     @Valid
     private DayOfWeek dayOfWeek;
 }

@@ -20,12 +20,15 @@ public class DishType implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "DISH_TYPE_ID")
+    @Column(name = "ID")
     private Byte id;
 
-    @Column(name = "DISH_TYPE_NAME")
+    @Column(name = "NAME", unique = true)
     private String name;
 
-    @Column(name = "DISH_TYPE_PRIORITY")
+    @Column(name = "PRIORITY")
     private Integer priority;
+
+    @Column(name = "IS_ACTIVE")
+    private Boolean isActive;
 }

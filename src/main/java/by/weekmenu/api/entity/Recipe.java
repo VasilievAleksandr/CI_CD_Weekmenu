@@ -24,35 +24,38 @@ public class Recipe implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "RECIPE_ID")
+    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "RECIPE_NAME")
+    @Column(name = "NAME", unique = true)
     private String name;
 
-    @Column(name = "RECIPE_PRICE")
+    @Column(name = "PRICE")
     private BigDecimal price;
 
-    @Column(name = "RECIPE_COOKING_TIME")
+    @Column(name = "COOKING_TIME")
     private Short cookingTime;
 
-    @Column(name = "RECIPE_PREPARING_TIME")
+    @Column(name = "PREPARING_TIME")
     private Short preparingTime;
 
-    @Column(name = "RECIPE_CALORIES")
+    @Column(name = "CALORIES")
     private Integer calories;
 
-    @Column(name = "RECIPE_PROTEINS")
+    @Column(name = "PROTEINS")
     private Integer proteins;
 
-    @Column(name = "RECIPE_FATS")
+    @Column(name = "FATS")
     private Integer fats;
 
-    @Column(name = "RECIPE_CARBS")
+    @Column(name = "CARBS")
     private Integer carbs;
 
-    @Column(name = "RECIPE_IMAGE_LINK")
+    @Column(name = "IMAGE_LINK")
     private String imageLink;
+
+    @Column(name = "IS_ACTIVE")
+    private Boolean isActive;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
@@ -61,7 +64,7 @@ public class Recipe implements Serializable {
     private Set<MenuRecipe> menuRecipes = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "RECIPE_COOKING_METHOD_ID")
+    @JoinColumn(name = "COOKING_METHOD_ID")
     @Valid
     private CookingMethod cookingMethod;
 
@@ -69,7 +72,7 @@ public class Recipe implements Serializable {
     private Set<CookingStep> cookingSteps = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "RECIPE_OWNERSHIP_ID")
+    @JoinColumn(name = "OWNERSHIP_ID")
     @Valid
     private Ownership ownership;
 }

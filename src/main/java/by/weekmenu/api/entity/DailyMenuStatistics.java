@@ -55,19 +55,19 @@ public class DailyMenuStatistics implements Serializable {
     @EmbeddedId
     private Id id = new Id();
 
-    @Column(name = "DAILY_MENU_STATISTICS_PRICE")
+    @Column(name = "PRICE")
     private BigDecimal price;
 
-    @Column(name = "DAILY_MENU_STATISTICS_CALORIES")
+    @Column(name = "CALORIES")
     private Integer calories;
 
-    @Column(name = "DAILY_MENU_STATISTICS_PROTEINS")
+    @Column(name = "PROTEINS")
     private Integer proteins;
 
-    @Column(name = "DAILY_MENU_STATISTICS_FATS")
+    @Column(name = "FATS")
     private Integer fats;
 
-    @Column(name = "DAILY_MENU_STATISTICS_CARBS")
+    @Column(name = "CARBS")
     private Integer carbs;
 
     @ManyToOne(fetch = FetchType.LAZY)

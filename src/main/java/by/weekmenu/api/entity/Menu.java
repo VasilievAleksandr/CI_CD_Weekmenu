@@ -25,34 +25,40 @@ public class Menu implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MENU_ID")
+    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "MENU_CALORIES")
+    @Column(name = "NAME", unique = true)
+    private String name;
+
+    @Column(name = "CALORIES")
     private Integer calories;
 
-    @Column(name = "MENU_PROTEINS")
+    @Column(name = "PROTEINS")
     private Integer proteins;
 
-    @Column(name = "MENU_FATS")
+    @Column(name = "FATS")
     private Integer fats;
 
-    @Column(name = "MENU_CARBS")
+    @Column(name = "CARBS")
     private Integer carbs;
 
-    @Column(name = "MENU_PRICE")
+    @Column(name = "PRICE")
     private BigDecimal price;
+
+    @Column(name = "IS_ACTIVE")
+    private Boolean isActive;
 
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     private Set<MenuRecipe> menuRecipes = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "MENU_MENU_CATEGORY_ID")
+    @JoinColumn(name = "MENU_CATEGORY_ID")
     @Valid
     private MenuCategory menuCategory;
 
     @ManyToOne
-    @JoinColumn(name = "MENU_OWNERSHIP_ID")
+    @JoinColumn(name = "OWNERSHIP_ID")
     @Valid
     private Ownership ownership;
 
