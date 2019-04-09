@@ -24,16 +24,16 @@ public class Ingredient implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "INGREDIENT_ID")
+    @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "INGREDIENT_NAME")
+    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "INGREDIENT_PRICE")
+    @Column(name = "PRICE")
     private BigDecimal price;
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
     private Set<RecipeIngredient> recipeIngredient = new HashSet<RecipeIngredient>();
 
     @ManyToOne

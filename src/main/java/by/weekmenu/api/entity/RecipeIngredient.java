@@ -6,8 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.EqualsAndHashCode;
 
 @NoArgsConstructor
@@ -25,10 +23,10 @@ public class RecipeIngredient implements Serializable {
 
         private static final long serialVersionUID = 1015642071168789374L;
 
-        @Column(name = "INGREDIENT_ID")
+        @Column(name = "ID")
         private Long ingredientId;
 
-        @Column(name = "RECIPE_ID")
+        @Column(name = "ID")
         private Long recipeId;
 
         public Id() {
@@ -53,11 +51,11 @@ public class RecipeIngredient implements Serializable {
             return ingredientId.hashCode() + recipeId.hashCode();
         }
 
-        public Long getChainId() {
+        public Long getRecipeId() {
             return recipeId;
         }
         
-        public Long getProductId() {
+        public Long getIngredientId() {
             return ingredientId;
         }
     }
@@ -66,7 +64,7 @@ public class RecipeIngredient implements Serializable {
     private Id id = new Id();
 
     
-    @Column(name = "RECIPE_INGREDIENT_QTY")
+    @Column(name = "QTY")
     private long qty;
 
     @ManyToOne (fetch = FetchType.LAZY)

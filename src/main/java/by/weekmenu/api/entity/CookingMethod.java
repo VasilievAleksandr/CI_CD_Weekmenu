@@ -22,15 +22,14 @@ public class CookingMethod implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "COOKING_METHOD_ID")
+    @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "COOKING_METHOD_NAME")
+    @Column(name = "NAME")
     private String name;
 
-//  Может здесь тоже связь нужна только со стороны recipe?  
     @OneToMany(mappedBy = "cookingMethod", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Recipe> recipe = new HashSet<Recipe>();
+    private Set<Recipe> recipes = new HashSet<Recipe>();
 
     public CookingMethod(String name) {
         this.name = name;

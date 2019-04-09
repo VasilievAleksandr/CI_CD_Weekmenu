@@ -20,10 +20,10 @@ public class Ownership implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "OWNERSHIP_ID")
+    @Column(name = "ID")
     private Long id;
 
-    @Column (name = "OWNERSHIP_NAME")
+    @Column (name = "NAME", unique = true)
     private String name;
 
     public Ownership(String name) {

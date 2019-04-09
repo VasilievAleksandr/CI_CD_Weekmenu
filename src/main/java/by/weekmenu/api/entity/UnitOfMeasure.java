@@ -20,13 +20,13 @@ public class UnitOfMeasure implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UNIT_OF_MEASURE_ID")
+    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UNIT_OF_MEASURE_NAME")
+    @Column(name = "NAME", unique = true)
     private String name;
 
-    public UnitOfMeasure(String yourOwnUnitOfMeasure) {
-        this.name = yourOwnUnitOfMeasure;
+    public UnitOfMeasure(String name) {
+        this.name = name;
     }
 }

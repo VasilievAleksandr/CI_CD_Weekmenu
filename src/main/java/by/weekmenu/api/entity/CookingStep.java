@@ -21,22 +21,17 @@ public class CookingStep implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "COOKING_STEP_ID")
+    @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "COOKING_STEP_PRIORITY")
+    @Column(name = "PRIORITY")
     private Integer priority;
 
-    @Column(name = "COOKING_STEP_DESCRIPTION")
+    @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "COOKING_STEP_IMAGELINK")
+    @Column(name = "IMAGELINK")
     private String imageLink;
-
-    @ManyToOne
-    @JoinColumn(name = "COOKING_STEP_RECIPE_ID")
-    @Valid
-    private Recipe recipe;
 
     public CookingStep(Integer priority, String description, String imageLink) {
         this.priority = priority;
