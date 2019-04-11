@@ -28,7 +28,7 @@ public class MenuCategory implements Serializable {
     private Integer id;
 
     @Column(name = "NAME", unique = true)
-    @NotBlank(message = "MenuCategory must have have name.")
+    @NotBlank(message = "MenuCategory must have name.")
     private String name;
 
     @Column(name = "PRIORITY")
@@ -45,4 +45,9 @@ public class MenuCategory implements Serializable {
     @Column(name = "IS_ACTIVE")
     @NotNull(message = "MenuCategory must have field 'isActive' defined.")
     private Boolean isActive;
+
+    public MenuCategory(String name, Boolean isActive) {
+        this.name = name;
+        this.isActive = isActive;
+    }
 }

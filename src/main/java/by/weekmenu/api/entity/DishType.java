@@ -27,7 +27,7 @@ public class DishType implements Serializable {
     private Byte id;
 
     @Column(name = "NAME", unique = true)
-    @NotBlank(message = "DishType must have have name.")
+    @NotBlank(message = "DishType must have name.")
     private String name;
 
     @Column(name = "PRIORITY")

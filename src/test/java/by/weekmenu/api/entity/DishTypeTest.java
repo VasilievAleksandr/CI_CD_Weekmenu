@@ -29,7 +29,7 @@ public class DishTypeTest {
         DishType dishType = new DishType(null, true);
         Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
         assertEquals(violations.size(), 1);
-        assertEquals("DishType must have have name.",
+        assertEquals("DishType must have name.",
                 violations.iterator().next().getMessage());
     }
 
@@ -38,7 +38,7 @@ public class DishTypeTest {
         DishType dishType = new DishType("   ", true);
         Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
         assertEquals(violations.size(), 1);
-        assertEquals("DishType must have have name.",
+        assertEquals("DishType must have name.",
                 violations.iterator().next().getMessage());
     }
 
@@ -47,15 +47,8 @@ public class DishTypeTest {
         DishType dishType = new DishType("", true);
         Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
         assertEquals(violations.size(), 1);
-        assertEquals("DishType must have have name.",
+        assertEquals("DishType must have name.",
                 violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testDishTypeNameIsNotBlank() {
-        DishType dishType = new DishType("Обед", true);
-        Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
-        assertEquals(violations.size(), 0);
     }
 
     @Test
@@ -79,14 +72,6 @@ public class DishTypeTest {
     }
 
     @Test
-    public void testDishTypePriorityIsPositive() {
-        DishType dishType = new DishType("Обед", true);
-        dishType.setPriority(100);
-        Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
-        assertEquals(violations.size(), 0);
-    }
-
-    @Test
     public void testDishTypeIsActiveIsNull() {
         DishType dishType = new DishType("Обед", null);
         Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
@@ -95,6 +80,13 @@ public class DishTypeTest {
                 violations.iterator().next().getMessage());
     }
 
+    @Test
+    public void testDishTypeIsValid() {
+        DishType dishType = new DishType("Обед", true);
+        dishType.setPriority(200);
+        Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
+        assertEquals(violations.size(), 0);
+    }
 
     @After
     public void tearDown() {
