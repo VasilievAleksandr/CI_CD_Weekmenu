@@ -1,6 +1,7 @@
 package by.weekmenu.api.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -56,18 +57,28 @@ public class DailyMenuStatistics implements Serializable {
     private Id id = new Id();
 
     @Column(name = "PRICE")
+    @Digits(
+            integer = 3,
+            fraction = 2,
+            message = "DailyMenuStatistics' price '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
+    @Positive(message = "DailyMenuStatistics' price '${validatedValue}' must be positive.")
     private BigDecimal price;
 
     @Column(name = "CALORIES")
+    @Positive(message = "DailyMenuStatistics' calories '${validatedValue}' must be positive.")
     private Integer calories;
 
     @Column(name = "PROTEINS")
+    @Positive(message = "DailyMenuStatistics' proteins '${validatedValue}' must be positive.")
     private Integer proteins;
 
     @Column(name = "FATS")
+    @Positive(message = "DailyMenuStatistics' fats '${validatedValue}' must be positive.")
     private Integer fats;
 
     @Column(name = "CARBS")
+    @Positive(message = "DailyMenuStatistics' carbs '${validatedValue}' must be positive.")
     private Integer carbs;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -76,6 +87,7 @@ public class DailyMenuStatistics implements Serializable {
             updatable = false,
             insertable = false
     )
+    @NotNull(message = "DailyMenuStatistics must have have dayOfWeek.")
     private DayOfWeek dayOfWeek;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -84,5 +96,6 @@ public class DailyMenuStatistics implements Serializable {
             updatable = false,
             insertable = false
     )
+    @NotNull(message = "DailyMenuStatistics must have have menu.")
     private Menu menu;
 }
