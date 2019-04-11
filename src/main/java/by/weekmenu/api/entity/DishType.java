@@ -37,4 +37,9 @@ public class DishType implements Serializable {
     @Column(name = "IS_ACTIVE")
     @NotNull(message = "DishType must have field 'isActive' defined.")
     private Boolean isActive;
+
+    public DishType(String name, Boolean isActive) {
+        this.name = name;
+        this.isActive = isActive;
+    }
 }
