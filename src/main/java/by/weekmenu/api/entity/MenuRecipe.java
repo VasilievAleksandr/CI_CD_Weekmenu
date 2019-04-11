@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @NoArgsConstructor
@@ -27,20 +28,24 @@ public class MenuRecipe implements Serializable {
     @ManyToOne
     @JoinColumn(name = "MENU_ID")
     @Valid
+    @NotNull(message = "MenuRecipe must have have menu.")
     private Menu menu;
 
     @ManyToOne
     @JoinColumn(name = "RECIPE_ID")
     @Valid
+    @NotNull(message = "MenuRecipe must have have recipe.")
     private Recipe recipe;
 
     @ManyToOne
     @JoinColumn(name = "DISH_TYPE_ID")
     @Valid
+    @NotNull(message = "MenuRecipe must have have dishType.")
     private DishType dishType;
 
     @ManyToOne
     @JoinColumn(name = "DAY_OF_WEEK_ID")
     @Valid
+    @NotNull(message = "MenuRecipe must have have dayOfWeek.")
     private DayOfWeek dayOfWeek;
 }
