@@ -8,10 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -33,7 +30,7 @@ public class Menu implements Serializable {
     private Long id;
 
     @Column(name = "NAME", unique = true)
-    @NotBlank(message = "Menu must have have name.")
+    @NotBlank(message = "Menu must have name.")
     private String name;
 
     @Column(name = "CALORIES")
@@ -41,15 +38,15 @@ public class Menu implements Serializable {
     private Integer calories;
 
     @Column(name = "PROTEINS")
-    @Positive(message = "Menu's proteins '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "Menu's proteins '${validatedValue}' must be positive or '0'.")
     private Integer proteins;
 
     @Column(name = "FATS")
-    @Positive(message = "Menu's fats '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "Menu's fats '${validatedValue}' must be positive or '0'.")
     private Integer fats;
 
     @Column(name = "CARBS")
-    @Positive(message = "Menu's carbs '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "Menu's carbs '${validatedValue}' must be positive or '0'.")
     private Integer carbs;
 
     @Column(name = "PRICE")
@@ -68,6 +65,7 @@ public class Menu implements Serializable {
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     private Set<
             @Valid
+            @NotNull(message = "Menu must have list of menuRecipes without null elements.")
             MenuRecipe> menuRecipes = new HashSet<>();
 
     @ManyToOne
@@ -86,4 +84,10 @@ public class Menu implements Serializable {
             @Valid
             @NotNull(message = "Menu must have list of dailyMenuStatistics without null elements.")
             DailyMenuStatistics> dailyMenuStatistics = new HashSet<>();
+
+    public Menu(String name, Boolean isActive, Ownership ownership) {
+        this.name = name;
+        this.isActive = isActive;
+        this.ownership = ownership;
+    }
 }

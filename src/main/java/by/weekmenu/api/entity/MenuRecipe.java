@@ -28,24 +28,37 @@ public class MenuRecipe implements Serializable {
     @ManyToOne
     @JoinColumn(name = "MENU_ID")
     @Valid
-    @NotNull(message = "MenuRecipe must have have menu.")
+    @NotNull(message = "MenuRecipe must have menu.")
     private Menu menu;
 
     @ManyToOne
     @JoinColumn(name = "RECIPE_ID")
     @Valid
-    @NotNull(message = "MenuRecipe must have have recipe.")
+    @NotNull(message = "MenuRecipe must have recipe.")
     private Recipe recipe;
 
     @ManyToOne
     @JoinColumn(name = "DISH_TYPE_ID")
     @Valid
-    @NotNull(message = "MenuRecipe must have have dishType.")
+    @NotNull(message = "MenuRecipe must have dishType.")
     private DishType dishType;
 
     @ManyToOne
     @JoinColumn(name = "DAY_OF_WEEK_ID")
     @Valid
-    @NotNull(message = "MenuRecipe must have have dayOfWeek.")
+    @NotNull(message = "MenuRecipe must have dayOfWeek.")
     private DayOfWeek dayOfWeek;
+
+    public MenuRecipe(Menu menu, Recipe recipe, DishType dishType, DayOfWeek dayOfWeek) {
+        this.menu = menu;
+        this.recipe = recipe;
+        this.dishType = dishType;
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public MenuRecipe(Recipe recipe, DishType dishType, DayOfWeek dayOfWeek) {
+        this.recipe = recipe;
+        this.dishType = dishType;
+        this.dayOfWeek = dayOfWeek;
+    }
 }

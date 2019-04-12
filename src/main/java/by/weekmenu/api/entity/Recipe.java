@@ -105,4 +105,11 @@ public class Recipe implements Serializable {
     @Valid
     @NotNull(message = "Recipe's ownership mustn't be null.")
     private Ownership ownership;
+
+    public Recipe(String name, Boolean isActive, CookingMethod cookingMethod, Ownership ownership) {
+        this.name = name;
+        this.isActive = isActive;
+        this.cookingMethod = cookingMethod;
+        this.ownership = ownership;
+    }
 }

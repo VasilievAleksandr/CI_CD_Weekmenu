@@ -66,12 +66,22 @@ public class DailyMenuStatisticsTest {
     }
 
     @Test
+    public void testCaloriesAreZero() {
+        DailyMenuStatistics dailyMenuStatistics = new DailyMenuStatistics(new DayOfWeek(), new Menu());
+        dailyMenuStatistics.setCalories(0);
+        Set<ConstraintViolation<DailyMenuStatistics>> violations =validator.validate(dailyMenuStatistics);
+        assertEquals(violations.size(), 1);
+        assertEquals("DailyMenuStatistics' calories '0' must be positive.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
     public void testProteinsAreNegative() {
         DailyMenuStatistics dailyMenuStatistics = new DailyMenuStatistics(new DayOfWeek(), new Menu());
         dailyMenuStatistics.setProteins(-100);
         Set<ConstraintViolation<DailyMenuStatistics>> violations =validator.validate(dailyMenuStatistics);
         assertEquals(violations.size(), 1);
-        assertEquals("DailyMenuStatistics' proteins '-100' must be positive.",
+        assertEquals("DailyMenuStatistics' proteins '-100' must be positive or '0'.",
                 violations.iterator().next().getMessage());
     }
 
@@ -81,7 +91,7 @@ public class DailyMenuStatisticsTest {
         dailyMenuStatistics.setFats(-100);
         Set<ConstraintViolation<DailyMenuStatistics>> violations =validator.validate(dailyMenuStatistics);
         assertEquals(violations.size(), 1);
-        assertEquals("DailyMenuStatistics' fats '-100' must be positive.",
+        assertEquals("DailyMenuStatistics' fats '-100' must be positive or '0'.",
                 violations.iterator().next().getMessage());
     }
 
@@ -91,7 +101,7 @@ public class DailyMenuStatisticsTest {
         dailyMenuStatistics.setCarbs(-100);
         Set<ConstraintViolation<DailyMenuStatistics>> violations =validator.validate(dailyMenuStatistics);
         assertEquals(violations.size(), 1);
-        assertEquals("DailyMenuStatistics' carbs '-100' must be positive.",
+        assertEquals("DailyMenuStatistics' carbs '-100' must be positive or '0'.",
                 violations.iterator().next().getMessage());
     }
 
@@ -121,7 +131,7 @@ public class DailyMenuStatisticsTest {
         dailyMenuStatistics.setPrice(new BigDecimal("123.12"));
         dailyMenuStatistics.setCarbs(100);
         dailyMenuStatistics.setFats(200);
-        dailyMenuStatistics.setProteins(300);
+        dailyMenuStatistics.setProteins(0);
         dailyMenuStatistics.setCalories(400);
         Set<ConstraintViolation<DailyMenuStatistics>> violations =validator.validate(dailyMenuStatistics);
         assertEquals(violations.size(), 0);

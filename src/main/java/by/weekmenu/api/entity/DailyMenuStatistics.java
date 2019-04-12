@@ -81,15 +81,15 @@ public class DailyMenuStatistics implements Serializable {
     private Integer calories;
 
     @Column(name = "PROTEINS")
-    @Positive(message = "DailyMenuStatistics' proteins '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "DailyMenuStatistics' proteins '${validatedValue}' must be positive or '0'.")
     private Integer proteins;
 
     @Column(name = "FATS")
-    @Positive(message = "DailyMenuStatistics' fats '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "DailyMenuStatistics' fats '${validatedValue}' must be positive or '0'.")
     private Integer fats;
 
     @Column(name = "CARBS")
-    @Positive(message = "DailyMenuStatistics' carbs '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "DailyMenuStatistics' carbs '${validatedValue}' must be positive or '0'.")
     private Integer carbs;
 
     @ManyToOne(fetch = FetchType.LAZY)

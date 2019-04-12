@@ -35,11 +35,6 @@ public class DayOfWeek implements Serializable {
     @NotBlank(message = "DayOfWeek must have shortName.")
     private String shortName;
 
-    @OneToMany(mappedBy = "dayOfWeek", cascade = CascadeType.ALL)
-    private Set<
-            @Valid
-                    DailyMenuStatistics> dailyMenuStatistics = new HashSet<>();
-
     public DayOfWeek(WeekDay weekDay) {
         this.name = weekDay.getFullName();
         this.shortName = weekDay.getShortName();
