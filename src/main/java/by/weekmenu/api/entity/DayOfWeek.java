@@ -28,11 +28,11 @@ public class DayOfWeek implements Serializable {
     private Byte id;
 
     @Column(name = "NAME", unique = true)
-    @NotBlank(message = "DayOfWeek must have have name.")
+    @NotBlank(message = "DayOfWeek must have name.")
     private String name;
 
     @Column(name = "SHORT_NAME", unique = true)
-    @NotBlank(message = "DayOfWeek must have have shortName.")
+    @NotBlank(message = "DayOfWeek must have shortName.")
     private String shortName;
 
     @OneToMany(mappedBy = "dayOfWeek", cascade = CascadeType.ALL)
@@ -42,7 +42,12 @@ public class DayOfWeek implements Serializable {
 
     public DayOfWeek(WeekDay weekDay) {
         this.name = weekDay.getFullName();
-        this.shortName = weekDay.getName();
+        this.shortName = weekDay.getShortName();
+    }
+
+    public DayOfWeek(String name, String shortName) {
+        this.name = name;
+        this.shortName = shortName;
     }
 }
 
@@ -56,16 +61,16 @@ enum WeekDay {
     SATURDAY("СБ", "Суббота"),
     SUNDAY("ВС", "Воскресенье");
 
-    private final String name;
+    private final String shortName;
     private final String fullName;
 
-    WeekDay(String name, String fullName) {
-        this.name = name;
+    WeekDay(String shortName, String fullName) {
+        this.shortName = shortName;
         this.fullName = fullName;
     }
 
-    String getName() {
-        return name;
+    String getShortName() {
+        return shortName;
     }
 
     String getFullName() {
