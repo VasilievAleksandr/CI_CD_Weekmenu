@@ -217,6 +217,21 @@ public class MenuTest {
         assertTrue(messages.contains("Menu must have list of dailyMenuStatistics without null elements."));
     }
 
+    @Test
+    public void testMenuIsValid() {
+        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        menu.setMenuCategory(new MenuCategory("Вегетарианское", true));
+        menu.getMenuRecipes().add(new MenuRecipe(menu, getValidRecipe(), getValidDishType(), getValidDayOfWeek()));
+        menu.setCarbs(100);
+        menu.setFats(100);
+        menu.setProteins(150);
+        menu.setCalories(400);
+        menu.setPrice(new BigDecimal("123.12"));
+        menu.getDailyMenuStatistics().add(new DailyMenuStatistics(new DayOfWeek("Понедельник", "ПН"), menu));
+        Set<ConstraintViolation<Menu>> violations =validator.validate(menu);
+        assertEquals(violations.size(), 0);
+    }
+
     @After
     public void tearDown() {
         validatorFactory.close();

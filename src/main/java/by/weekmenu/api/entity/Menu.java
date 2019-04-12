@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(exclude = {"id", "menuRecipes", "dailyMenuStatistics"})
 @Entity
 @Table(name = "MENU")
 public class Menu implements Serializable {
