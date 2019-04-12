@@ -1,11 +1,22 @@
 package by.weekmenu.api.entity;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(exclude = "id")
+@Entity
+@Table(name = "DAILY_MENU_STATISTICS")
 public class DailyMenuStatistics implements Serializable {
 
     private static final long serialVersionUID = 3756286465717228068L;
@@ -98,4 +109,9 @@ public class DailyMenuStatistics implements Serializable {
     )
     @NotNull(message = "DailyMenuStatistics must have have menu.")
     private Menu menu;
+
+    public DailyMenuStatistics(DayOfWeek dayOfWeek, Menu menu) {
+        this.dayOfWeek = dayOfWeek;
+        this.menu = menu;
+    }
 }
