@@ -33,6 +33,18 @@ public class Ingredient implements Serializable {
     @Column(name = "PRICE")
     private BigDecimal price;
 
+    @Column(name = "CALORIES")
+    private Integer calories;
+
+    @Column(name = "PROTEINS")
+    private Integer proteins;
+
+    @Column(name = "FATS")
+    private Integer fats;
+
+    @Column(name = "CARBS")
+    private Integer carbs;
+
     @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
     private Set<RecipeIngredient> recipeIngredient = new HashSet<RecipeIngredient>();
 
