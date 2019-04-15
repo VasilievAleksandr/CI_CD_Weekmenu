@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,17 +28,21 @@ public class DayOfWeek implements Serializable {
     private Byte id;
 
     @Column(name = "NAME", unique = true)
+    @NotBlank(message = "DayOfWeek must have name.")
     private String name;
 
     @Column(name = "SHORT_NAME", unique = true)
+    @NotBlank(message = "DayOfWeek must have shortName.")
     private String shortName;
-
-    @OneToMany(mappedBy = "dayOfWeek", cascade = CascadeType.ALL)
-    private Set<DailyMenuStatistics> dailyMenuStatistics = new HashSet<>();
 
     public DayOfWeek(WeekDay weekDay) {
         this.name = weekDay.getFullName();
-        this.shortName = weekDay.getName();
+        this.shortName = weekDay.getShortName();
+    }
+
+    public DayOfWeek(String name, String shortName) {
+        this.name = name;
+        this.shortName = shortName;
     }
 }
 
@@ -50,16 +56,16 @@ enum WeekDay {
     SATURDAY("СБ", "Суббота"),
     SUNDAY("ВС", "Воскресенье");
 
-    private final String name;
+    private final String shortName;
     private final String fullName;
 
-    WeekDay(String name, String fullName) {
-        this.name = name;
+    WeekDay(String shortName, String fullName) {
+        this.shortName = shortName;
         this.fullName = fullName;
     }
 
-    String getName() {
-        return name;
+    String getShortName() {
+        return shortName;
     }
 
     String getFullName() {

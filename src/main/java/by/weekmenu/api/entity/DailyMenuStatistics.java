@@ -1,10 +1,22 @@
 package by.weekmenu.api.entity;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(exclude = "id")
+@Entity
+@Table(name = "DAILY_MENU_STATISTICS")
 public class DailyMenuStatistics implements Serializable {
 
     private static final long serialVersionUID = 3756286465717228068L;
@@ -56,18 +68,28 @@ public class DailyMenuStatistics implements Serializable {
     private Id id = new Id();
 
     @Column(name = "PRICE")
+    @Digits(
+            integer = 3,
+            fraction = 2,
+            message = "DailyMenuStatistics' price '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
+    @Positive(message = "DailyMenuStatistics' price '${validatedValue}' must be positive.")
     private BigDecimal price;
 
     @Column(name = "CALORIES")
+    @Positive(message = "DailyMenuStatistics' calories '${validatedValue}' must be positive.")
     private Integer calories;
 
     @Column(name = "PROTEINS")
+    @PositiveOrZero(message = "DailyMenuStatistics' proteins '${validatedValue}' must be positive or '0'.")
     private Integer proteins;
 
     @Column(name = "FATS")
+    @PositiveOrZero(message = "DailyMenuStatistics' fats '${validatedValue}' must be positive or '0'.")
     private Integer fats;
 
     @Column(name = "CARBS")
+    @PositiveOrZero(message = "DailyMenuStatistics' carbs '${validatedValue}' must be positive or '0'.")
     private Integer carbs;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -76,6 +98,7 @@ public class DailyMenuStatistics implements Serializable {
             updatable = false,
             insertable = false
     )
+    @NotNull(message = "DailyMenuStatistics must have have dayOfWeek.")
     private DayOfWeek dayOfWeek;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -84,5 +107,11 @@ public class DailyMenuStatistics implements Serializable {
             updatable = false,
             insertable = false
     )
+    @NotNull(message = "DailyMenuStatistics must have have menu.")
     private Menu menu;
+
+    public DailyMenuStatistics(DayOfWeek dayOfWeek, Menu menu) {
+        this.dayOfWeek = dayOfWeek;
+        this.menu = menu;
+    }
 }

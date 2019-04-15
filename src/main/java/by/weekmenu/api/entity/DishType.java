@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
 
 @NoArgsConstructor
@@ -24,11 +27,19 @@ public class DishType implements Serializable {
     private Byte id;
 
     @Column(name = "NAME", unique = true)
+    @NotBlank(message = "DishType must have name.")
     private String name;
 
     @Column(name = "PRIORITY")
+    @Positive(message = "DishType's priority '${validatedValue}' must be positive.")
     private Integer priority;
 
     @Column(name = "IS_ACTIVE")
+    @NotNull(message = "DishType must have field 'isActive' defined.")
     private Boolean isActive;
+
+    public DishType(String name, Boolean isActive) {
+        this.name = name;
+        this.isActive = isActive;
+    }
 }
