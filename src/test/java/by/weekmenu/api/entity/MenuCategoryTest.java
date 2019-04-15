@@ -54,7 +54,7 @@ public class MenuCategoryTest {
 
     @Test
     public void testMenuCategoryPriorityIsNegative() {
-        MenuCategory menuCategory = new MenuCategory("Вегетарианское", true);
+        MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", true);
         menuCategory.setPriority(-100);
         Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
         assertEquals(violations.size(), 1);
@@ -64,7 +64,7 @@ public class MenuCategoryTest {
 
     @Test
     public void testMenuCategoryPriorityIsZero() {
-        MenuCategory menuCategory = new MenuCategory("Вегетарианское", true);
+        MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", true);
         menuCategory.setPriority(0);
         Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
         assertEquals(violations.size(), 1);
@@ -74,7 +74,7 @@ public class MenuCategoryTest {
 
     @Test
     public void testMenuCategoryImageLinkIsTooLong() {
-        MenuCategory menuCategory = new MenuCategory("Вегетарианское", true);
+        MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", true);
         String imageLink = StringUtils.repeat("path_to_the_image", "/", 20);
         menuCategory.setImageLink(imageLink);
         Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
@@ -85,7 +85,7 @@ public class MenuCategoryTest {
 
     @Test
     public void testMenuCategoryIsActiveIsNull() {
-        MenuCategory menuCategory = new MenuCategory("Вегетарианское", null);
+        MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", null);
         Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
         assertEquals(violations.size(), 1);
         assertEquals("MenuCategory must have field 'isActive' defined.",
@@ -94,7 +94,7 @@ public class MenuCategoryTest {
 
     @Test
     public void testMenuCategoryIsValid() {
-        MenuCategory menuCategory = new MenuCategory("Вегетарианское", false);
+        MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", false);
         menuCategory.setImageLink("/images/dinner.jpg");
         menuCategory.setPriority(100);
         Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);

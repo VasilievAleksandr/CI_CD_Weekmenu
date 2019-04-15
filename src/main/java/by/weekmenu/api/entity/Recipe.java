@@ -29,7 +29,7 @@ public class Recipe implements Serializable {
     private Long id;
 
     @Column(name = "NAME", unique = true)
-    @NotBlank(message = "Recipe must have have name.")
+    @NotBlank(message = "Recipe must have name.")
     private String name;
 
     @Column(name = "PRICE")
@@ -42,11 +42,11 @@ public class Recipe implements Serializable {
     private BigDecimal price;
 
     @Column(name = "COOKING_TIME")
-    @Positive(message = "Recipe's cookingTime '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "Recipe's cookingTime '${validatedValue}' must be positive or '0'.")
     private Short cookingTime;
 
     @Column(name = "PREPARING_TIME")
-    @Positive(message = "Recipe's preparingTime '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "Recipe's preparingTime '${validatedValue}' must be positive or '0'.")
     private Short preparingTime;
 
     @Column(name = "CALORIES")
@@ -54,15 +54,15 @@ public class Recipe implements Serializable {
     private Integer calories;
 
     @Column(name = "PROTEINS")
-    @Positive(message = "Recipe's proteins '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "Recipe's proteins '${validatedValue}' must be positive or '0'.")
     private Integer proteins;
 
     @Column(name = "FATS")
-    @Positive(message = "Recipe's fats '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "Recipe's fats '${validatedValue}' must be positive or '0'.")
     private Integer fats;
 
     @Column(name = "CARBS")
-    @Positive(message = "Recipe's carbs '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "Recipe's carbs '${validatedValue}' must be positive or '0'.")
     private Integer carbs;
 
     @Column(name = "IMAGE_LINK")
@@ -85,7 +85,7 @@ public class Recipe implements Serializable {
     @OneToMany(mappedBy = "recipe")
     private Set<
             @Valid
-//            @NotNull(message = "Recipe must have list of menuRecipes without null elements.")
+            @NotNull(message = "Recipe must have list of menuRecipes without null elements.")
             MenuRecipe> menuRecipes = new HashSet<>();
 
     @ManyToOne
