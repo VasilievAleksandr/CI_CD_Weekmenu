@@ -62,7 +62,7 @@ public class Menu implements Serializable {
     @NotNull(message = "Menu must have field 'isActive' defined.")
     private Boolean isActive;
 
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
     private Set<
             @Valid
             @NotNull(message = "Menu must have list of menuRecipes without null elements.")
@@ -79,7 +79,7 @@ public class Menu implements Serializable {
     @NotNull(message = "Menu's ownership mustn't be null.")
     private Ownership ownership;
 
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
     private Set<
             @Valid
             @NotNull(message = "Menu must have list of dailyMenuStatistics without null elements.")
