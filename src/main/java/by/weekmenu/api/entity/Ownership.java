@@ -1,12 +1,13 @@
 package by.weekmenu.api.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import lombok.EqualsAndHashCode;
 
 @NoArgsConstructor
 @Getter
@@ -24,6 +25,7 @@ public class Ownership implements Serializable {
     private Long id;
 
     @Column (name = "NAME", unique = true)
+    @NotBlank(message = "Ownership must have name.")
     private String name;
 
     public Ownership(String name) {
