@@ -59,7 +59,7 @@ public class OwnershipTest {
     @Test
     public void testOwnershipIsValid() {
         Ownership ownership = new Ownership("Пользователь");
-        Set<ConstraintViolation<Ownership>> violations =validator.validate(ownership);
+        Set<ConstraintViolation<Ownership>> violations = validator.validate(ownership);
         assertEquals(violations.size(), 0);
     }
 }

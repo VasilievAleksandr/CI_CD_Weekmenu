@@ -34,7 +34,16 @@ public class CookingStepTest {
         CookingStep cookingStep = new CookingStep(-1, "Описание", "images/dinner.jpg");
         Set<ConstraintViolation<CookingStep>> violations = validator.validate(cookingStep);
         assertEquals(violations.size(), 1);
-        assertEquals("Cooking priority '-1' must be positive.",
+        assertEquals("Cooking priority '-1' must be positive or '0'.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testPriorityAreZero() {
+        CookingStep cookingStep = new CookingStep(0, "Описание", "images/dinner.jpg");
+        Set<ConstraintViolation<CookingStep>> violations = validator.validate(cookingStep);
+        assertEquals(violations.size(), 1);
+        assertEquals("Cooking priority '0' must be positive or '0'.",
                 violations.iterator().next().getMessage());
     }
 

@@ -60,7 +60,7 @@ public class CookingMethodTest {
     }
 
     @Test
-    public void testHasInvalidCookingMethod() {
+    public void testHasInvalidRecipes() {
         CookingMethod cookingMethod = new CookingMethod("Жарка");
         cookingMethod.getRecipes().add(null);
         Set<ConstraintViolation<CookingMethod>> violations = validator.validate(cookingMethod);
