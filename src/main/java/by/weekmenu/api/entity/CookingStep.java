@@ -27,7 +27,7 @@ public class CookingStep implements Serializable {
     private Integer id;
 
     @Column(name = "PRIORITY")
-    @Positive(message = "Cooking priority '${validatedValue}' must be positive or '0'.")
+    @Positive(message = "Cooking priority '${validatedValue}' must be positive.")
     private Integer priority;
 
     @Column(name = "DESCRIPTION")
