@@ -75,7 +75,7 @@ public class RecipeTest {
         recipe.setPrice(new BigDecimal("20.123"));
         Set<ConstraintViolation<Recipe>> violations =validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("Recipe's price '20.123' must have up to '3' integer digits and '2' fraction digits.",
+        assertEquals("Recipe's price '20.123' must have up to '7' integer digits and '2' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 
@@ -199,7 +199,7 @@ public class RecipeTest {
                 .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
-        assertTrue(messages.contains("RecipeIngredient's qty '-100' must be positive or '0'."));
+        assertTrue(messages.contains("RecipeIngredient's qty '-100' must be positive."));
         assertTrue(messages.contains("Recipe must have list of recipeIngredients without null elements."));
     }
 
@@ -223,7 +223,7 @@ public class RecipeTest {
         Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod(null), new Ownership("Пользователь"));
         Set<ConstraintViolation<Recipe>> violations =validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("CookingMethod must have name.",
+        assertEquals("Cooking Method must have name.",
                 violations.iterator().next().getMessage());
     }
 
@@ -246,7 +246,7 @@ public class RecipeTest {
                 .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
-        assertTrue(messages.contains("CookingStep must have description."));
+        assertTrue(messages.contains("Cooking Step must have field 'description' filled."));
         assertTrue(messages.contains("Recipe must have list of menuRecipes without null elements."));
     }
 

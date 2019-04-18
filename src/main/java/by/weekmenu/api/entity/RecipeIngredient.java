@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import lombok.EqualsAndHashCode;
 
@@ -65,6 +66,7 @@ public class RecipeIngredient implements Serializable {
 
     
     @Column(name = "QTY")
+    @Positive(message = "RecipeIngredient's qty '${validatedValue}' must be positive.")
     private Long qty;
 
     @ManyToOne (fetch = FetchType.LAZY)

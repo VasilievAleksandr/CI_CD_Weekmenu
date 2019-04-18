@@ -31,7 +31,7 @@ public class DailyMenuStatisticsTest {
         dailyMenuStatistics.setPrice(new BigDecimal("20.123"));
         Set<ConstraintViolation<DailyMenuStatistics>> violations =validator.validate(dailyMenuStatistics);
         assertEquals(violations.size(), 1);
-        assertEquals("DailyMenuStatistics' price '20.123' must have up to '3' integer digits and '2' fraction digits.",
+        assertEquals("DailyMenuStatistics' price '20.123' must have up to '7' integer digits and '2' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 

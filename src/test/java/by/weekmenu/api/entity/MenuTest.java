@@ -126,7 +126,7 @@ public class MenuTest {
         menu.setPrice(new BigDecimal("20.123"));
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
-        assertEquals("Menu's price '20.123' must have up to '3' integer digits and '2' fraction digits.",
+        assertEquals("Menu's price '20.123' must have up to '7' integer digits and '2' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 
