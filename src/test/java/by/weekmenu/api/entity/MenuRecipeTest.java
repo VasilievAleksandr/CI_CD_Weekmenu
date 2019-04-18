@@ -29,7 +29,7 @@ public class MenuRecipeTest {
     }
 
     private Recipe getValidRecipe() {
-        return new Recipe("Курица с ананасами", true, new CookingMethod("Жарка"), new Ownership("Пользователь"));
+        return new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
     }
 
     private DishType getValidDishType() {

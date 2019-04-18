@@ -1,5 +1,6 @@
 package by.weekmenu.api.entity;
 
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,7 @@ public class CookingMethod implements Serializable {
             @Valid
             @NotNull(message = "Cooking Method must have list of recipes without null elements")
             Recipe> recipes = new HashSet<Recipe>();
+
 
     public CookingMethod(String name) {
         this.name = name;

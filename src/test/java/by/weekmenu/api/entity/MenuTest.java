@@ -28,7 +28,7 @@ public class MenuTest {
     }
 
     private Recipe getValidRecipe() {
-        return new Recipe("Курица с ананасами", true, new CookingMethod("Жарка"), new Ownership("Пользователь"));
+        return new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
     }
 
     private DishType getValidDishType() {
@@ -235,5 +235,4 @@ public class MenuTest {
     public void tearDown() {
         validatorFactory.close();
     }
-
 }
