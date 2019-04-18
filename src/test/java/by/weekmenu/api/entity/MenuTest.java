@@ -10,7 +10,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -134,10 +133,10 @@ public class MenuTest {
     @Test
     public void testPriceIsTooHigh() {
         Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
-        menu.setPrice(new BigDecimal("1234.12"));
+        menu.setPrice(new BigDecimal("12345678.12"));
         Set<ConstraintViolation<Menu>> violations =validator.validate(menu);
         assertEquals(violations.size(), 1);
-        assertEquals("Menu's price '1234.12' must have up to '3' integer digits and '2' fraction digits.",
+        assertEquals("Menu's price '12345678.12' must have up to '7' integer digits and '2' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 

@@ -38,10 +38,10 @@ public class DailyMenuStatisticsTest {
     @Test
     public void testPriceIsTooHigh() {
         DailyMenuStatistics dailyMenuStatistics = new DailyMenuStatistics(new DayOfWeek(), new Menu());
-        dailyMenuStatistics.setPrice(new BigDecimal("1234.12"));
+        dailyMenuStatistics.setPrice(new BigDecimal("12345678.12"));
         Set<ConstraintViolation<DailyMenuStatistics>> violations =validator.validate(dailyMenuStatistics);
         assertEquals(violations.size(), 1);
-        assertEquals("DailyMenuStatistics' price '1234.12' must have up to '3' integer digits and '2' fraction digits.",
+        assertEquals("DailyMenuStatistics' price '12345678.12' must have up to '7' integer digits and '2' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 
@@ -118,7 +118,7 @@ public class DailyMenuStatisticsTest {
     @Test
     public void testHasNoMenu() {
         DailyMenuStatistics dailyMenuStatistics = new DailyMenuStatistics();
-        dailyMenuStatistics.setDayOfWeek(new DayOfWeek());
+        dailyMenuStatistics.setDayOfWeek(new DayOfWeek(WeekDay.MONDAY));
         Set<ConstraintViolation<DailyMenuStatistics>> violations =validator.validate(dailyMenuStatistics);
         assertEquals(violations.size(), 1);
         assertEquals("DailyMenuStatistics must have have menu.",
@@ -127,7 +127,7 @@ public class DailyMenuStatisticsTest {
 
     @Test
     public void testIsValid() {
-        DailyMenuStatistics dailyMenuStatistics = new DailyMenuStatistics(new DayOfWeek(), new Menu());
+        DailyMenuStatistics dailyMenuStatistics = new DailyMenuStatistics(new DayOfWeek(WeekDay.MONDAY), new Menu());
         dailyMenuStatistics.setPrice(new BigDecimal("123.12"));
         dailyMenuStatistics.setCarbs(100);
         dailyMenuStatistics.setFats(200);

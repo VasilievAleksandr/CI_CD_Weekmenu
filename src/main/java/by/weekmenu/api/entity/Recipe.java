@@ -34,7 +34,7 @@ public class Recipe implements Serializable {
 
     @Column(name = "PRICE")
     @Digits(
-            integer = 3,
+            integer = 7,
             fraction = 2,
             message = "Recipe's price '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )

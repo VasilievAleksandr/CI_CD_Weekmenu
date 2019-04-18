@@ -82,10 +82,10 @@ public class RecipeTest {
     @Test
     public void testPriceIsTooHigh() {
         Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.setPrice(new BigDecimal("1234.12"));
+        recipe.setPrice(new BigDecimal("12345678.12"));
         Set<ConstraintViolation<Recipe>> violations =validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("Recipe's price '1234.12' must have up to '3' integer digits and '2' fraction digits.",
+        assertEquals("Recipe's price '12345678.12' must have up to '7' integer digits and '2' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 
@@ -112,10 +112,10 @@ public class RecipeTest {
     @Test
     public void testPreparingTimeIsNegative() {
         Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.setPreparingTime((new Short("-30")));
+        recipe.setPreparingTime((new Short("-15")));
         Set<ConstraintViolation<Recipe>> violations =validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("Recipe's preparingTime '-30' must be positive or '0'.",
+        assertEquals("Recipe's preparingTime '-15' must be positive or '0'.",
                 violations.iterator().next().getMessage());
     }
 
