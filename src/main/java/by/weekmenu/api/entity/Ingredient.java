@@ -76,6 +76,7 @@ public class Ingredient implements Serializable {
     @NotNull(message = "Ingredient's ownership mustn't be null.")
     private Ownership ownership;
 
+
     public Ingredient(String name, BigDecimal price, Integer calories, Integer proteins, Integer fats, Integer carbs,
                       @Valid UnitOfMeasure unitOfMeasure, @Valid Ownership ownership) {
         this.name = name;

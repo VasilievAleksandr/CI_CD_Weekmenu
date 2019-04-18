@@ -12,6 +12,7 @@ import java.io.Serializable;
 
 import lombok.EqualsAndHashCode;
 
+
 @NoArgsConstructor
 @Getter
 @Setter
