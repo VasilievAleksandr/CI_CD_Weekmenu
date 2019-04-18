@@ -133,7 +133,7 @@ public class DailyMenuStatisticsTest {
         dailyMenuStatistics.setFats(200);
         dailyMenuStatistics.setProteins(0);
         dailyMenuStatistics.setCalories(400);
-        Set<ConstraintViolation<DailyMenuStatistics>> violations =validator.validate(dailyMenuStatistics);
+        Set<ConstraintViolation<DailyMenuStatistics>> violations = validator.validate(dailyMenuStatistics);
         assertEquals(violations.size(), 0);
     }
 

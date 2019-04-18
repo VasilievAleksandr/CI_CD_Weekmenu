@@ -27,7 +27,7 @@ public class DayOfWeekTest {
     @Test
     public void testNameIsNull() {
         DayOfWeek dayOfWeek = new DayOfWeek(null, "ПН");
-        Set<ConstraintViolation<DayOfWeek>> violations =validator.validate(dayOfWeek);
+        Set<ConstraintViolation<DayOfWeek>> violations = validator.validate(dayOfWeek);
         assertEquals(violations.size(), 1);
         assertEquals("DayOfWeek must have name.",
                 violations.iterator().next().getMessage());
@@ -36,7 +36,7 @@ public class DayOfWeekTest {
     @Test
     public void testNameIsBlank() {
         DayOfWeek dayOfWeek = new DayOfWeek("   ", "ПН");
-        Set<ConstraintViolation<DayOfWeek>> violations =validator.validate(dayOfWeek);
+        Set<ConstraintViolation<DayOfWeek>> violations = validator.validate(dayOfWeek);
         assertEquals(violations.size(), 1);
         assertEquals("DayOfWeek must have name.",
                 violations.iterator().next().getMessage());
@@ -45,7 +45,7 @@ public class DayOfWeekTest {
     @Test
     public void testNameIsEmpty() {
         DayOfWeek dayOfWeek = new DayOfWeek("", "ПН");
-        Set<ConstraintViolation<DayOfWeek>> violations =validator.validate(dayOfWeek);
+        Set<ConstraintViolation<DayOfWeek>> violations = validator.validate(dayOfWeek);
         assertEquals(violations.size(), 1);
         assertEquals("DayOfWeek must have name.",
                 violations.iterator().next().getMessage());
@@ -54,7 +54,7 @@ public class DayOfWeekTest {
     @Test
     public void testShortNameIsNull() {
         DayOfWeek dayOfWeek = new DayOfWeek("Понедельник", null);
-        Set<ConstraintViolation<DayOfWeek>> violations =validator.validate(dayOfWeek);
+        Set<ConstraintViolation<DayOfWeek>> violations = validator.validate(dayOfWeek);
         assertEquals(violations.size(), 1);
         assertEquals("DayOfWeek must have shortName.",
                 violations.iterator().next().getMessage());
@@ -63,7 +63,7 @@ public class DayOfWeekTest {
     @Test
     public void testShortNameIsBlank() {
         DayOfWeek dayOfWeek = new DayOfWeek("Понедельник", "   ");
-        Set<ConstraintViolation<DayOfWeek>> violations =validator.validate(dayOfWeek);
+        Set<ConstraintViolation<DayOfWeek>> violations = validator.validate(dayOfWeek);
         assertEquals(violations.size(), 1);
         assertEquals("DayOfWeek must have shortName.",
                 violations.iterator().next().getMessage());
@@ -72,7 +72,7 @@ public class DayOfWeekTest {
     @Test
     public void testShortNameIsEmpty() {
         DayOfWeek dayOfWeek = new DayOfWeek("Понедельник", "");
-        Set<ConstraintViolation<DayOfWeek>> violations =validator.validate(dayOfWeek);
+        Set<ConstraintViolation<DayOfWeek>> violations = validator.validate(dayOfWeek);
         assertEquals(violations.size(), 1);
         assertEquals("DayOfWeek must have shortName.",
                 violations.iterator().next().getMessage());
@@ -81,7 +81,7 @@ public class DayOfWeekTest {
     @Test
     public void testIsValid() {
         DayOfWeek dayOfWeek = new DayOfWeek("Понедельник", "ПН");
-        Set<ConstraintViolation<DayOfWeek>> violations =validator.validate(dayOfWeek);
+        Set<ConstraintViolation<DayOfWeek>> violations = validator.validate(dayOfWeek);
         assertEquals(violations.size(), 0);
     }
 

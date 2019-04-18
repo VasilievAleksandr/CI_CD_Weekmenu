@@ -27,7 +27,7 @@ public class DishTypeTest {
     @Test
     public void testDishTypeNameIsNull() {
         DishType dishType = new DishType(null, true);
-        Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
+        Set<ConstraintViolation<DishType>> violations = validator.validate(dishType);
         assertEquals(violations.size(), 1);
         assertEquals("DishType must have name.",
                 violations.iterator().next().getMessage());
@@ -36,7 +36,7 @@ public class DishTypeTest {
     @Test
     public void testDishTypeNameIsBlank() {
         DishType dishType = new DishType("   ", true);
-        Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
+        Set<ConstraintViolation<DishType>> violations = validator.validate(dishType);
         assertEquals(violations.size(), 1);
         assertEquals("DishType must have name.",
                 violations.iterator().next().getMessage());
@@ -45,7 +45,7 @@ public class DishTypeTest {
     @Test
     public void testDishTypeNameIsEmpty() {
         DishType dishType = new DishType("", true);
-        Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
+        Set<ConstraintViolation<DishType>> violations = validator.validate(dishType);
         assertEquals(violations.size(), 1);
         assertEquals("DishType must have name.",
                 violations.iterator().next().getMessage());
@@ -55,7 +55,7 @@ public class DishTypeTest {
     public void testDishTypePriorityIsNegative() {
         DishType dishType = new DishType("Обед", true);
         dishType.setPriority(-100);
-        Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
+        Set<ConstraintViolation<DishType>> violations = validator.validate(dishType);
         assertEquals(violations.size(), 1);
         assertEquals("DishType's priority '-100' must be positive.",
                 violations.iterator().next().getMessage());
@@ -65,7 +65,7 @@ public class DishTypeTest {
     public void testDishTypePriorityIsZero() {
         DishType dishType = new DishType("Обед", true);
         dishType.setPriority(0);
-        Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
+        Set<ConstraintViolation<DishType>> violations = validator.validate(dishType);
         assertEquals(violations.size(), 1);
         assertEquals("DishType's priority '0' must be positive.",
                 violations.iterator().next().getMessage());
@@ -74,7 +74,7 @@ public class DishTypeTest {
     @Test
     public void testDishTypeIsActiveIsNull() {
         DishType dishType = new DishType("Обед", null);
-        Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
+        Set<ConstraintViolation<DishType>> violations = validator.validate(dishType);
         assertEquals(violations.size(), 1);
         assertEquals("DishType must have field 'isActive' defined.",
                 violations.iterator().next().getMessage());
@@ -84,7 +84,7 @@ public class DishTypeTest {
     public void testDishTypeIsValid() {
         DishType dishType = new DishType("Обед", true);
         dishType.setPriority(200);
-        Set<ConstraintViolation<DishType>> violations =validator.validate(dishType);
+        Set<ConstraintViolation<DishType>> violations = validator.validate(dishType);
         assertEquals(violations.size(), 0);
     }
 

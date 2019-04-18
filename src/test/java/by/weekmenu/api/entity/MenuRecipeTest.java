@@ -44,7 +44,7 @@ public class MenuRecipeTest {
     public void testMenuIsInvalid() {
         MenuRecipe menuRecipe = new MenuRecipe(new Menu("Бюджетное", null, new Ownership("Пользователь")),
                 getValidRecipe(), getValidDishType(), getValidDayOfWeek());
-        Set<ConstraintViolation<MenuRecipe>> violations =validator.validate(menuRecipe);
+        Set<ConstraintViolation<MenuRecipe>> violations = validator.validate(menuRecipe);
         assertEquals(violations.size(), 1);
         assertEquals("Menu must have field 'isActive' defined.",
                 violations.iterator().next().getMessage());
@@ -54,7 +54,7 @@ public class MenuRecipeTest {
     public void testMenuIsNull() {
         MenuRecipe menuRecipe = new MenuRecipe(null,
                 getValidRecipe(), getValidDishType(), getValidDayOfWeek());
-        Set<ConstraintViolation<MenuRecipe>> violations =validator.validate(menuRecipe);
+        Set<ConstraintViolation<MenuRecipe>> violations = validator.validate(menuRecipe);
         assertEquals(violations.size(), 1);
         assertEquals("MenuRecipe must have menu.",
                 violations.iterator().next().getMessage());
@@ -65,7 +65,7 @@ public class MenuRecipeTest {
         MenuRecipe menuRecipe = new MenuRecipe(getValidMenu(),
                 new Recipe("Курица с ананасами", true, null, new Ownership("Пользователь")),
                 getValidDishType(), getValidDayOfWeek());
-        Set<ConstraintViolation<MenuRecipe>> violations =validator.validate(menuRecipe);
+        Set<ConstraintViolation<MenuRecipe>> violations = validator.validate(menuRecipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe's cookingMethod mustn't be null.",
                 violations.iterator().next().getMessage());
@@ -74,7 +74,7 @@ public class MenuRecipeTest {
     @Test
     public void testRecipeIsNull() {
         MenuRecipe menuRecipe = new MenuRecipe(getValidMenu(), null, getValidDishType(), getValidDayOfWeek());
-        Set<ConstraintViolation<MenuRecipe>> violations =validator.validate(menuRecipe);
+        Set<ConstraintViolation<MenuRecipe>> violations = validator.validate(menuRecipe);
         assertEquals(violations.size(), 1);
         assertEquals("MenuRecipe must have recipe.",
                 violations.iterator().next().getMessage());
@@ -85,7 +85,7 @@ public class MenuRecipeTest {
         MenuRecipe menuRecipe = new MenuRecipe(getValidMenu(), getValidRecipe(),
                 new DishType(null, true),
                 getValidDayOfWeek());
-        Set<ConstraintViolation<MenuRecipe>> violations =validator.validate(menuRecipe);
+        Set<ConstraintViolation<MenuRecipe>> violations = validator.validate(menuRecipe);
         assertEquals(violations.size(), 1);
         assertEquals("DishType must have name.",
                 violations.iterator().next().getMessage());
@@ -94,7 +94,7 @@ public class MenuRecipeTest {
     @Test
     public void testDishTypeIsNull() {
         MenuRecipe menuRecipe = new MenuRecipe(getValidMenu(), getValidRecipe(), null, getValidDayOfWeek());
-        Set<ConstraintViolation<MenuRecipe>> violations =validator.validate(menuRecipe);
+        Set<ConstraintViolation<MenuRecipe>> violations = validator.validate(menuRecipe);
         assertEquals(violations.size(), 1);
         assertEquals("MenuRecipe must have dishType.",
                 violations.iterator().next().getMessage());
@@ -104,7 +104,7 @@ public class MenuRecipeTest {
     public void testDayOfWeekIsInvalid() {
         MenuRecipe menuRecipe = new MenuRecipe(getValidMenu(), getValidRecipe(), getValidDishType(),
                 new DayOfWeek("Понедельник", null));
-        Set<ConstraintViolation<MenuRecipe>> violations =validator.validate(menuRecipe);
+        Set<ConstraintViolation<MenuRecipe>> violations = validator.validate(menuRecipe);
         assertEquals(violations.size(), 1);
         assertEquals("DayOfWeek must have shortName.",
                 violations.iterator().next().getMessage());
@@ -113,7 +113,7 @@ public class MenuRecipeTest {
     @Test
     public void testDayOfWeekIsNull() {
         MenuRecipe menuRecipe = new MenuRecipe(getValidMenu(), getValidRecipe(), getValidDishType(), null);
-        Set<ConstraintViolation<MenuRecipe>> violations =validator.validate(menuRecipe);
+        Set<ConstraintViolation<MenuRecipe>> violations = validator.validate(menuRecipe);
         assertEquals(violations.size(), 1);
         assertEquals("MenuRecipe must have dayOfWeek.",
                 violations.iterator().next().getMessage());
@@ -122,7 +122,7 @@ public class MenuRecipeTest {
     @Test
     public void testIsValid() {
         MenuRecipe menuRecipe = new MenuRecipe(getValidMenu(), getValidRecipe(), getValidDishType(), getValidDayOfWeek());
-        Set<ConstraintViolation<MenuRecipe>> violations =validator.validate(menuRecipe);
+        Set<ConstraintViolation<MenuRecipe>> violations = validator.validate(menuRecipe);
         assertEquals(violations.size(), 0);
     }
 

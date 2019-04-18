@@ -28,7 +28,7 @@ public class MenuCategoryTest {
     @Test
     public void testMenuCategoryNameIsNull() {
         MenuCategory menuCategory = new MenuCategory(null, true);
-        Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
+        Set<ConstraintViolation<MenuCategory>> violations = validator.validate(menuCategory);
         assertEquals(violations.size(), 1);
         assertEquals("MenuCategory must have name.",
                 violations.iterator().next().getMessage());
@@ -37,7 +37,7 @@ public class MenuCategoryTest {
     @Test
     public void testMenuCategoryNameIsBlank() {
         MenuCategory menuCategory = new MenuCategory("   ", true);
-        Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
+        Set<ConstraintViolation<MenuCategory>> violations = validator.validate(menuCategory);
         assertEquals(violations.size(), 1);
         assertEquals("MenuCategory must have name.",
                 violations.iterator().next().getMessage());
@@ -46,7 +46,7 @@ public class MenuCategoryTest {
     @Test
     public void testMenuCategoryNameIsEmpty() {
         MenuCategory menuCategory = new MenuCategory("", true);
-        Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
+        Set<ConstraintViolation<MenuCategory>> violations = validator.validate(menuCategory);
         assertEquals(violations.size(), 1);
         assertEquals("MenuCategory must have name.",
                 violations.iterator().next().getMessage());
@@ -56,7 +56,7 @@ public class MenuCategoryTest {
     public void testMenuCategoryPriorityIsNegative() {
         MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", true);
         menuCategory.setPriority(-100);
-        Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
+        Set<ConstraintViolation<MenuCategory>> violations = validator.validate(menuCategory);
         assertEquals(violations.size(), 1);
         assertEquals("MenuCategory's priority '-100' must be positive.",
                 violations.iterator().next().getMessage());
@@ -66,7 +66,7 @@ public class MenuCategoryTest {
     public void testMenuCategoryPriorityIsZero() {
         MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", true);
         menuCategory.setPriority(0);
-        Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
+        Set<ConstraintViolation<MenuCategory>> violations = validator.validate(menuCategory);
         assertEquals(violations.size(), 1);
         assertEquals("MenuCategory's priority '0' must be positive.",
                 violations.iterator().next().getMessage());
@@ -77,7 +77,7 @@ public class MenuCategoryTest {
         MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", true);
         String imageLink = StringUtils.repeat("path_to_the_image", "/", 20);
         menuCategory.setImageLink(imageLink);
-        Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
+        Set<ConstraintViolation<MenuCategory>> violations = validator.validate(menuCategory);
         assertEquals(violations.size(), 1);
         assertEquals("ImageLink's length of the menuCategory '" + imageLink + "' mustn't be more than '255' characters long.",
                 violations.iterator().next().getMessage());
@@ -97,7 +97,7 @@ public class MenuCategoryTest {
         MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", false);
         menuCategory.setImageLink("/images/dinner.jpg");
         menuCategory.setPriority(100);
-        Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
+        Set<ConstraintViolation<MenuCategory>> violations = validator.validate(menuCategory);
         assertEquals(violations.size(), 0);
     }
 
