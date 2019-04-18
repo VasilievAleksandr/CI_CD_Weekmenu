@@ -65,7 +65,7 @@ public class RecipeIngredient implements Serializable {
 
     
     @Column(name = "QTY")
-    private long qty;
+    private Long qty;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "INGREDIENT_ID")
@@ -74,4 +74,10 @@ public class RecipeIngredient implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RECIPE_ID")
     private Recipe recipe;
+
+    public RecipeIngredient(Long qty, Ingredient ingredient, Recipe recipe) {
+        this.qty = qty;
+        this.ingredient = ingredient;
+        this.recipe = recipe;
+    }
 }
