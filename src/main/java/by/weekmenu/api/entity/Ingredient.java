@@ -33,15 +33,6 @@ public class Ingredient implements Serializable {
     @NotBlank(message = "Ingredient must have name.")
     private String name;
 
-    @Column(name = "PRICE")
-    @Digits(
-            integer = 7,
-            fraction = 2,
-            message = "Ingredient's price '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
-    )
-    @Positive(message = "Ingredient's price '${validatedValue}' must be positive.")
-    private BigDecimal price;
-
     @Column(name = "CALORIES")
     @Positive(message = "Ingredient's calories '${validatedValue}' must be positive.")
     private Integer calories;
@@ -57,6 +48,12 @@ public class Ingredient implements Serializable {
     @Column(name = "CARBS")
     @PositiveOrZero(message = "Ingredient's carbs '${validatedValue}' must be positive or '0'.")
     private Integer carbs;
+
+    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.PERSIST)
+    private Set<
+            @Valid
+            @NotNull(message = "Ingredient must have list of ingredientCurrencies without null elements.")
+                    IngredientCurrency> ingredientCurrencies = new HashSet<>();
 
     @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
     private Set<

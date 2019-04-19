@@ -33,6 +33,7 @@ public class ExchangeRate implements Serializable {
     private LocalDate date;
 
     @Column(name = "RATE")
+    @NotNull(message = "ExchangeRate must have rate.")
     @Digits(
             integer = 7,
             fraction = 2,

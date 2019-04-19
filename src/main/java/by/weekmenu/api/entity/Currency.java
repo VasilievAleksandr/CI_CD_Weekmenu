@@ -39,4 +39,8 @@ public class Currency implements Serializable {
     @Column(name = "CODE", unique = true)
     @Pattern(regexp = "\\p{Sc}", message = "Currency's symbol must match pattern.")
     private String symbol;
+
+    @Column(name = "IS_ACTIVE")
+    @NotNull(message = "Currency must have field 'isActive' defined.")
+    private Boolean isActive;
 }

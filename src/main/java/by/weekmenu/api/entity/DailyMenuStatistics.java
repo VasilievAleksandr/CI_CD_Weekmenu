@@ -6,10 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -67,15 +70,6 @@ public class DailyMenuStatistics implements Serializable {
     @EmbeddedId
     private Id id = new Id();
 
-    @Column(name = "PRICE")
-    @Digits(
-            integer = 7,
-            fraction = 2,
-            message = "DailyMenuStatistics' price '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
-    )
-    @Positive(message = "DailyMenuStatistics' price '${validatedValue}' must be positive.")
-    private BigDecimal price;
-
     @Column(name = "CALORIES")
     @Positive(message = "DailyMenuStatistics' calories '${validatedValue}' must be positive.")
     private Integer calories;
@@ -91,6 +85,12 @@ public class DailyMenuStatistics implements Serializable {
     @Column(name = "CARBS")
     @PositiveOrZero(message = "DailyMenuStatistics' carbs '${validatedValue}' must be positive or '0'.")
     private Integer carbs;
+
+    @OneToMany(mappedBy = "dailyMenuStatistics", cascade = CascadeType.PERSIST)
+    private Set<
+            @Valid
+            @NotNull(message = "DailyMenuStatistics must have list of DailyMenuStatisticsCurrencies without null elements.")
+                    DailyMenuStatisticsCurrency> dailyMenuStatisticsCurrencies = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(

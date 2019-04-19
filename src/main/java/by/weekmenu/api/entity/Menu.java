@@ -49,15 +49,6 @@ public class Menu implements Serializable {
     @PositiveOrZero(message = "Menu's carbs '${validatedValue}' must be positive or '0'.")
     private Integer carbs;
 
-    @Column(name = "PRICE")
-    @Digits(
-            integer = 7,
-            fraction = 2,
-            message = "Menu's price '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
-    )
-    @Positive(message = "Menu's price '${validatedValue}' must be positive.")
-    private BigDecimal price;
-
     @Column(name = "IS_ACTIVE")
     @NotNull(message = "Menu must have field 'isActive' defined.")
     private Boolean isActive;
@@ -67,6 +58,12 @@ public class Menu implements Serializable {
             @Valid
             @NotNull(message = "Menu must have list of menuRecipes without null elements.")
             MenuRecipe> menuRecipes = new HashSet<>();
+
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
+    private Set<
+            @Valid
+            @NotNull(message = "Menu must have list of menuCurrencies without null elements.")
+                    MenuCurrency> menuCurrencies = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "MENU_CATEGORY_ID")
