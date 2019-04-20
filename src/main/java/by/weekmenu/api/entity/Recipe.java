@@ -32,15 +32,6 @@ public class Recipe implements Serializable {
     @NotBlank(message = "Recipe must have name.")
     private String name;
 
-    @Column(name = "PRICE")
-    @Digits(
-            integer = 7,
-            fraction = 2,
-            message = "Recipe's price '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
-    )
-    @Positive(message = "Recipe's price '${validatedValue}' must be positive.")
-    private BigDecimal price;
-
     @Column(name = "COOKING_TIME")
     @PositiveOrZero(message = "Recipe's cookingTime '${validatedValue}' must be positive or '0'.")
     private Short cookingTime;
@@ -75,6 +66,12 @@ public class Recipe implements Serializable {
     @Column(name = "IS_ACTIVE")
     @NotNull(message = "Recipe must have field 'isActive' defined.")
     private Boolean isActive;
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.PERSIST)
+    private Set<
+            @Valid
+            @NotNull(message = "Recipe must have list of recipeCurrencies without null elements.")
+                    RecipeCurrency> recipeCurrencies = new HashSet<>();
 
     @OneToMany(mappedBy = "recipe")
     private Set<
