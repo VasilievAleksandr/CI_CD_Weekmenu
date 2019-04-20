@@ -27,25 +27,9 @@ public class IngredientTest {
         validator = validatorFactory.getValidator();
     }
 
-    private Recipe getValidRecipe() {
-        return new Recipe("Курица", true, new CookingMethod("Тушение"),
-                new Ownership("Пользователь"));
-    }
-
-    private RecipeIngredient getValidRecipeIngredient() {
-        return new RecipeIngredient(new BigDecimal(100), getValidRecipe());
-    }
-
-    
-    private RecipeIngredient getInvalidRecipeIngredient() {
-        return new RecipeIngredient(null, getValidRecipe());
-    }
-
     @Test
     public void testIngredientNameIsNull() {
-        Ingredient ingredient = new Ingredient(null, new BigDecimal("100"));
-        ingredient.setOwnership(new Ownership("Пользователь"));
-        ingredient.setUnitOfMeasure(new UnitOfMeasure("литр"));
+        Ingredient ingredient = new Ingredient(null, new Ownership("Пользователь"), new UnitOfMeasure("литр"));
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 1);
         assertEquals("Ingredient must have name.",
@@ -54,9 +38,7 @@ public class IngredientTest {
 
     @Test
     public void testIngredientNameIsBlank() {
-        Ingredient ingredient = new Ingredient("   ", new BigDecimal("100"));
-        ingredient.setOwnership(new Ownership("Пользователь"));
-        ingredient.setUnitOfMeasure(new UnitOfMeasure("литр"));
+        Ingredient ingredient = new Ingredient("   ", new Ownership("Пользователь"), new UnitOfMeasure("литр"));
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 1);
         assertEquals("Ingredient must have name.",
@@ -65,45 +47,10 @@ public class IngredientTest {
 
     @Test
     public void testIngredientNameIsEmpty() {
-        Ingredient ingredient = new Ingredient("", new BigDecimal("100"));
-        ingredient.setOwnership(new Ownership("Пользователь"));
-        ingredient.setUnitOfMeasure(new UnitOfMeasure("литр"));
+        Ingredient ingredient = new Ingredient("", new Ownership("Пользователь"), new UnitOfMeasure("литр"));
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 1);
         assertEquals("Ingredient must have name.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testIngredientPriceHasTooManyFractionDigits() {
-        Ingredient ingredient = new Ingredient("молоко", new BigDecimal("111.123"));
-        ingredient.setOwnership(new Ownership("Пользователь"));
-        ingredient.setUnitOfMeasure(new UnitOfMeasure("литр"));
-        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
-        assertEquals(violations.size(), 1);
-        assertEquals("Ingredient's price '111.123' must have up to '7' integer digits and '2' fraction digits.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testIngredientPriceIsTooHigh() {
-        Ingredient ingredient = new Ingredient("Курица", new BigDecimal("12345678.12"));
-        ingredient.setUnitOfMeasure(new UnitOfMeasure("литр"));
-        ingredient.setOwnership(new Ownership("Пользователь"));
-        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
-        assertEquals(violations.size(), 1);
-        assertEquals("Ingredient's price '12345678.12' must have up to '7' integer digits and '2' fraction digits.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testIngredientPriceIsNegative() {
-        Ingredient ingredient = new Ingredient("Курица", new BigDecimal("-111"));
-        ingredient.setUnitOfMeasure(new UnitOfMeasure("литр"));
-        ingredient.setOwnership(new Ownership("Пользователь"));
-        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
-        assertEquals(violations.size(), 1);
-        assertEquals("Ingredient's price '-111' must be positive.",
                 violations.iterator().next().getMessage());
     }
 
@@ -170,26 +117,24 @@ public class IngredientTest {
 
     @Test
     public void testHasInvalidRecipeIngredients() {
-        Ingredient ingredient = new Ingredient("молоко", new BigDecimal(100));
-        ingredient.setUnitOfMeasure(new UnitOfMeasure("литр"));
-        ingredient.setOwnership(new Ownership("Пользователь"));
-//        ingredient.getRecipeIngredients().add(getValidRecipeIngredient());
-//        ingredient.getRecipeIngredients().add(new RecipeIngredient(new BigDecimal("-100"), getValidRecipe()));
+        Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), new UnitOfMeasure("литр"));
+        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("-111.12"),
+                new Ingredient("курица", new Ownership("пользователь"), new UnitOfMeasure("литр")),
+                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")));
+        ingredient.getRecipeIngredients().add(recipeIngredient);
         ingredient.getRecipeIngredients().add(null);
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         List<String> messages = violations.stream()
                 .map((ConstraintViolation<Ingredient> violation) -> violation.getMessage())
                 .collect(Collectors.toList());
-        assertEquals(violations.size(), 1);
-//        assertTrue(messages.contains("RecipeIngredient's qty '${validatedValue}' must be positive."));
+        assertEquals(violations.size(), 2);
         assertTrue(messages.contains("Ingredient must have list of recipeIngredients without null elements."));
+        assertTrue(messages.contains("RecipeIngredient's qty '-111.12' must be positive."));
     }
 
     @Test
     public void testUnitOfMeasureIsNull() {
-        Ingredient ingredient = new Ingredient(null);
-        ingredient.setName("молоко");
-        ingredient.setOwnership(new Ownership("Пользователь"));
+        Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), null);
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 1);
         assertEquals("Ingredient's unitOfMeasure mustn't be null.",
@@ -198,9 +143,7 @@ public class IngredientTest {
 
     @Test
     public void testUnitOfMeasureIsInvalid() {
-        Ingredient ingredient = new Ingredient(new UnitOfMeasure(null));
-        ingredient.setName("молоко");
-        ingredient.setOwnership(new Ownership("Пользователь"));
+        Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), new UnitOfMeasure(""));
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 1);
         assertEquals("UnitOfMeasure must have name.",
@@ -209,8 +152,7 @@ public class IngredientTest {
 
     @Test
     public void testOwnershipIsNull() {
-        Ingredient ingredient = new Ingredient("молоко", new BigDecimal(100), null);
-        ingredient.setUnitOfMeasure(new UnitOfMeasure("литр"));
+        Ingredient ingredient = new Ingredient("курица", null, new UnitOfMeasure("литр"));
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 1);
         assertEquals("Ingredient's ownership mustn't be null.",
@@ -219,8 +161,7 @@ public class IngredientTest {
 
     @Test
     public void testOwnershipIsInvalid() {
-        Ingredient ingredient = new Ingredient("молоко", new BigDecimal(100), new Ownership(null));
-        ingredient.setUnitOfMeasure(new UnitOfMeasure("литр"));
+        Ingredient ingredient = new Ingredient("курица", new Ownership(""), new UnitOfMeasure("литр"));
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 1);
         assertEquals("Ownership must have name.",
@@ -229,9 +170,12 @@ public class IngredientTest {
 
     @Test
     public void testIngredientIsValid() {
-        Ingredient ingredient = new Ingredient("молоко", new BigDecimal(100), 100, 100, 100, 100,
+        Ingredient ingredient = new Ingredient("молоко",100, 100, 100, 100,
                 new UnitOfMeasure("литр"), new Ownership("Пользователь"));
-        ingredient.getRecipeIngredients().add(getValidRecipeIngredient());
+        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111.12"),
+                new Ingredient("курица", new Ownership("пользователь"), new UnitOfMeasure("литр")),
+                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")));
+        ingredient.getRecipeIngredients().add(recipeIngredient);
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 0);
     }

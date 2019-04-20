@@ -27,7 +27,7 @@ public class Ingredient implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Integer id;
+    private Long id;
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "Ingredient must have name.")
@@ -59,7 +59,7 @@ public class Ingredient implements Serializable {
     private Set<
             @Valid
             @NotNull(message = "Ingredient must have list of recipeIngredients without null elements.")
-            RecipeIngredient> recipeIngredients = new HashSet<RecipeIngredient>();
+                    RecipeIngredient> recipeIngredients = new HashSet<RecipeIngredient>();
 
     @ManyToOne
     @JoinColumn(name = "UNIT_OF_MEASURE_ID")
@@ -74,10 +74,9 @@ public class Ingredient implements Serializable {
     private Ownership ownership;
 
 
-    public Ingredient(String name, BigDecimal price, Integer calories, Integer proteins, Integer fats, Integer carbs,
+    public Ingredient(String name, Integer calories, Integer proteins, Integer fats, Integer carbs,
                       @Valid UnitOfMeasure unitOfMeasure, @Valid Ownership ownership) {
         this.name = name;
-        this.price = price;
         this.calories = calories;
         this.proteins = proteins;
         this.fats = fats;
@@ -86,9 +85,9 @@ public class Ingredient implements Serializable {
         this.ownership = ownership;
     }
 
-    public Ingredient(String name, BigDecimal price) {
+    public Ingredient(String name) {
         this.name = name;
-        this.price = price;
+
     }
 
     public Ingredient(Integer calories, Integer proteins, Integer fats, Integer carbs) {
@@ -97,13 +96,11 @@ public class Ingredient implements Serializable {
         this.fats = fats;
         this.carbs = carbs;
     }
-    public Ingredient(String name, BigDecimal price, Ownership ownership) {
-        this.name = name;
-        this.price = price;
-        this.ownership = ownership;
-    }
 
-    public Ingredient( UnitOfMeasure unitOfMeasure) {
+    public Ingredient(String name, Ownership ownership, UnitOfMeasure unitOfMeasure) {
+        this.name = name;
+        this.ownership = ownership;
         this.unitOfMeasure = unitOfMeasure;
     }
+
 }

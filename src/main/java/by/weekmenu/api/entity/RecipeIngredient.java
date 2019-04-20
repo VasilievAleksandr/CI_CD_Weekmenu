@@ -5,8 +5,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import javax.validation.constraints.*;
+
 import lombok.EqualsAndHashCode;
 
 @NoArgsConstructor
@@ -24,10 +28,10 @@ public class RecipeIngredient implements Serializable {
 
         private static final long serialVersionUID = 1015642071168789374L;
 
-        @Column(name = "ID")
+        @Column(name = "INGREDIENT_ID")
         private Long ingredientId;
 
-        @Column(name = "ID")
+        @Column(name = "RECIPE_ID")
         private Long recipeId;
 
         public Id() {
@@ -66,20 +70,33 @@ public class RecipeIngredient implements Serializable {
 
     
     @Column(name = "QTY")
+    @Digits(
+            integer = 5,
+            fraction = 2,
+            message = "RecipeIngredient's qty '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
     @Positive(message = "RecipeIngredient's qty '${validatedValue}' must be positive.")
-    private Long qty;
+    private BigDecimal qty;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "INGREDIENT_ID")
+    @Valid
+    @NotNull(message = "RecipeIngredient's Ingredient mustn't be null.")
     private Ingredient ingredient;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RECIPE_ID")
+    @Valid
+    @NotNull(message = "RecipeIngredient's Recipe mustn't be null.")
     private Recipe recipe;
 
-    public RecipeIngredient(Long qty, Ingredient ingredient, Recipe recipe) {
+    public RecipeIngredient(BigDecimal qty, Ingredient ingredient, Recipe recipe) {
         this.qty = qty;
         this.ingredient = ingredient;
         this.recipe = recipe;
+    }
+
+    public RecipeIngredient(BigDecimal qty) {
+        this.qty = qty;
     }
 }

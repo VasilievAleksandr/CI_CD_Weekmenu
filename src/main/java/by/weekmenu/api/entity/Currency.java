@@ -43,4 +43,11 @@ public class Currency implements Serializable {
     @Column(name = "IS_ACTIVE")
     @NotNull(message = "Currency must have field 'isActive' defined.")
     private Boolean isActive;
+
+    public Currency(String name, String code, String symbol, Boolean isActive) {
+        this.name = name;
+        this.code = code;
+        this.symbol = symbol;
+        this.isActive = isActive;
+    }
 }

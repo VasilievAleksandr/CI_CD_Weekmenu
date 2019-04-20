@@ -17,18 +17,17 @@ import lombok.EqualsAndHashCode;
 @Setter
 @EqualsAndHashCode(exclude = {"id"})
 @Entity
-@Table(name = "INGREDIENT_CURRENCY")
-public class IngredientCurrency {
-
-    private static final long serialVersionUID = 1115642071168789374L;
+@Table(name = "RECIPE_CURRENCY")
+public class RecipeCurrency {
+    private static final long serialVersionUID = 1115642071168789375L;
 
     @Embeddable
     public static class Id implements Serializable {
 
-        private static final long serialVersionUID = 1125642071168789374L;
+        private static final long serialVersionUID = 1125642071168789375L;
 
-        @Column(name = "INGREDIENT_ID")
-        private Long ingredientId;
+        @Column(name = "RECIPE_ID")
+        private Long recipeId;
 
         @Column(name = "CURRENCY_ID")
         private Byte currencyId;
@@ -37,30 +36,30 @@ public class IngredientCurrency {
 
         }
 
-        public Id(Long ingredientId, Byte currencyId) {
-            this.ingredientId = ingredientId;
+        public Id(Long recipeId, Byte currencyId) {
+            this.recipeId = recipeId;
             this.currencyId = currencyId;
         }
 
         public boolean equals(Object o) {
             if (o != null && o instanceof Id) {
                 Id that = (Id) o;
-                return this.ingredientId.equals(that.ingredientId) && this.currencyId.equals(that.currencyId);
+                return this.recipeId.equals(that.recipeId) && this.currencyId.equals(that.currencyId);
             }
 
             return false;
         }
 
         public int hashCode() {
-            return ingredientId.hashCode() + currencyId.hashCode();
+            return recipeId.hashCode() + currencyId.hashCode();
         }
 
         public Byte getCurrencyId() {
             return currencyId;
         }
 
-        public Long getIngredientId() {
-            return ingredientId;
+        public Long getRecipeId() {
+            return recipeId;
         }
     }
 
@@ -72,31 +71,30 @@ public class IngredientCurrency {
     @Digits(
             integer = 7,
             fraction = 2,
-            message = "Ingredient_Currency's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+            message = "Recipe_Currency's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
-    @Positive(message = "Ingredient_Currency's Price_Value '${validatedValue}' must be positive.")
+    @Positive(message = "Recipe_Currency's Price_Value '${validatedValue}' must be positive.")
     private BigDecimal priceValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INGREDIENT_ID")
+    @JoinColumn(name = "RECIPE_ID")
     @Valid
-    @NotNull(message = "Ingredient_Currency's Ingredient mustn't be null.")
-    private Ingredient ingredient;
+    @NotNull(message = "Recipe_Currency's Recipe mustn't be null.")
+    private Recipe recipe;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CURRENCY_ID")
     @Valid
-    @NotNull(message = "Ingredient_Currency's Currency mustn't be null.")
+    @NotNull(message = "Recipe_Currency's Currency mustn't be null.")
     private Currency currency;
 
-    public IngredientCurrency(BigDecimal priceValue, Ingredient ingredient, Currency currency) {
+    public RecipeCurrency(BigDecimal priceValue, Recipe recipe, Currency currency) {
         this.priceValue = priceValue;
-        this.ingredient = ingredient;
+        this.recipe = recipe;
         this.currency = currency;
     }
 
-    public IngredientCurrency(BigDecimal priceValue) {
+    public RecipeCurrency(BigDecimal priceValue) {
         this.priceValue = priceValue;
     }
-
 }
