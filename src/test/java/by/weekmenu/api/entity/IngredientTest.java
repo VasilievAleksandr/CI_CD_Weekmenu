@@ -36,6 +36,7 @@ public class IngredientTest {
         return new RecipeIngredient(new BigDecimal(100), getValidRecipe());
     }
 
+    
     private RecipeIngredient getInvalidRecipeIngredient() {
         return new RecipeIngredient(null, getValidRecipe());
     }
