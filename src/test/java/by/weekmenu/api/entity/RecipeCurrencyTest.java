@@ -73,7 +73,7 @@ public class RecipeCurrencyTest {
     @Test
     public void testRecipeIsInvalid() {
         RecipeCurrency recipeCurrency = new RecipeCurrency(new BigDecimal("111"),
-                new Recipe(null, true, new CookingMethod("жарка"),new Ownership("пользователь")),
+                new Recipe(null, true, new CookingMethod("жарка"), new Ownership("пользователь")),
                 new Currency("руб", "BYN", "$", true));
         Set<ConstraintViolation<RecipeCurrency>> violations = validator.validate(recipeCurrency);
         assertEquals(violations.size(), 1);
@@ -84,11 +84,20 @@ public class RecipeCurrencyTest {
     @Test
     public void testCurrencyIsNull() {
         RecipeCurrency recipeCurrency = new RecipeCurrency(new BigDecimal("111"),
-                new Recipe("рецепт", true, new CookingMethod("жарка"),new Ownership("пользователь")),
+                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")),
                 null);
         Set<ConstraintViolation<RecipeCurrency>> violations = validator.validate(recipeCurrency);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe_Currency's Currency mustn't be null.",
                 violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testRecipeCurrencyIsValid() {
+        RecipeCurrency recipeCurrency = new RecipeCurrency(new BigDecimal("111"),
+                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")),
+                new Currency("руб", "BYN", "$", true));
+        Set<ConstraintViolation<RecipeCurrency>> violations = validator.validate(recipeCurrency);
+        assertEquals(violations.size(), 0);
     }
 }

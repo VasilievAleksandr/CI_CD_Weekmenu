@@ -52,6 +52,13 @@ public class UnitOfMeasureTest {
                 violations.iterator().next().getMessage());
     }
 
+    @Test
+    public void testUnitOfMeasureIsValid() {
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure("литр");
+        Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
+        assertEquals(violations.size(), 0);
+    }
+
     @After
     public void tearDown() {
         validatorFactory.close();

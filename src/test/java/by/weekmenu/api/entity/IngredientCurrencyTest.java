@@ -87,4 +87,13 @@ public class IngredientCurrencyTest {
         assertEquals("Ingredient_Currency's Currency mustn't be null.",
                 violations.iterator().next().getMessage());
     }
+
+    @Test
+    public void testIngredientCurrencyIsValid() {
+        IngredientCurrency ingredientCurrency = new IngredientCurrency(new BigDecimal("111"),
+                new Ingredient("курица", new Ownership("пользователь"), new UnitOfMeasure("литр")),
+                new Currency("руб", "BYN", "$", true));
+        Set<ConstraintViolation<IngredientCurrency>> violations = validator.validate(ingredientCurrency);
+        assertEquals(violations.size(), 0);
+    }
 }
