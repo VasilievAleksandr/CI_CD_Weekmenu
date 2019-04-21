@@ -11,8 +11,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-import javax.validation.Valid;
-
 
 @NoArgsConstructor
 @Getter
@@ -37,7 +35,7 @@ public class CookingStep implements Serializable {
     @NotBlank(message = "Cooking Step must have field 'description' filled.")
     private String description;
 
-    @Column(name = "IMAGELINK")
+    @Column(name = "IMAGE_LINK")
     @Size(
             max = 255,
             message = "ImageLink's length of the cookingStep '${validatedValue}' mustn't be more than '{max}' characters long."

@@ -8,7 +8,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -121,36 +120,6 @@ public class MenuTest {
     }
 
     @Test
-    public void testPriceHasTooManyFractionDigits() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
-        menu.setPrice(new BigDecimal("20.123"));
-        Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
-        assertEquals(violations.size(), 1);
-        assertEquals("Menu's price '20.123' must have up to '7' integer digits and '2' fraction digits.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testPriceIsTooHigh() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
-        menu.setPrice(new BigDecimal("12345678.12"));
-        Set<ConstraintViolation<Menu>> violations =validator.validate(menu);
-        assertEquals(violations.size(), 1);
-        assertEquals("Menu's price '12345678.12' must have up to '7' integer digits and '2' fraction digits.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testPriceIsNegative() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
-        menu.setPrice(new BigDecimal("-12.1"));
-        Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
-        assertEquals(violations.size(), 1);
-        assertEquals("Menu's price '-12.1' must be positive.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
     public void testIsActiveIsNull() {
         Menu menu = new Menu("Бюджетное", null, new Ownership("Пользователь"));
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
@@ -225,7 +194,6 @@ public class MenuTest {
         menu.setFats(100);
         menu.setProteins(150);
         menu.setCalories(400);
-        menu.setPrice(new BigDecimal("123.12"));
         menu.getDailyMenuStatistics().add(new DailyMenuStatistics(new DayOfWeek("Понедельник", "ПН"), menu));
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 0);
