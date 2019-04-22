@@ -8,6 +8,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -129,6 +130,21 @@ public class MenuTest {
     }
 
     @Test
+    public void testHasInvalidMenuCurrencies() {
+        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        MenuCurrency menuCurrency = new MenuCurrency(menu, new Currency(" ", "BYN", "$", true));
+        menu.getMenuCurrencies().add(menuCurrency);
+        menu.getMenuCurrencies().add(null);
+        Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
+        List<String> messages = violations.stream()
+                .map((ConstraintViolation<Menu> violation) -> violation.getMessage())
+                .collect(Collectors.toList());
+        assertEquals(violations.size(), 2);
+        assertTrue(messages.contains("Menu must have list of menuCurrencies without null elements."));
+        assertTrue(messages.contains("Currency must have name."));
+    }
+
+    @Test
     public void testHasInvalidMenuRecipes() {
         Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
         menu.getMenuRecipes().add(new MenuRecipe(getValidRecipe(), getInvalidDishType(), getValidDayOfWeek()));
@@ -194,6 +210,7 @@ public class MenuTest {
         menu.setFats(100);
         menu.setProteins(150);
         menu.setCalories(400);
+        menu.getMenuCurrencies().add(new MenuCurrency(menu, new Currency("руб.", "BYN", true)));
         menu.getDailyMenuStatistics().add(new DailyMenuStatistics(new DayOfWeek("Понедельник", "ПН"), menu));
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 0);

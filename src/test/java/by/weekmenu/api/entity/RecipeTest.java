@@ -162,6 +162,21 @@ public class RecipeTest {
     }
 
     @Test
+    public void testHasInvalidRecipeCurrencies() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        RecipeCurrency recipeCurrency = new RecipeCurrency(new BigDecimal("-1.11"), recipe, new Currency("руб", "BYN", "$", true));
+        recipe.getRecipeCurrencies().add(recipeCurrency);
+        recipe.getRecipeCurrencies().add(null);
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        List<String> messages = violations.stream()
+                .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
+                .collect(Collectors.toList());
+        assertEquals(violations.size(), 2);
+        assertTrue(messages.contains("Recipe must have list of recipeCurrencies without null elements."));
+        assertTrue(messages.contains("Recipe_Currency's Price_Value '-1.11' must be positive."));
+    }
+
+    @Test
     public void testHasInvalidRecipeIngredients() {
         Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
         recipe.getRecipeIngredients().add(
@@ -259,6 +274,9 @@ public class RecipeTest {
                         new Ingredient("курица", new Ownership("пользователь"),
                                 new UnitOfMeasure("литр")), recipe)
         );
+        recipe.getRecipeCurrencies().add(new RecipeCurrency(new BigDecimal("1.11"),
+                new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь")),
+                new Currency("руб", "BYN", "$", true)));
         recipe.getCookingSteps().add(new CookingStep(100, "Нарезать курицу", "images/choped_chicken.jpg"));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 0);

@@ -50,4 +50,10 @@ public class Currency implements Serializable {
         this.symbol = symbol;
         this.isActive = isActive;
     }
+
+    public Currency(String name, String code, Boolean isActive) {
+        this.name = name;
+        this.code = code;
+        this.isActive = isActive;
+    }
 }
