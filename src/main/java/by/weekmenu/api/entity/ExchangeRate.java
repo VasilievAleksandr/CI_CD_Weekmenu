@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -44,11 +45,20 @@ public class ExchangeRate implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "BANK_ID")
+    @Valid
     @NotNull(message = "ExchangeRate must have bank.")
     private Bank bank;
 
     @ManyToOne
     @JoinColumn(name = "CURRENCY_ID")
     @NotNull(message = "ExchangeRate must have currency.")
+    @Valid
     private Currency currency;
+
+    public ExchangeRate(LocalDate date, BigDecimal rate, Bank bank, Currency currency) {
+        this.date = date;
+        this.rate = rate;
+        this.bank = bank;
+        this.currency = currency;
+    }
 }

@@ -34,4 +34,9 @@ public class Bank implements Serializable {
     @JoinColumn(name = "CURRENCY_ID")
     @NotNull(message = "Bank must have base currency")
     private Currency baseCurrency;
+
+    public Bank(String name, Currency baseCurrency) {
+        this.name = name;
+        this.baseCurrency = baseCurrency;
+    }
 }
