@@ -32,10 +32,6 @@ public class RecipeTest {
         return new Menu("Бюджетное", true, new Ownership("Пользователь"));
     }
 
-    private DishType getValidDishType() {
-        return new DishType("Обед", true);
-    }
-
     private DishType getInvalidDishType() {
         return new DishType("Обед", null);
     }
@@ -68,6 +64,17 @@ public class RecipeTest {
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe must have name.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testNameIsTooLong() {
+        Recipe recipe = new Recipe("", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        String name = StringUtils.repeat("очень_длинное_название_рецепта", 20);
+        recipe.setName(name);
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        assertEquals(violations.size(), 1);
+        assertEquals("Recipe's name '" + name +"' must be '255' characters long",
                 violations.iterator().next().getMessage());
     }
 
@@ -169,7 +176,7 @@ public class RecipeTest {
         recipe.getRecipeCurrencies().add(null);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         List<String> messages = violations.stream()
-                .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
         assertTrue(messages.contains("Recipe must have list of recipeCurrencies without null elements."));
@@ -187,7 +194,7 @@ public class RecipeTest {
         recipe.getRecipeIngredients().add(null);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         List<String> messages = violations.stream()
-                .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
         assertTrue(messages.contains("RecipeIngredient's qty '-100' must be positive."));
@@ -201,7 +208,7 @@ public class RecipeTest {
         recipe.getMenuRecipes().add(null);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         List<String> messages = violations.stream()
-                .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 3);
         assertTrue(messages.contains("MenuRecipe must have recipe."));
@@ -234,7 +241,7 @@ public class RecipeTest {
         recipe.getMenuRecipes().add(null);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         List<String> messages = violations.stream()
-                .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
         assertTrue(messages.contains("Cooking Step must have field 'description' filled."));
