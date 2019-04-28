@@ -31,6 +31,7 @@ public class Menu implements Serializable {
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "Menu must have name.")
+    @Size(max = 255, message = "Menu's name '${validatedValue}' must be '{max}' characters long")
     private String name;
 
     @Column(name = "CALORIES")
