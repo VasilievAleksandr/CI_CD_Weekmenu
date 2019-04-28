@@ -26,6 +26,7 @@ public class Currency implements Serializable {
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "Currency must have name.")
+    @Size(max = 255, message = "Currency's name '${validatedValue}' must be '{max}' characters long")
     private String name;
 
     @Column(name = "CODE", unique = true)
