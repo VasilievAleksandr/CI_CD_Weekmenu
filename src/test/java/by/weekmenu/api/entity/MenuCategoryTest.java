@@ -53,6 +53,17 @@ public class MenuCategoryTest {
     }
 
     @Test
+    public void testNameIsTooLong() {
+        MenuCategory menuCategory = new MenuCategory("", true);
+        String name = StringUtils.repeat("очень_длинное_название_категории_меню", 20);
+        menuCategory.setName(name);
+        Set<ConstraintViolation<MenuCategory>> violations = validator.validate(menuCategory);
+        assertEquals(violations.size(), 1);
+        assertEquals("MenuCategory's name '" + name +"' must be '255' characters long",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
     public void testMenuCategoryPriorityIsNegative() {
         MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", true);
         menuCategory.setPriority(-100);
