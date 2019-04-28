@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @NoArgsConstructor
@@ -28,6 +29,7 @@ public class DishType implements Serializable {
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "DishType must have name.")
+    @Size(max = 255, message = "DishType's name '${validatedValue}' must be '{max}' characters long")
     private String name;
 
     @Column(name = "PRIORITY")
