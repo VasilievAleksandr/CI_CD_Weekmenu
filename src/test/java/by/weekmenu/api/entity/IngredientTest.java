@@ -116,18 +116,18 @@ public class IngredientTest {
     }
 
     @Test
-    public void testHasInvalidIngredientCurrencies() {
+    public void testHasInvalidIngredientPrices() {
         Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), new UnitOfMeasure("литр"));
-        IngredientCurrency ingredientCurrency = new IngredientCurrency(new BigDecimal("-1.11"), ingredient, new Currency("руб", "BYN", "$", true));
-        ingredient.getIngredientCurrencies().add(ingredientCurrency);
-        ingredient.getIngredientCurrencies().add(null);
+        IngredientPrice ingredientPrice = new IngredientPrice(new BigDecimal("-1.11"), ingredient, new Region("BLR"));
+        ingredient.getIngredientPrices().add(ingredientPrice);
+        ingredient.getIngredientPrices().add(null);
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         List<String> messages = violations.stream()
                 .map((ConstraintViolation<Ingredient> violation) -> violation.getMessage())
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
-        assertTrue(messages.contains("Ingredient must have list of ingredientCurrencies without null elements."));
-        assertTrue(messages.contains("Ingredient_Currency's Price_Value '-1.11' must be positive."));
+        assertTrue(messages.contains("Ingredient must have list of ingredientPrice without null elements."));
+        assertTrue(messages.contains("Ingredient_Price's Price_Value '-1.11' must be positive."));
     }
 
     @Test
@@ -191,7 +191,7 @@ public class IngredientTest {
                 new Ingredient("курица", new Ownership("пользователь"), new UnitOfMeasure("литр")),
                 new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")));
         ingredient.getRecipeIngredients().add(recipeIngredient);
-        ingredient.getIngredientCurrencies().add(new IngredientCurrency(new BigDecimal("1.11"), ingredient, new Currency("руб", "BYN", "$", true)));
+        ingredient.getIngredientPrices().add(new IngredientPrice(new BigDecimal("1.11"), ingredient, new Region("BLR")));
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 0);
     }

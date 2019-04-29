@@ -17,8 +17,8 @@ import lombok.EqualsAndHashCode;
 @Setter
 @EqualsAndHashCode(exclude = {"id"})
 @Entity
-@Table(name = "INGREDIENT_CURRENCY")
-public class IngredientCurrency {
+@Table(name = "INGREDIENT_PRICE")
+public class IngredientPrice {
 
     private static final long serialVersionUID = 1115642071168789374L;
 
@@ -30,33 +30,33 @@ public class IngredientCurrency {
         @Column(name = "INGREDIENT_ID")
         private Long ingredientId;
 
-        @Column(name = "CURRENCY_ID")
-        private Byte currencyId;
+        @Column(name = "REGION_ID")
+        private Byte regionId;
 
         public Id() {
 
         }
 
-        public Id(Long ingredientId, Byte currencyId) {
+        public Id(Long ingredientId, Byte regionId) {
             this.ingredientId = ingredientId;
-            this.currencyId = currencyId;
+            this.regionId = regionId;
         }
 
         public boolean equals(Object o) {
             if (o != null && o instanceof Id) {
                 Id that = (Id) o;
-                return this.ingredientId.equals(that.ingredientId) && this.currencyId.equals(that.currencyId);
+                return this.ingredientId.equals(that.ingredientId) && this.regionId.equals(that.regionId);
             }
 
             return false;
         }
 
         public int hashCode() {
-            return ingredientId.hashCode() + currencyId.hashCode();
+            return ingredientId.hashCode() + regionId.hashCode();
         }
 
-        public Byte getCurrencyId() {
-            return currencyId;
+        public Byte getRegionId() {
+            return regionId;
         }
 
         public Long getIngredientId() {
@@ -72,30 +72,30 @@ public class IngredientCurrency {
     @Digits(
             integer = 7,
             fraction = 2,
-            message = "Ingredient_Currency's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+            message = "Ingredient_Price's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
-    @Positive(message = "Ingredient_Currency's Price_Value '${validatedValue}' must be positive.")
+    @Positive(message = "Ingredient_Price's Price_Value '${validatedValue}' must be positive.")
     private BigDecimal priceValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INGREDIENT_ID")
     @Valid
-    @NotNull(message = "Ingredient_Currency's Ingredient mustn't be null.")
+    @NotNull(message = "Ingredient_Price's Ingredient mustn't be null.")
     private Ingredient ingredient;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_ID")
+    @JoinColumn(name = "REGION_ID")
     @Valid
-    @NotNull(message = "Ingredient_Currency's Currency mustn't be null.")
-    private Currency currency;
+    @NotNull(message = "Ingredient_Price's Region mustn't be null.")
+    private Region region;
 
-    public IngredientCurrency(BigDecimal priceValue, Ingredient ingredient, Currency currency) {
+    public IngredientPrice(BigDecimal priceValue, Ingredient ingredient, Region region) {
         this.priceValue = priceValue;
         this.ingredient = ingredient;
-        this.currency = currency;
+        this.region = region;
     }
 
-    public IngredientCurrency(BigDecimal priceValue) {
+    public IngredientPrice(BigDecimal priceValue) {
         this.priceValue = priceValue;
     }
 

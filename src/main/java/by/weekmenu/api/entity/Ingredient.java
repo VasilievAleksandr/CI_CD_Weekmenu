@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id", "recipeIngredient"})
+@EqualsAndHashCode(exclude = {"id", "recipeIngredients", "ingredientPrices"})
 @Entity
 @Table(name = "INGREDIENT")
 public class Ingredient implements Serializable {
@@ -52,8 +52,8 @@ public class Ingredient implements Serializable {
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.PERSIST)
     private Set<
             @Valid
-            @NotNull(message = "Ingredient must have list of ingredientCurrencies without null elements.")
-                    IngredientCurrency> ingredientCurrencies = new HashSet<>();
+            @NotNull(message = "Ingredient must have list of ingredientPrice without null elements.")
+                    IngredientPrice> ingredientPrices = new HashSet<>();
 
     @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
     private Set<
