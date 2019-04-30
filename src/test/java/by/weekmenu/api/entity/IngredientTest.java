@@ -1,5 +1,6 @@
 package by.weekmenu.api.entity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,17 @@ public class IngredientTest {
     public void setUp() throws Exception {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
+    }
+
+    @Test
+    public void testIngerdientNameIsTooLong() {
+        String name = StringUtils.repeat("name", "/", 60);
+        Ingredient ingredient = new Ingredient(null, new Ownership("Пользователь"), new UnitOfMeasure("литр"));
+        ingredient.setName(name);
+        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
+        assertEquals(violations.size(), 1);
+        assertEquals("Ingredient's name '" + name + "' mustn't be more than '255' characters long.",
+                violations.iterator().next().getMessage());
     }
 
     @Test

@@ -31,6 +31,9 @@ public class Ingredient implements Serializable {
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "Ingredient must have name.")
+    @Size(  max = 255,
+            message = "Ingredient's name '${validatedValue}' mustn't be more than '{max}' characters long."
+    )
     private String name;
 
     @Column(name = "CALORIES")
