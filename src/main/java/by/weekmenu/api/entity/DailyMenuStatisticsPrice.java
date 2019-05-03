@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(exclude = "id")
 @Entity
 @Table(name = "DAILY_MENU_STATISTICS_CURRENCY")
-public class DailyMenuStatisticsCurrency implements Serializable {
+public class DailyMenuStatisticsPrice implements Serializable {
 
     private static final long serialVersionUID = 2012039841615767284L;
 
@@ -58,25 +58,25 @@ public class DailyMenuStatisticsCurrency implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DAILY_MENU_STATISTICS_ID")
     @Valid
-    @NotNull(message = "DailyMenuStatisticsCurrency must have dailyMenuStatistics.")
+    @NotNull(message = "DailyMenuStatisticsPrice must have dailyMenuStatistics.")
     private DailyMenuStatistics dailyMenuStatistics;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CURRENCY_ID")
     @Valid
-    @NotNull(message = "DailyMenuStatisticsCurrency must have currency.")
+    @NotNull(message = "DailyMenuStatisticsPrice must have currency.")
     private Currency currency;
 
     @Column(name = "PRICE_VALUE")
     @Digits(
             integer = 7,
             fraction = 2,
-            message = "Daily_Menu_Statistics_Currency's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+            message = "Daily_Menu_Statistics_Price's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
-    @Positive(message = "Daily_Menu_Statistics_Currency's Price_Value '${validatedValue}' must be positive.")
+    @Positive(message = "Daily_Menu_Statistics_Price's Price_Value '${validatedValue}' must be positive.")
     private BigDecimal priceValue;
 
-    public DailyMenuStatisticsCurrency(DailyMenuStatistics dailyMenuStatistics, Currency currency) {
+    public DailyMenuStatisticsPrice(DailyMenuStatistics dailyMenuStatistics, Currency currency) {
         this.dailyMenuStatistics = dailyMenuStatistics;
         this.currency = currency;
     }

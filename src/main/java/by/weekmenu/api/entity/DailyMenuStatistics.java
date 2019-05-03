@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -90,7 +89,7 @@ public class DailyMenuStatistics implements Serializable {
     private Set<
             @Valid
             @NotNull(message = "DailyMenuStatistics must have list of DailyMenuStatisticsCurrencies without null elements.")
-                    DailyMenuStatisticsCurrency> dailyMenuStatisticsCurrencies = new HashSet<>();
+                    DailyMenuStatisticsPrice> dailyMenuStatisticsPrice = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
