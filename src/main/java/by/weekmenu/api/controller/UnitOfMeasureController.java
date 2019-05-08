@@ -8,38 +8,41 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping({"/unitOfMeasure"})
+@RequestMapping({"/unitOfMeasures"})
 public class UnitOfMeasureController {
 
+    private final UnitOfMeasureServiceImp unitOfMeasureService;
+
     @Autowired
-    UnitOfMeasureServiceImp unitOfMeasureService;
+    public UnitOfMeasureController(UnitOfMeasureServiceImp unitOfMeasureService) {
+        this.unitOfMeasureService = unitOfMeasureService;
+    }
 
     @GetMapping
     public List<UnitOfMeasureDto> findAllUnitOfMeasure() {
         return unitOfMeasureService.findAll();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public UnitOfMeasureDto findUnitOfMeasureById(@PathVariable("id") Long id) {
         return unitOfMeasureService.findById(id);
     }
 
     @PostMapping
-    public List<UnitOfMeasureDto> addUnitOfMeasure(@RequestBody UnitOfMeasureDto unitOfMeasureDTO) {
-        unitOfMeasureService.save(unitOfMeasureDTO);
-        return unitOfMeasureService.findAll();
+    public UnitOfMeasureDto addUnitOfMeasure(@RequestBody UnitOfMeasureDto unitOfMeasureDTO) {
+        return unitOfMeasureService.save(unitOfMeasureDTO);
     }
 
-    @PutMapping("{id}")
-    public List<UnitOfMeasureDto> updateUnitOfMeasure(@RequestBody UnitOfMeasureDto unitOfMeasureDTO) {
-        unitOfMeasureService.update(unitOfMeasureDTO);
-        return unitOfMeasureService.findAll();
+    @PutMapping("/{id}")
+    public UnitOfMeasureDto updateUnitOfMeasure(@RequestBody UnitOfMeasureDto unitOfMeasureDTO, @PathVariable("id") Long id) {
+        UnitOfMeasureDto newUnitOfMeasureDto = unitOfMeasureService.findById(id);
+        if (newUnitOfMeasureDto != null) newUnitOfMeasureDto.setName(unitOfMeasureDTO.getName());
+        return unitOfMeasureService.update(unitOfMeasureDTO);
     }
 
-    @DeleteMapping("{id}")
-    public List<UnitOfMeasureDto> deleteUnitOfMeasureById(@PathVariable("id") Long id) {
-        unitOfMeasureService.delete(id);
-        return unitOfMeasureService.findAll();
+    @DeleteMapping("/{id}")
+    public void deleteUnitOfMeasureById(@PathVariable("id") Long id) {
+        UnitOfMeasureDto newUnitOfMeasureDto = unitOfMeasureService.findById(id);
+        if (newUnitOfMeasureDto != null) unitOfMeasureService.delete(id);
     }
 }
-
