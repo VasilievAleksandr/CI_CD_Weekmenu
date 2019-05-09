@@ -45,15 +45,26 @@ public class Region implements Serializable {
     @NotNull(message = "Region's Country mustn't be null.")
     private Country country;
 
-    @OneToMany(mappedBy = "regionWM", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "region", cascade = CascadeType.PERSIST)
     private Set<
             @Valid
-            @NotNull(message = "Region must have list of recipePrice without null elements.")
+            @NotNull(message = "Region must have list of recipePrices without null elements.")
                     RecipePrice> recipePrices = new HashSet<>();
 
     @OneToMany(mappedBy = "region", cascade = CascadeType.PERSIST)
     private Set<
             @Valid
-            @NotNull(message = "Region must have list of dailyMenuStatisticsPrice without null elements.")
+            @NotNull(message = "Region must have list of dailyMenuStatisticsPrices without null elements.")
                     DailyMenuStatisticsPrice> dailyMenuStatisticsPrices = new HashSet<>();
+
+    @OneToMany(mappedBy = "region", cascade = CascadeType.PERSIST)
+    private Set<
+            @Valid
+            @NotNull(message = "Region must have list of ingredientPrices without null elements.")
+                    IngredientPrice> ingredientPrices = new HashSet<>();
+
+    public Region(String name, Country country) {
+        this.name = name;
+        this.country = country;
+    }
 }

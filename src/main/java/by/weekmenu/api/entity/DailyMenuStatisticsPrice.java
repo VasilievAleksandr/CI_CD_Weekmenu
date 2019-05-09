@@ -30,25 +30,25 @@ public class DailyMenuStatisticsPrice implements Serializable {
         @Column(name = "DAILY_MENU_STATISTICS_ID")
         private Long dailyMenuStatisticsId;
 
-        @Column(name = "CURRENCY_ID")
-        private Byte currencyId;
+        @Column(name = "REGION_ID")
+        private Byte regionId;
 
-        public Id(Long dailyMenuStatisticsId, Byte currencyId) {
+        public Id(Long dailyMenuStatisticsId, Byte regionId) {
             this.dailyMenuStatisticsId = dailyMenuStatisticsId;
-            this.currencyId = currencyId;
+            this.regionId = regionId;
         }
 
         public boolean equals(Object o) {
             if (o != null && o instanceof Id) {
                 Id that = (Id) o;
-                return this.dailyMenuStatisticsId.equals(that.dailyMenuStatisticsId) && this.currencyId.equals(that.currencyId);
+                return this.dailyMenuStatisticsId.equals(that.dailyMenuStatisticsId) && this.regionId.equals(that.regionId);
             }
 
             return false;
         }
 
         public int hashCode() {
-            return dailyMenuStatisticsId.hashCode() + currencyId.hashCode();
+            return dailyMenuStatisticsId.hashCode() + regionId.hashCode();
         }
     }
 
@@ -56,16 +56,20 @@ public class DailyMenuStatisticsPrice implements Serializable {
     private Id id = new Id();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DAILY_MENU_STATISTICS_ID")
+    @JoinColumn(name = "DAILY_MENU_STATISTICS_ID",
+            updatable = false,
+            insertable = false)
     @Valid
     @NotNull(message = "DailyMenuStatisticsPrice must have dailyMenuStatistics.")
     private DailyMenuStatistics dailyMenuStatistics;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_ID")
+    @JoinColumn(name = "REGION_ID",
+            updatable = false,
+            insertable = false)
     @Valid
-    @NotNull(message = "DailyMenuStatisticsPrice must have currency.")
-    private Currency currency;
+    @NotNull(message = "DailyMenuStatisticsPrice must have region.")
+    private Region region;
 
     @Column(name = "PRICE_VALUE")
     @Digits(
@@ -76,8 +80,8 @@ public class DailyMenuStatisticsPrice implements Serializable {
     @Positive(message = "Daily_Menu_Statistics_Price's Price_Value '${validatedValue}' must be positive.")
     private BigDecimal priceValue;
 
-    public DailyMenuStatisticsPrice(DailyMenuStatistics dailyMenuStatistics, Currency currency) {
+    public DailyMenuStatisticsPrice(DailyMenuStatistics dailyMenuStatistics, Region region) {
         this.dailyMenuStatistics = dailyMenuStatistics;
-        this.currency = currency;
+        this.region = region;
     }
 }

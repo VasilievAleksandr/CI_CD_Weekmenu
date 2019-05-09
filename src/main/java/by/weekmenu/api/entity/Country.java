@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(exclude = {"id","regions"})
 @Entity
 @Table(name = "COUNTRY")
 public class Country implements Serializable {
@@ -32,13 +32,13 @@ public class Country implements Serializable {
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "Country must have name.")
     @Size(max = 255,
-            message = "UnitOfMeasure's name '${validatedValue}' mustn't be more than '{max}' characters long."
+            message = "Country's name '${validatedValue}' mustn't be more than '{max}' characters long."
     )
     private String name;
 
     @Column(name = "ALPHA_CODE_2", unique = true)
     @NotBlank(message = "Country must have alphaCode2.")
-    @Size(max = 255,
+    @Size(max = 2,
             message = "Country's alphaCode2 '${validatedValue}' mustn't be more than '{max}' characters long."
     )
     private String alphaCode2;
@@ -54,6 +54,12 @@ public class Country implements Serializable {
     @OneToMany(mappedBy = "country", cascade = CascadeType.PERSIST)
     private Set<
             @Valid
-            @NotNull(message = "Country must have list of regionWM without null elements.")
+            @NotNull(message = "Country must have list of regions without null elements.")
                     Region> regions = new HashSet<>();
+
+    public Country(String name, String alphaCode2, Currency currency) {
+        this.name = name;
+        this.alphaCode2 = alphaCode2;
+        this.currency = currency;
+    }
 }
