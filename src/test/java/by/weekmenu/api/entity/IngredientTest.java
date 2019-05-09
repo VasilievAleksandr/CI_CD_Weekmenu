@@ -27,6 +27,17 @@ public class IngredientTest {
         validator = validatorFactory.getValidator();
     }
 
+    private Region getRegion() {
+        Country country = new Country("Беларусь", "BY", getCurrency());
+        country.getRegions().add(new Region("Минская область", country));
+
+        return new Region("Минский район", country);
+    }
+
+    private Currency getCurrency() {
+        return new Currency("руб.", "BYN", true);
+    }
+
     @Test
     public void testIngredientNameIsNull() {
         Ingredient ingredient = new Ingredient(null, new Ownership("Пользователь"), new UnitOfMeasure("литр"));
@@ -116,18 +127,18 @@ public class IngredientTest {
     }
 
     @Test
-    public void testHasInvalidIngredientCurrencies() {
+    public void testHasInvalidIngredientPrice() {
         Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), new UnitOfMeasure("литр"));
-        IngredientCurrency ingredientCurrency = new IngredientCurrency(new BigDecimal("-1.11"), ingredient, new Currency("руб", "BYN", "$", true));
-        ingredient.getIngredientCurrencies().add(ingredientCurrency);
-        ingredient.getIngredientCurrencies().add(null);
+        IngredientPrice ingredientPrice = new IngredientPrice(new BigDecimal("-1.11"), ingredient, getRegion());
+        ingredient.getIngredientPrices().add(ingredientPrice);
+        ingredient.getIngredientPrices().add(null);
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         List<String> messages = violations.stream()
                 .map((ConstraintViolation<Ingredient> violation) -> violation.getMessage())
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
-        assertTrue(messages.contains("Ingredient must have list of ingredientCurrencies without null elements."));
-        assertTrue(messages.contains("Ingredient_Currency's Price_Value '-1.11' must be positive."));
+        assertTrue(messages.contains("Ingredient must have list of ingredientPrices without null elements."));
+        assertTrue(messages.contains("Ingredient_Price's Price_Value '-1.11' must be positive."));
     }
 
     @Test
@@ -185,13 +196,13 @@ public class IngredientTest {
 
     @Test
     public void testIngredientIsValid() {
-        Ingredient ingredient = new Ingredient("молоко",100, 100, 100, 100,
+        Ingredient ingredient = new Ingredient("молоко", 100, 100, 100, 100,
                 new UnitOfMeasure("литр"), new Ownership("Пользователь"));
         RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111.12"),
                 new Ingredient("курица", new Ownership("пользователь"), new UnitOfMeasure("литр")),
                 new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")));
         ingredient.getRecipeIngredients().add(recipeIngredient);
-        ingredient.getIngredientCurrencies().add(new IngredientCurrency(new BigDecimal("1.11"), ingredient, new Currency("руб", "BYN", "$", true)));
+        ingredient.getIngredientPrices().add(new IngredientPrice(new BigDecimal("1.11"), ingredient, getRegion()));
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 0);
     }

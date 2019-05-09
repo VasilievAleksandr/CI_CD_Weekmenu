@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -70,8 +69,8 @@ public class Recipe implements Serializable {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.PERSIST)
     private Set<
             @Valid
-            @NotNull(message = "Recipe must have list of recipeCurrencies without null elements.")
-                    RecipeCurrency> recipeCurrencies = new HashSet<>();
+            @NotNull(message = "Recipe must have list of recipePrices without null elements.")
+                    RecipePrice> recipePrices = new HashSet<>();
 
     @OneToMany(mappedBy = "recipe")
     private Set<

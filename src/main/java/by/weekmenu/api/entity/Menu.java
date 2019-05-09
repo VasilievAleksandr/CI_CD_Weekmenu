@@ -10,14 +10,13 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id", "menuRecipes", "dailyMenuStatistics", "menuCurrencies"})
+@EqualsAndHashCode(exclude = {"id", "menuRecipes", "dailyMenuStatistics", "menuPrices"})
 @Entity
 @Table(name = "MENU")
 public class Menu implements Serializable {
@@ -62,8 +61,8 @@ public class Menu implements Serializable {
     @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
     private Set<
             @Valid
-            @NotNull(message = "Menu must have list of menuCurrencies without null elements.")
-                    MenuCurrency> menuCurrencies = new HashSet<>();
+            @NotNull(message = "Menu must have list of menuPrices without null elements.")
+                    MenuPrice> menuPrices = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "MENU_CATEGORY_ID")

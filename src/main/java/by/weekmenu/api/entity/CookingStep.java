@@ -33,6 +33,9 @@ public class CookingStep implements Serializable {
 
     @Column(name = "DESCRIPTION")
     @NotBlank(message = "Cooking Step must have field 'description' filled.")
+    @Size(max = 2000,
+            message = "CookingStep's description '${validatedValue}' mustn't be more than '{max}' characters long."
+    )
     private String description;
 
     @Column(name = "IMAGE_LINK")
