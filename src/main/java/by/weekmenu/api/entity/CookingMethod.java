@@ -19,7 +19,7 @@ import java.util.Set;
 @Setter
 @EqualsAndHashCode(exclude = {"id", "recipes"})
 @Entity
-@Table(name = "COOKING_METHOD" )
+@Table(name = "COOKING_METHOD")
 public class CookingMethod implements Serializable {
 
     private static final long serialVersionUID = 1003642071168789374L;
