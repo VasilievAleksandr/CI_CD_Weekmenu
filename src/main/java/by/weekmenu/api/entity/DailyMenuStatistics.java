@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = "id")
+@EqualsAndHashCode(exclude = {"id","dailyMenuStatisticsPrices"})
 @Entity
 @Table(name = "DAILY_MENU_STATISTICS")
 public class DailyMenuStatistics implements Serializable {
@@ -89,7 +89,7 @@ public class DailyMenuStatistics implements Serializable {
     private Set<
             @Valid
             @NotNull(message = "DailyMenuStatistics must have list of DailyMenuStatisticsCurrencies without null elements.")
-                    DailyMenuStatisticsPrice> dailyMenuStatisticsPrice = new HashSet<>();
+                    DailyMenuStatisticsPrice> dailyMenuStatisticsPrices = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(

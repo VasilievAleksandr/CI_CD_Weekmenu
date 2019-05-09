@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = "id")
+@EqualsAndHashCode(exclude = {"id","countries"})
 @Entity
 @Table(name = "CURRENCY")
 public class Currency implements Serializable {

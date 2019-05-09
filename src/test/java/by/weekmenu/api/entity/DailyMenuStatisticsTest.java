@@ -8,13 +8,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class DailyMenuStatisticsTest {
 
@@ -25,6 +21,17 @@ public class DailyMenuStatisticsTest {
     public void setUp() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
+    }
+
+    private Region getRegion() {
+        Country country = new Country("Беларусь", "BY", getCurrency());
+        country.getRegions().add(new Region("Минская область", country));
+
+        return new Region("Минский район", country);
+    }
+
+    private Currency getCurrency() {
+        return new Currency("руб.", "BYN", true);
     }
 
     @Test
@@ -78,19 +85,13 @@ public class DailyMenuStatisticsTest {
     }
 
     @Test
-    public void testHasInvalidDailyMenuStatisticsCurrencies() {
+    public void testHasInvalidDailyMenuStatisticsPrice() {
         DailyMenuStatistics dailyMenuStatistics = new DailyMenuStatistics(new DayOfWeek(), new Menu());
-        DailyMenuStatisticsCurrency dailyMenuStatisticsCurrency = new DailyMenuStatisticsCurrency(dailyMenuStatistics,
-                new Currency("  ", "BYN", "$", true));
-        dailyMenuStatistics.getDailyMenuStatisticsCurrencies().add(dailyMenuStatisticsCurrency);
-        dailyMenuStatistics.getDailyMenuStatisticsCurrencies().add(null);
+        dailyMenuStatistics.getDailyMenuStatisticsPrices().add(null);
         Set<ConstraintViolation<DailyMenuStatistics>> violations = validator.validate(dailyMenuStatistics);
-        List<String> messages = violations.stream()
-                .map((ConstraintViolation<DailyMenuStatistics> violation) -> violation.getMessage())
-                .collect(Collectors.toList());
-        assertEquals(violations.size(), 2);
-        assertTrue(messages.contains("DailyMenuStatistics must have list of DailyMenuStatisticsCurrencies without null elements."));
-        assertTrue(messages.contains("Currency must have name."));
+        assertEquals(violations.size(), 1);
+        assertEquals("DailyMenuStatistics must have list of DailyMenuStatisticsCurrencies without null elements.",
+                violations.iterator().next().getMessage());
     }
 
     @Test
@@ -120,9 +121,9 @@ public class DailyMenuStatisticsTest {
         dailyMenuStatistics.setFats(200);
         dailyMenuStatistics.setProteins(0);
         dailyMenuStatistics.setCalories(400);
-        dailyMenuStatistics.getDailyMenuStatisticsCurrencies()
-                .add(new DailyMenuStatisticsCurrency(new DailyMenuStatistics(new DayOfWeek(WeekDay.MONDAY), new Menu())
-                        , new Currency("руб.", "BYN", "$", true)));
+        dailyMenuStatistics.getDailyMenuStatisticsPrices()
+                .add(new DailyMenuStatisticsPrice(new DailyMenuStatistics(new DayOfWeek(WeekDay.MONDAY), new Menu())
+                        , getRegion()));
         Set<ConstraintViolation<DailyMenuStatistics>> violations = validator.validate(dailyMenuStatistics);
         assertEquals(violations.size(), 0);
     }
