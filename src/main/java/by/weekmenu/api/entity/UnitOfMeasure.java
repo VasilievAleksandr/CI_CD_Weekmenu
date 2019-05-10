@@ -1,16 +1,12 @@
 package by.weekmenu.api.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-
-import lombok.EqualsAndHashCode;
 
 
 @NoArgsConstructor
@@ -19,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(exclude = {"id"})
 @Entity
 @Table(name = "UNIT_OF_MEASURE")
-public class UnitOfMeasure implements Serializable {
+public class UnitOfMeasure {
 
     private static final long serialVersionUID = 1000642071168789374L;
 
