@@ -34,12 +34,6 @@ public class UnitOfMeasureServiceImp implements CrudService<UnitOfMeasureDto, Lo
 
     @Override
     @Transactional
-    public UnitOfMeasureDto update(UnitOfMeasureDto entityDto) {
-        return convertToDto(unitOfMeasureRepository.save(convertToEntity(entityDto)));
-    }
-
-    @Override
-    @Transactional
     public void delete(Long id) {
         unitOfMeasureRepository.deleteById(id);
     }
