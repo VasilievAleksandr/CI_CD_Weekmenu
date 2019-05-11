@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Setter
 @EqualsAndHashCode(exclude = "id")
 @Entity
-@Table(name = "DAILY_MENU_STATISTICS_CURRENCY")
+@Table(name = "DAILY_MENU_STATISTICS_PRICE")
 public class DailyMenuStatisticsPrice implements Serializable {
 
     private static final long serialVersionUID = 2012039841615767284L;
@@ -57,6 +57,9 @@ public class DailyMenuStatisticsPrice implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DAILY_MENU_STATISTICS_ID",
+            updatable = false,
+            insertable = false)
+    @JoinColumn(name = "REGION_ID",
             updatable = false,
             insertable = false)
     @Valid

@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id","countries"})
+@EqualsAndHashCode(exclude = {"id", "countries"})
 @Entity
 @Table(name = "CURRENCY")
 public class Currency implements Serializable {
@@ -31,7 +31,9 @@ public class Currency implements Serializable {
     @NotBlank(message = "Currency must have name.")
     private String name;
 
-    @Column(name = "CODE", unique = true)
+    @Column(name = "CODE", unique = true,
+            updatable = false,
+            insertable = false)
     @NotBlank(message = "Currency must have code.")
     @Size(
             min = 3,

@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Setter
 @EqualsAndHashCode(exclude = {"id"})
 @Entity
-@Table(name = "RECIPE_REGION")
+@Table(name = "RECIPE_PRICE")
 public class RecipePrice {
     private static final long serialVersionUID = 1115642071168789375L;
 

@@ -1,17 +1,17 @@
 package by.weekmenu.api.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import javax.validation.constraints.*;
-
-import lombok.EqualsAndHashCode;
 
 @NoArgsConstructor
 @Getter
@@ -48,7 +48,7 @@ public class RecipeIngredient implements Serializable {
                 Id that = (Id) o;
                 return this.ingredientId.equals(that.ingredientId) && this.recipeId.equals(that.recipeId);
             }
-            
+
             return false;
         }
 
@@ -59,7 +59,7 @@ public class RecipeIngredient implements Serializable {
         public Long getRecipeId() {
             return recipeId;
         }
-        
+
         public Long getIngredientId() {
             return ingredientId;
         }
@@ -68,7 +68,7 @@ public class RecipeIngredient implements Serializable {
     @EmbeddedId
     private Id id = new Id();
 
-    
+
     @Column(name = "QTY")
     @Digits(
             integer = 5,
@@ -78,14 +78,18 @@ public class RecipeIngredient implements Serializable {
     @Positive(message = "RecipeIngredient's qty '${validatedValue}' must be positive.")
     private BigDecimal qty;
 
-    @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "INGREDIENT_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "INGREDIENT_ID",
+            insertable = false,
+            updatable = false)
     @Valid
     @NotNull(message = "RecipeIngredient's Ingredient mustn't be null.")
     private Ingredient ingredient;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "RECIPE_ID")
+    @JoinColumn(name = "RECIPE_ID",
+            insertable = false,
+            updatable = false)
     @Valid
     @NotNull(message = "RecipeIngredient's Recipe mustn't be null.")
     private Recipe recipe;
