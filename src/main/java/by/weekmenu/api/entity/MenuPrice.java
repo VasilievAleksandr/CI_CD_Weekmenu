@@ -34,9 +34,9 @@ public class MenuPrice implements Serializable {
         private Long menuId;
 
         @Column(name = "REGION_ID")
-        private Byte regionId;
+        private Long regionId;
 
-        public Id(Long menuId, Byte regionId) {
+        public Id(Long menuId, Long regionId) {
             this.menuId = menuId;
             this.regionId = regionId;
         }

@@ -108,12 +108,12 @@ public class CountryTest {
         Country country = new Country("Беларусь", "BY", null);
         Set<ConstraintViolation<Country>> violations = validator.validate(country);
         assertEquals(violations.size(), 1);
-        assertEquals("Currency's Country mustn't be null.",
+        assertEquals("Country's currency mustn't be null.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
-    public void testHasInvalidRecipes() {
+    public void testHasInvalidRegion() {
         Country country = new Country("Беларусь", "BY", getCurrency());
         country.getRegions().add(null);
         Set<ConstraintViolation<Country>> violations = validator.validate(country);

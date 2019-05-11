@@ -31,9 +31,9 @@ public class DailyMenuStatisticsPrice implements Serializable {
         private Long dailyMenuStatisticsId;
 
         @Column(name = "REGION_ID")
-        private Byte regionId;
+        private Long regionId;
 
-        public Id(Long dailyMenuStatisticsId, Byte regionId) {
+        public Id(Long dailyMenuStatisticsId, Long regionId) {
             this.dailyMenuStatisticsId = dailyMenuStatisticsId;
             this.regionId = regionId;
         }

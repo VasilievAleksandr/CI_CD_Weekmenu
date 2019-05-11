@@ -48,7 +48,7 @@ public class Country implements Serializable {
             updatable = false,
             insertable = false)
     @Valid
-    @NotNull(message = "Currency's Country mustn't be null.")
+    @NotNull(message = "Country's currency mustn't be null.")
     private Currency currency;
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.PERSIST)
