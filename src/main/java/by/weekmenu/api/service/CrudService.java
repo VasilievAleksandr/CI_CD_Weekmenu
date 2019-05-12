@@ -9,8 +9,6 @@ public interface CrudService<E,PK extends Serializable> {
 
     E findById(PK id);
 
-    E update(E entityDto);
-
     void delete(PK id);
 
     List<E> findAll();

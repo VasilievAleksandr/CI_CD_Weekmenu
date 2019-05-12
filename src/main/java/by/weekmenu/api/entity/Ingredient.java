@@ -1,22 +1,16 @@
 package by.weekmenu.api.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.validation.Valid;
-
-
-import lombok.EqualsAndHashCode;
 
 @NoArgsConstructor
 @Getter
@@ -96,11 +90,6 @@ public class Ingredient implements Serializable {
         this.ownership = ownership;
     }
 
-    public Ingredient(String name) {
-        this.name = name;
-
-    }
-
     public Ingredient(Integer calories, Integer proteins, Integer fats, Integer carbs) {
         this.calories = calories;
         this.proteins = proteins;
@@ -113,5 +102,4 @@ public class Ingredient implements Serializable {
         this.ownership = ownership;
         this.unitOfMeasure = unitOfMeasure;
     }
-
 }

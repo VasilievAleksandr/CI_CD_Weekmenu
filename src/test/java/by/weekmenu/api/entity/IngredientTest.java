@@ -149,7 +149,7 @@ public class IngredientTest {
                 .map((ConstraintViolation<Ingredient> violation) -> violation.getMessage())
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
-        assertTrue(messages.contains("Ingredient must have list of ingredientPrices without null elements."));
+        assertTrue(messages.contains("Ingredient must have list of ingredientPrice without null elements."));
         assertTrue(messages.contains("Ingredient_Price's Price_Value '-1.11' must be positive."));
     }
 
