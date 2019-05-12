@@ -1,5 +1,6 @@
 package by.weekmenu.api.entity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +50,16 @@ public class UnitOfMeasureTest {
         Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
         assertEquals(violations.size(), 1);
         assertEquals("UnitOfMeasure must have name.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testUnitOfMeasureNameIsTooLong() {
+        String name = StringUtils.repeat("name", "/", 60);
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure(name);
+        Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
+        assertEquals(violations.size(), 1);
+        assertEquals("UnitOfMeasure's name '" + name + "' mustn't be more than '255' characters long.",
                 violations.iterator().next().getMessage());
     }
 

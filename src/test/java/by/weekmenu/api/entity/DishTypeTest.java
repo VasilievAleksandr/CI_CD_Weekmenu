@@ -1,5 +1,6 @@
 package by.weekmenu.api.entity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +49,17 @@ public class DishTypeTest {
         Set<ConstraintViolation<DishType>> violations = validator.validate(dishType);
         assertEquals(violations.size(), 1);
         assertEquals("DishType must have name.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testNameIsTooLong() {
+        DishType dishType = new DishType("", true);
+        String name = StringUtils.repeat("очень_длинное_название_блюда", 20);
+        dishType.setName(name);
+        Set<ConstraintViolation<DishType>> violations = validator.validate(dishType);
+        assertEquals(violations.size(), 1);
+        assertEquals("DishType's name '" + name +"' must be '255' characters long",
                 violations.iterator().next().getMessage());
     }
 

@@ -1,5 +1,6 @@
 package by.weekmenu.api.entity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,6 +82,17 @@ public class MenuTest {
     }
 
     @Test
+    public void testNameIsTooLong() {
+        Menu menu = new Menu("", true, new Ownership("Пользователь"));
+        String name = StringUtils.repeat("очень_длинное_название_меню", 20);
+        menu.setName(name);
+        Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
+        assertEquals(violations.size(), 1);
+        assertEquals("Menu's name '" + name +"' must be '255' characters long",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
     public void testCaloriesAreNegative() {
         Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
         menu.setCalories(-100);
@@ -147,7 +159,7 @@ public class MenuTest {
         menu.getMenuPrices().add(null);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         List<String> messages = violations.stream()
-                .map((ConstraintViolation<Menu> violation) -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
         assertTrue(messages.contains("Menu must have list of menuPrices without null elements."));
@@ -161,7 +173,7 @@ public class MenuTest {
         menu.getMenuRecipes().add(null);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         List<String> messages = violations.stream()
-                .map((ConstraintViolation<Menu> violation) -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 3);
         assertTrue(messages.contains("MenuRecipe must have menu."));
@@ -204,7 +216,7 @@ public class MenuTest {
         menu.getDailyMenuStatistics().add(null);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         List<String> messages = violations.stream()
-                .map((ConstraintViolation<Menu> violation) -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
         assertTrue(messages.contains("DailyMenuStatistics must have have dayOfWeek."));

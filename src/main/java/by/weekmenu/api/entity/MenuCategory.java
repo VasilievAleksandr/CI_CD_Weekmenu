@@ -29,6 +29,7 @@ public class MenuCategory implements Serializable {
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "MenuCategory must have name.")
+    @Size(max = 255, message = "MenuCategory's name '${validatedValue}' must be '{max}' characters long")
     private String name;
 
     @Column(name = "PRIORITY")

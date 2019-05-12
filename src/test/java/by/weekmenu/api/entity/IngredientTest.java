@@ -1,5 +1,6 @@
 package by.weekmenu.api.entity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,17 @@ public class IngredientTest {
 
     private Currency getCurrency() {
         return new Currency("руб.", "BYN", true);
+    }
+
+    @Test
+    public void testIngerdientNameIsTooLong() {
+        String name = StringUtils.repeat("name", "/", 60);
+        Ingredient ingredient = new Ingredient(null, new Ownership("Пользователь"), new UnitOfMeasure("литр"));
+        ingredient.setName(name);
+        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
+        assertEquals(violations.size(), 1);
+        assertEquals("Ingredient's name '" + name + "' mustn't be more than '255' characters long.",
+                violations.iterator().next().getMessage());
     }
 
     @Test
@@ -199,7 +211,7 @@ public class IngredientTest {
         Ingredient ingredient = new Ingredient("молоко", 100, 100, 100, 100,
                 new UnitOfMeasure("литр"), new Ownership("Пользователь"));
         RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111.12"),
-                new Ingredient("курица", new Ownership("пользователь"), new UnitOfMeasure("литр")),
+                new Ingredient("курица", new Ownership("пользователь"), new UnitOfMeasure("килограмм")),
                 new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")));
         ingredient.getRecipeIngredients().add(recipeIngredient);
         ingredient.getIngredientPrices().add(new IngredientPrice(new BigDecimal("1.11"), ingredient, getRegion()));

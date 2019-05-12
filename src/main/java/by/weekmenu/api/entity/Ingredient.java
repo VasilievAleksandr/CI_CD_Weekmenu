@@ -1,6 +1,5 @@
 package by.weekmenu.api.entity;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +13,10 @@ import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.validation.Valid;
+
+
+import lombok.EqualsAndHashCode;
 
 @NoArgsConstructor
 @Getter
@@ -32,6 +35,9 @@ public class Ingredient implements Serializable {
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "Ingredient must have name.")
+    @Size(  max = 255,
+            message = "Ingredient's name '${validatedValue}' mustn't be more than '{max}' characters long."
+    )
     private String name;
 
     @Column(name = "CALORIES")
@@ -53,7 +59,7 @@ public class Ingredient implements Serializable {
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.PERSIST)
     private Set<
             @Valid
-            @NotNull(message = "Ingredient must have list of ingredientPrices without null elements.")
+            @NotNull(message = "Ingredient must have list of ingredientPrice without null elements.")
                     IngredientPrice> ingredientPrices = new HashSet<>();
 
     @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
@@ -90,17 +96,22 @@ public class Ingredient implements Serializable {
         this.ownership = ownership;
     }
 
+    public Ingredient(String name) {
+        this.name = name;
+
+    }
+
+    public Ingredient(Integer calories, Integer proteins, Integer fats, Integer carbs) {
+        this.calories = calories;
+        this.proteins = proteins;
+        this.fats = fats;
+        this.carbs = carbs;
+    }
+
     public Ingredient(String name, Ownership ownership, UnitOfMeasure unitOfMeasure) {
         this.name = name;
         this.ownership = ownership;
         this.unitOfMeasure = unitOfMeasure;
     }
 
-    public Ingredient(Integer calories, Integer proteins, Integer fats, Integer carbs
-    ) {
-        this.calories = calories;
-        this.proteins = proteins;
-        this.fats = fats;
-        this.carbs = carbs;
-    }
 }

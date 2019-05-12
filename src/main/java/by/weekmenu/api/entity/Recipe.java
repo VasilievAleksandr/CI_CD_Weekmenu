@@ -29,6 +29,7 @@ public class Recipe implements Serializable {
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "Recipe must have name.")
+    @Size(max = 255, message = "Recipe's name '${validatedValue}' must be '{max}' characters long")
     private String name;
 
     @Column(name = "COOKING_TIME")
