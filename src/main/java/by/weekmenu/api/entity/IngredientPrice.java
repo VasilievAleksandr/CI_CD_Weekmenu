@@ -32,13 +32,13 @@ public class IngredientPrice {
         private Long ingredientId;
 
         @Column(name = "REGION_ID")
-        private Byte regionId;
+        private Long regionId;
 
         public Id() {
 
         }
 
-        public Id(Long ingredientId, Byte regionId) {
+        public Id(Long ingredientId, Long regionId) {
             this.ingredientId = ingredientId;
             this.regionId = regionId;
         }
@@ -56,7 +56,7 @@ public class IngredientPrice {
             return ingredientId.hashCode() + regionId.hashCode();
         }
 
-        public Byte getRegionId() {
+        public Long getRegionId() {
             return regionId;
         }
 
