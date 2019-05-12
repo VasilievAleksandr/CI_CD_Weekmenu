@@ -107,7 +107,7 @@ public class IngredientPriceTest {
     }
 
     @Test
-    public void testIngredientPriceIsValid() {
+    public void testIngredientCurrencyIsValid() {
         IngredientPrice ingredientPrice = new IngredientPrice(new BigDecimal("111"),
                 new Ingredient("курица", new Ownership("пользователь"), new UnitOfMeasure("литр")),
                 getRegion());
