@@ -1,5 +1,6 @@
 package by.weekmenu.api.entity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +57,16 @@ public class OwnershipTest {
                 violations.iterator().next().getMessage());
     }
 
+    @Test
+    public void testNameIsTooLong() {
+        Ownership ownership = new Ownership();
+        String name = StringUtils.repeat("очень_длинное_название_имени", 20);
+        ownership.setName(name);
+        Set<ConstraintViolation<Ownership>> violations = validator.validate(ownership);
+        assertEquals(violations.size(), 1);
+        assertEquals("Ownership's name '" + name +"' mustn't be more than '255' characters long.",
+                violations.iterator().next().getMessage());
+    }
     @Test
     public void testOwnershipIsValid() {
         Ownership ownership = new Ownership("Пользователь");
