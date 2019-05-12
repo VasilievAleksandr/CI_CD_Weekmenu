@@ -18,8 +18,8 @@ import java.math.BigDecimal;
 @Setter
 @EqualsAndHashCode(exclude = "id")
 @Entity
-@Table(name = "MENU_CURRENCY")
-public class MenuCurrency implements Serializable {
+@Table(name = "MENU_PRICE")
+public class MenuPrice implements Serializable {
 
     private static final long serialVersionUID = -5276633775282339542L;
 
@@ -33,25 +33,25 @@ public class MenuCurrency implements Serializable {
         @Column(name = "MENU__ID")
         private Long menuId;
 
-        @Column(name = "CURRENCY_ID")
-        private Byte currencyId;
+        @Column(name = "REGION_ID")
+        private Long regionId;
 
-        public Id(Long menuId, Byte currencyId) {
+        public Id(Long menuId, Long regionId) {
             this.menuId = menuId;
-            this.currencyId = currencyId;
+            this.regionId = regionId;
         }
 
         public boolean equals(Object o) {
             if (o != null && o instanceof Id) {
                 Id that = (Id) o;
-                return this.menuId.equals(that.menuId) && this.currencyId.equals(that.currencyId);
+                return this.menuId.equals(that.menuId) && this.regionId.equals(that.regionId);
             }
 
             return false;
         }
 
         public int hashCode() {
-            return menuId.hashCode() + currencyId.hashCode();
+            return menuId.hashCode() + regionId.hashCode();
         }
     }
 
@@ -59,28 +59,32 @@ public class MenuCurrency implements Serializable {
     private Id id = new Id();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MENU_ID")
+    @JoinColumn(name = "MENU_ID",
+            updatable = false,
+            insertable = false)
     @Valid
-    @NotNull(message = "MenuCurrency must have menu.")
+    @NotNull(message = "MenuPrice must have menu.")
     private Menu menu;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_ID")
+    @JoinColumn(name = "REGION_ID",
+            updatable = false,
+            insertable = false)
     @Valid
-    @NotNull(message = "MenuCurrency must have currency.")
-    private Currency currency;
+    @NotNull(message = "MenuPrice must have region.")
+    private Region region;
 
     @Column(name = "PRICE_VALUE")
     @Digits(
             integer = 7,
             fraction = 2,
-            message = "Menu_Currency's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+            message = "Menu_Price's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
-    @Positive(message = "Menu_Currency's Price_Value '${validatedValue}' must be positive.")
+    @Positive(message = "Menu_Price's Price_Value '${validatedValue}' must be positive.")
     private BigDecimal priceValue;
 
-    public MenuCurrency(Menu menu, Currency currency) {
+    public MenuPrice(Menu menu, Region region) {
         this.menu = menu;
-        this.currency = currency;
+        this.region = region;
     }
 }

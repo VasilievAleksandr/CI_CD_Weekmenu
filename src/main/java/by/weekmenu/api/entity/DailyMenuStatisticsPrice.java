@@ -15,8 +15,8 @@ import java.math.BigDecimal;
 @Setter
 @EqualsAndHashCode(exclude = "id")
 @Entity
-@Table(name = "DAILY_MENU_STATISTICS_CURRENCY")
-public class DailyMenuStatisticsCurrency implements Serializable {
+@Table(name = "DAILY_MENU_STATISTICS_PRICE")
+public class DailyMenuStatisticsPrice implements Serializable {
 
     private static final long serialVersionUID = 2012039841615767284L;
 
@@ -30,25 +30,25 @@ public class DailyMenuStatisticsCurrency implements Serializable {
         @Column(name = "DAILY_MENU_STATISTICS_ID")
         private Long dailyMenuStatisticsId;
 
-        @Column(name = "CURRENCY_ID")
-        private Byte currencyId;
+        @Column(name = "REGION_ID")
+        private Long regionId;
 
-        public Id(Long dailyMenuStatisticsId, Byte currencyId) {
+        public Id(Long dailyMenuStatisticsId, Long regionId) {
             this.dailyMenuStatisticsId = dailyMenuStatisticsId;
-            this.currencyId = currencyId;
+            this.regionId = regionId;
         }
 
         public boolean equals(Object o) {
             if (o != null && o instanceof Id) {
                 Id that = (Id) o;
-                return this.dailyMenuStatisticsId.equals(that.dailyMenuStatisticsId) && this.currencyId.equals(that.currencyId);
+                return this.dailyMenuStatisticsId.equals(that.dailyMenuStatisticsId) && this.regionId.equals(that.regionId);
             }
 
             return false;
         }
 
         public int hashCode() {
-            return dailyMenuStatisticsId.hashCode() + currencyId.hashCode();
+            return dailyMenuStatisticsId.hashCode() + regionId.hashCode();
         }
     }
 
@@ -56,28 +56,35 @@ public class DailyMenuStatisticsCurrency implements Serializable {
     private Id id = new Id();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DAILY_MENU_STATISTICS_ID")
+    @JoinColumn(name = "DAILY_MENU_STATISTICS_ID",
+            updatable = false,
+            insertable = false)
+    @JoinColumn(name = "REGION_ID",
+            updatable = false,
+            insertable = false)
     @Valid
-    @NotNull(message = "DailyMenuStatisticsCurrency must have dailyMenuStatistics.")
+    @NotNull(message = "DailyMenuStatisticsPrice must have dailyMenuStatistics.")
     private DailyMenuStatistics dailyMenuStatistics;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_ID")
+    @JoinColumn(name = "REGION_ID",
+            updatable = false,
+            insertable = false)
     @Valid
-    @NotNull(message = "DailyMenuStatisticsCurrency must have currency.")
-    private Currency currency;
+    @NotNull(message = "DailyMenuStatisticsPrice must have region.")
+    private Region region;
 
     @Column(name = "PRICE_VALUE")
     @Digits(
             integer = 7,
             fraction = 2,
-            message = "Daily_Menu_Statistics_Currency's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+            message = "Daily_Menu_Statistics_Price's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
-    @Positive(message = "Daily_Menu_Statistics_Currency's Price_Value '${validatedValue}' must be positive.")
+    @Positive(message = "Daily_Menu_Statistics_Price's Price_Value '${validatedValue}' must be positive.")
     private BigDecimal priceValue;
 
-    public DailyMenuStatisticsCurrency(DailyMenuStatistics dailyMenuStatistics, Currency currency) {
+    public DailyMenuStatisticsPrice(DailyMenuStatistics dailyMenuStatistics, Region region) {
         this.dailyMenuStatistics = dailyMenuStatistics;
-        this.currency = currency;
+        this.region = region;
     }
 }

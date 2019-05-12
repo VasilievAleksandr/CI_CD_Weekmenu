@@ -44,6 +44,17 @@ public class RecipeTest {
         return new DayOfWeek("Понедельник", "ПН");
     }
 
+    private Region getRegion() {
+        Country country = new Country("Беларусь", "BY", getCurrency());
+        country.getRegions().add(new Region("Минская область", country));
+
+        return new Region("Минский район", country);
+    }
+
+    private Currency getCurrency() {
+        return new Currency("руб.", "BYN", true);
+    }
+
     @Test
     public void testNameIsNull() {
         Recipe recipe = new Recipe(null, true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
@@ -162,18 +173,18 @@ public class RecipeTest {
     }
 
     @Test
-    public void testHasInvalidRecipeCurrencies() {
+    public void testHasInvalidRecipePrice() {
         Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        RecipeCurrency recipeCurrency = new RecipeCurrency(new BigDecimal("-1.11"), recipe, new Currency("руб", "BYN", "$", true));
-        recipe.getRecipeCurrencies().add(recipeCurrency);
-        recipe.getRecipeCurrencies().add(null);
+        RecipePrice recipeCurrency = new RecipePrice(new BigDecimal("-1.11"), recipe, getRegion());
+        recipe.getRecipePrices().add(recipeCurrency);
+        recipe.getRecipePrices().add(null);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         List<String> messages = violations.stream()
                 .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
-        assertTrue(messages.contains("Recipe must have list of recipeCurrencies without null elements."));
-        assertTrue(messages.contains("Recipe_Currency's Price_Value '-1.11' must be positive."));
+        assertTrue(messages.contains("Recipe must have list of recipePrices without null elements."));
+        assertTrue(messages.contains("Recipe_Price's Price_Value '-1.11' must be positive."));
     }
 
     @Test
@@ -274,9 +285,9 @@ public class RecipeTest {
                         new Ingredient("курица", new Ownership("пользователь"),
                                 new UnitOfMeasure("литр")), recipe)
         );
-        recipe.getRecipeCurrencies().add(new RecipeCurrency(new BigDecimal("1.11"),
+        recipe.getRecipePrices().add(new RecipePrice(new BigDecimal("1.11"),
                 new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь")),
-                new Currency("руб", "BYN", "$", true)));
+                getRegion()));
         recipe.getCookingSteps().add(new CookingStep(100, "Нарезать курицу", "images/choped_chicken.jpg"));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 0);

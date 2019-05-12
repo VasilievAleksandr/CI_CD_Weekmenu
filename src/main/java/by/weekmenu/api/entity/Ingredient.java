@@ -1,23 +1,24 @@
 package by.weekmenu.api.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-
-import lombok.EqualsAndHashCode;
 
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id", "recipeIngredient"})
+@EqualsAndHashCode(exclude = {"id", "recipeIngredients", "ingredientPrices"})
 @Entity
 @Table(name = "INGREDIENT")
 public class Ingredient implements Serializable {
@@ -52,8 +53,8 @@ public class Ingredient implements Serializable {
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.PERSIST)
     private Set<
             @Valid
-            @NotNull(message = "Ingredient must have list of ingredientCurrencies without null elements.")
-                    IngredientCurrency> ingredientCurrencies = new HashSet<>();
+            @NotNull(message = "Ingredient must have list of ingredientPrices without null elements.")
+                    IngredientPrice> ingredientPrices = new HashSet<>();
 
     @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
     private Set<
@@ -62,13 +63,17 @@ public class Ingredient implements Serializable {
                     RecipeIngredient> recipeIngredients = new HashSet<RecipeIngredient>();
 
     @ManyToOne
-    @JoinColumn(name = "UNIT_OF_MEASURE_ID")
+    @JoinColumn(name = "UNIT_OF_MEASURE_ID",
+            updatable = false,
+            insertable = false)
     @Valid
     @NotNull(message = "Ingredient's unitOfMeasure mustn't be null.")
     private UnitOfMeasure unitOfMeasure;
 
     @ManyToOne
-    @JoinColumn(name = "OWNERSHIP_ID")
+    @JoinColumn(name = "OWNERSHIP_ID",
+            updatable = false,
+            insertable = false)
     @Valid
     @NotNull(message = "Ingredient's ownership mustn't be null.")
     private Ownership ownership;
@@ -85,22 +90,17 @@ public class Ingredient implements Serializable {
         this.ownership = ownership;
     }
 
-    public Ingredient(String name) {
-        this.name = name;
-
-    }
-
-    public Ingredient(Integer calories, Integer proteins, Integer fats, Integer carbs) {
-        this.calories = calories;
-        this.proteins = proteins;
-        this.fats = fats;
-        this.carbs = carbs;
-    }
-
     public Ingredient(String name, Ownership ownership, UnitOfMeasure unitOfMeasure) {
         this.name = name;
         this.ownership = ownership;
         this.unitOfMeasure = unitOfMeasure;
     }
 
+    public Ingredient(Integer calories, Integer proteins, Integer fats, Integer carbs
+    ) {
+        this.calories = calories;
+        this.proteins = proteins;
+        this.fats = fats;
+        this.carbs = carbs;
+    }
 }
