@@ -37,7 +37,7 @@ public class UnitOfMeasureController {
     public UnitOfMeasureDto updateUnitOfMeasure(@RequestBody UnitOfMeasureDto unitOfMeasureDTO, @PathVariable("id") Long id) {
         UnitOfMeasureDto newUnitOfMeasureDto = unitOfMeasureService.findById(id);
         if (newUnitOfMeasureDto != null) newUnitOfMeasureDto.setName(unitOfMeasureDTO.getName());
-        return unitOfMeasureService.save(unitOfMeasureDTO);
+        return unitOfMeasureService.save(newUnitOfMeasureDto);
     }
 
     @DeleteMapping("/{id}")
