@@ -37,7 +37,7 @@ public class CurrencyController {
     public CurrencyDto updateCurrency(@RequestBody CurrencyDto currencyDTO, @PathVariable("id") Byte id) {
         CurrencyDto newCurrencyDto = currencyService.findById(id);
         if (newCurrencyDto != null) newCurrencyDto.setName(currencyDTO.getName());
-        return currencyService.save(currencyDTO);
+        return currencyService.save(newCurrencyDto);
     }
 
     @DeleteMapping("/{id}")

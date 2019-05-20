@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -22,6 +21,4 @@ public class CurrencyDto implements Serializable {
 
     private Boolean isActive;
 
-    private Set<String> countries;
-
-}
+ }
