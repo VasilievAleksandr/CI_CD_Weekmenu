@@ -33,6 +33,13 @@ public class UnitOfMeasure implements Serializable {
     )
     private String name;
 
+    @Column(name = "FULL_NAME", unique = true)
+    @NotBlank(message = "UnitOfMeasure must have full name.")
+    @Size(max = 255,
+            message = "UnitOfMeasure's full name '${validatedValue}' mustn't be more than '{max}' characters long."
+    )
+    private String fullName;
+
     public UnitOfMeasure(String name) {
         this.name = name;
     }
