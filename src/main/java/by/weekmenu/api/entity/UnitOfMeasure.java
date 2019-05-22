@@ -40,7 +40,8 @@ public class UnitOfMeasure implements Serializable {
     )
     private String fullName;
 
-    public UnitOfMeasure(String name) {
+    public UnitOfMeasure(String name, String fullName) {
         this.name = name;
+        this.fullName = fullName;
     }
 }

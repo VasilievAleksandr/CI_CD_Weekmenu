@@ -27,7 +27,7 @@ public class UnitOfMeasureTest {
 
     @Test
     public void testUnitOfMeasureNameIsNull() {
-        UnitOfMeasure unitOfMeasure = new UnitOfMeasure(null);
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure(null, "килограмм");
         Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
         assertEquals(violations.size(), 1);
         assertEquals("UnitOfMeasure must have name.",
@@ -36,7 +36,7 @@ public class UnitOfMeasureTest {
 
     @Test
     public void testUnitOfMeasureNameIsBlank() {
-        UnitOfMeasure unitOfMeasure = new UnitOfMeasure("   ");
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure("   ", "килограмм");
         Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
         assertEquals(violations.size(), 1);
         assertEquals("UnitOfMeasure must have name.",
@@ -46,7 +46,7 @@ public class UnitOfMeasureTest {
 
     @Test
     public void testUnitOfMeasureNameIsEmpty() {
-        UnitOfMeasure unitOfMeasure = new UnitOfMeasure("");
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure("", "килограмм");
         Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
         assertEquals(violations.size(), 1);
         assertEquals("UnitOfMeasure must have name.",
@@ -56,7 +56,7 @@ public class UnitOfMeasureTest {
     @Test
     public void testUnitOfMeasureNameIsTooLong() {
         String name = StringUtils.repeat("name", "/", 60);
-        UnitOfMeasure unitOfMeasure = new UnitOfMeasure(name);
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure(name, "килограмм");
         Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
         assertEquals(violations.size(), 1);
         assertEquals("UnitOfMeasure's name '" + name + "' mustn't be more than '255' characters long.",
@@ -64,8 +64,45 @@ public class UnitOfMeasureTest {
     }
 
     @Test
+    public void testUnitOfMeasureFullNameIsNull() {
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure("кг", null);
+        Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
+        assertEquals(violations.size(), 1);
+        assertEquals("UnitOfMeasure must have full name.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testUnitOfMeasureFullNameIsBlank() {
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure("кг", "   ");
+        Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
+        assertEquals(violations.size(), 1);
+        assertEquals("UnitOfMeasure must have full name.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testUnitOfMeasureFullNameIsEmpty() {
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure("кг", "");
+        Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
+        assertEquals(violations.size(), 1);
+        assertEquals("UnitOfMeasure must have full name.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testUnitOfMeasureFullNameIsTooLong() {
+        String fullName = StringUtils.repeat("fullName", "/", 60);
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure("кг", fullName);
+        Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
+        assertEquals(violations.size(), 1);
+        assertEquals("UnitOfMeasure's full name '" + fullName + "' mustn't be more than '255' characters long.",
+                violations.iterator().next().getMessage());
+    }
+
+        @Test
     public void testUnitOfMeasureIsValid() {
-        UnitOfMeasure unitOfMeasure = new UnitOfMeasure("литр");
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure("кг", "килограмм");
         Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
         assertEquals(violations.size(), 0);
     }

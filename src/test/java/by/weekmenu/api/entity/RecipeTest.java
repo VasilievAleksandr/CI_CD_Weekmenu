@@ -200,7 +200,7 @@ public class RecipeTest {
         recipe.getRecipeIngredients().add(
                 new RecipeIngredient(new BigDecimal("-100"),
                         new Ingredient("курица", new Ownership("пользователь"),
-                                new UnitOfMeasure("литр")), recipe)
+                                new UnitOfMeasure("л","литр")), recipe)
         );
         recipe.getRecipeIngredients().add(null);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
@@ -290,7 +290,7 @@ public class RecipeTest {
         recipe.getRecipeIngredients().add(
                 new RecipeIngredient(new BigDecimal("100"),
                         new Ingredient("курица", new Ownership("пользователь"),
-                                new UnitOfMeasure("литр")), recipe)
+                                new UnitOfMeasure("л","литр")), recipe)
         );
         recipe.getRecipePrices().add(new RecipePrice(new BigDecimal("1.11"),
                 new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь")),
