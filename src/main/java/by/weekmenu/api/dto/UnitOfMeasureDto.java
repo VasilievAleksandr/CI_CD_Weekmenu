@@ -7,9 +7,11 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UnitOfMeasureDto implements Serializable {
+public class UnitOfMeasureDto {
 
     private Long id;
 
     private String name;
+
+    private String fullName;
 }
