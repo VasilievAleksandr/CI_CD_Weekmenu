@@ -11,7 +11,7 @@ public class UnitOfMeasureDto {
 
     private Long id;
 
-    private String name;
-
     private String fullName;
+
+    private String shortName;
 }

@@ -184,7 +184,7 @@ public class IngredientTest {
         Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), new UnitOfMeasure("", "литр"));
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 1);
-        assertEquals("UnitOfMeasure must have name.",
+        assertEquals("UnitOfMeasure must have short name.",
                 violations.iterator().next().getMessage());
     }
 

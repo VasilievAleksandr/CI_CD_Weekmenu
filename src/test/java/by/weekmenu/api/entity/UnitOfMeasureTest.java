@@ -26,40 +26,40 @@ public class UnitOfMeasureTest {
     }
 
     @Test
-    public void testUnitOfMeasureNameIsNull() {
+    public void testUnitOfMeasureShortNameIsNull() {
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure(null, "килограмм");
         Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
         assertEquals(violations.size(), 1);
-        assertEquals("UnitOfMeasure must have name.",
+        assertEquals("UnitOfMeasure must have short name.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
-    public void testUnitOfMeasureNameIsBlank() {
+    public void testUnitOfMeasureShortNameIsBlank() {
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure("   ", "килограмм");
         Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
         assertEquals(violations.size(), 1);
-        assertEquals("UnitOfMeasure must have name.",
+        assertEquals("UnitOfMeasure must have short name.",
                 violations.iterator().next().getMessage());
     }
 
 
     @Test
-    public void testUnitOfMeasureNameIsEmpty() {
+    public void testUnitOfMeasureShortNameIsEmpty() {
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure("", "килограмм");
         Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
         assertEquals(violations.size(), 1);
-        assertEquals("UnitOfMeasure must have name.",
+        assertEquals("UnitOfMeasure must have short name.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
-    public void testUnitOfMeasureNameIsTooLong() {
+    public void testUnitOfMeasureShortNameIsTooLong() {
         String name = StringUtils.repeat("name", "/", 60);
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure(name, "килограмм");
         Set<ConstraintViolation<UnitOfMeasure>> violations = validator.validate(unitOfMeasure);
         assertEquals(violations.size(), 1);
-        assertEquals("UnitOfMeasure's name '" + name + "' mustn't be more than '255' characters long.",
+        assertEquals("UnitOfMeasure's short name '" + name + "' mustn't be more than '255' characters long.",
                 violations.iterator().next().getMessage());
     }
 

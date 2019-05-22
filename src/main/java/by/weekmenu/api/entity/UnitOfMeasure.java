@@ -26,13 +26,6 @@ public class UnitOfMeasure implements Serializable {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "NAME", unique = true)
-    @NotBlank(message = "UnitOfMeasure must have name.")
-    @Size(max = 255,
-            message = "UnitOfMeasure's name '${validatedValue}' mustn't be more than '{max}' characters long."
-    )
-    private String name;
-
     @Column(name = "FULL_NAME", unique = true)
     @NotBlank(message = "UnitOfMeasure must have full name.")
     @Size(max = 255,
@@ -40,8 +33,15 @@ public class UnitOfMeasure implements Serializable {
     )
     private String fullName;
 
-    public UnitOfMeasure(String name, String fullName) {
-        this.name = name;
+    @Column(name = "SHORT_NAME", unique = true)
+    @NotBlank(message = "UnitOfMeasure must have short name.")
+    @Size(max = 255,
+            message = "UnitOfMeasure's short name '${validatedValue}' mustn't be more than '{max}' characters long."
+    )
+    private String shortName;
+
+    public UnitOfMeasure(String shortName, String fullName) {
+        this.shortName = shortName;
         this.fullName = fullName;
     }
 }

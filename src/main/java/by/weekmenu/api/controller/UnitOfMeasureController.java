@@ -36,7 +36,10 @@ public class UnitOfMeasureController {
     @PutMapping("/{id}")
     public UnitOfMeasureDto updateUnitOfMeasure(@RequestBody UnitOfMeasureDto unitOfMeasureDTO, @PathVariable("id") Long id) {
         UnitOfMeasureDto newUnitOfMeasureDto = unitOfMeasureService.findById(id);
-        if (newUnitOfMeasureDto != null) newUnitOfMeasureDto.setName(unitOfMeasureDTO.getName());
+        if (newUnitOfMeasureDto != null) {
+            newUnitOfMeasureDto.setFullName(unitOfMeasureDTO.getFullName());
+            newUnitOfMeasureDto.setShortName(unitOfMeasureDTO.getShortName());
+        }
         return unitOfMeasureService.save(newUnitOfMeasureDto);
     }
 
