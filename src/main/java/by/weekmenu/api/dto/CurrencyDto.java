@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class CurrencyDto implements Serializable {
 
-    private Byte id;
+    private Integer id;
 
     private String name;
 

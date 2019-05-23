@@ -24,7 +24,7 @@ public class CurrencyController {
     }
 
     @GetMapping("/{id}")
-    public CurrencyDto findCurrencyById(@PathVariable("id") Byte id) {
+    public CurrencyDto findCurrencyById(@PathVariable("id") Integer id) {
         return currencyService.findById(id);
     }
 
@@ -34,15 +34,20 @@ public class CurrencyController {
     }
 
     @PutMapping("/{id}")
-    public CurrencyDto updateCurrency(@RequestBody CurrencyDto currencyDTO, @PathVariable("id") Byte id) {
+    public CurrencyDto updateCurrency(@RequestBody CurrencyDto currencyDTO, @PathVariable("id") Integer id) {
         CurrencyDto newCurrencyDto = currencyService.findById(id);
         if (newCurrencyDto != null) newCurrencyDto.setName(currencyDTO.getName());
         return currencyService.save(newCurrencyDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCurrencyById(@PathVariable("id") Byte id) {
+    public void deleteCurrencyById(@PathVariable("id") Integer id) {
         CurrencyDto newCurrencyDto = currencyService.findById(id);
         if (newCurrencyDto != null) currencyService.delete(id);
+    }
+
+    @GetMapping("/codes")
+    public List<String> getAllCurrencyCodes() {
+        return currencyService.getAllCurrencyCodes();
     }
 }

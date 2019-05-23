@@ -22,16 +22,18 @@ public class Currency implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Byte id;
+    private Integer id;
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "Currency must have name.")
     @Size(max = 255, message = "Currency's name '${validatedValue}' must be '{max}' characters long")
     private String name;
 
-    @Column(name = "CODE", unique = true,
-            updatable = false,
-            insertable = false)
+    @Column(name = "CODE", unique = true
+//            ,
+//            updatable = false,
+//            insertable = false
+            )
     @NotBlank(message = "Currency must have code.")
     @Size(
             min = 3,
@@ -39,7 +41,7 @@ public class Currency implements Serializable {
             message = "Currency's code '${validatedValue}' must be '{min}' characters long.")
     private String code;
 
-    @Column(name = "CODE", unique = true)
+    @Column(name = "SYMBOL", unique = true)
     @Pattern(regexp = "\\p{Sc}", message = "Currency's symbol '${validatedValue}' must match pattern.")
     private String symbol;
 
