@@ -113,19 +113,8 @@ public class CountryTest {
     }
 
     @Test
-    public void testHasInvalidRegion() {
-        Country country = new Country("Беларусь", "BY", getCurrency());
-        country.getRegions().add(null);
-        Set<ConstraintViolation<Country>> violations = validator.validate(country);
-        assertEquals(violations.size(), 1);
-        assertEquals("Country must have list of regions without null elements.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
     public void testIsValid() {
         Country country = new Country("Беларусь", "BY", getCurrency());
-        country.getRegions().add(new Region("Минская область", country));
         Set<ConstraintViolation<Country>> violations = validator.validate(country);
         assertEquals(violations.size(), 0);
     }
