@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +45,7 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer> {
         currencyRepository.findAll().forEach(list::add);
 
         return list.stream()
+                .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -51,6 +53,7 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer> {
     public List<String> getAllCurrencyCodes() {
         return currencyRepository.findAllByIsActiveTrueOrderByCode()
                 .stream()
+                .filter(Objects::nonNull)
                 .map(Currency::getCode)
                 .collect(Collectors.toList());
     }
