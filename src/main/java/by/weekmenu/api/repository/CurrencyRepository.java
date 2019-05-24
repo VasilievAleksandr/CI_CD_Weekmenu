@@ -8,7 +8,5 @@ import java.util.List;
 public interface CurrencyRepository extends CrudRepository<Currency, Integer>  {
 
     Currency findByCode(String code);
-
-    Currency findAllByCode(String code);
     List<Currency> findAllByIsActiveTrueOrderByCode();
 }
