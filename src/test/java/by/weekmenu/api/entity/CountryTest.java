@@ -9,9 +9,12 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CountryTest {
 
@@ -78,9 +81,12 @@ public class CountryTest {
     public void testAlphaCode2IsEmpty() {
         Country country = new Country("Беларусь", "", getCurrency());
         Set<ConstraintViolation<Country>> violations = validator.validate(country);
-        assertEquals(violations.size(), 1);
-        assertEquals("Country must have alphaCode2.",
-                violations.iterator().next().getMessage());
+        List<String> messages = violations.stream()
+                .map((ConstraintViolation<Country> violation) -> violation.getMessage())
+                .collect(Collectors.toList());
+        assertEquals(violations.size(), 2);
+        assertTrue(messages.contains("Country must have alphaCode2."));
+        assertTrue(messages.contains("Country's alphaCode2 '' must be '2' characters long."));
     }
 
     @Test
@@ -99,7 +105,16 @@ public class CountryTest {
         Country country = new Country("Беларусь", name, getCurrency());
         Set<ConstraintViolation<Country>> violations = validator.validate(country);
         assertEquals(violations.size(), 1);
-        assertEquals("Country's alphaCode2 '" + name + "' mustn't be more than '2' characters long.",
+        assertEquals("Country's alphaCode2 '" + name + "' must be '2' characters long.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testAlphaCode2IsTooShort() {
+        Country country = new Country("Беларусь", "B", getCurrency());
+        Set<ConstraintViolation<Country>> violations = validator.validate(country);
+        assertEquals(violations.size(), 1);
+        assertEquals("Country's alphaCode2 'B' must be '2' characters long.",
                 violations.iterator().next().getMessage());
     }
 

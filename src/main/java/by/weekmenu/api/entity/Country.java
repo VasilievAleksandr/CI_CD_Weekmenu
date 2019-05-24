@@ -36,8 +36,10 @@ public class Country implements Serializable {
 
     @Column(name = "ALPHA_CODE_2", unique = true)
     @NotBlank(message = "Country must have alphaCode2.")
-    @Size(max = 2,
-            message = "Country's alphaCode2 '${validatedValue}' mustn't be more than '{max}' characters long."
+    @Size(
+            min = 2,
+            max = 2,
+            message = "Country's alphaCode2 '${validatedValue}' must be '{min}' characters long."
     )
     private String alphaCode2;
 
