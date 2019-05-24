@@ -1,6 +1,7 @@
 package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.UnitOfMeasureDto;
+import by.weekmenu.api.service.CrudService;
 import by.weekmenu.api.service.UnitOfMeasureServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import java.util.List;
 @RequestMapping({"/unitOfMeasures"})
 public class UnitOfMeasureController {
 
-    private final UnitOfMeasureServiceImp unitOfMeasureService;
+    private final CrudService<UnitOfMeasureDto, Long> unitOfMeasureService;
 
     @Autowired
     public UnitOfMeasureController(UnitOfMeasureServiceImp unitOfMeasureService) {
@@ -37,7 +38,7 @@ public class UnitOfMeasureController {
     public UnitOfMeasureDto updateUnitOfMeasure(@RequestBody UnitOfMeasureDto unitOfMeasureDTO, @PathVariable("id") Long id) {
         UnitOfMeasureDto newUnitOfMeasureDto = unitOfMeasureService.findById(id);
         if (newUnitOfMeasureDto != null) newUnitOfMeasureDto.setName(unitOfMeasureDTO.getName());
-        return unitOfMeasureService.save(unitOfMeasureDTO);
+        return unitOfMeasureService.save(newUnitOfMeasureDto);
     }
 
     @DeleteMapping("/{id}")
