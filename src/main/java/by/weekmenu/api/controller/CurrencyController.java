@@ -1,6 +1,7 @@
 package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.CurrencyDto;
+import by.weekmenu.api.service.CrudService;
 import by.weekmenu.api.service.CurrencyServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import java.util.List;
 @RequestMapping({"/currencies"})
 public class CurrencyController {
 
-    private final CurrencyServiceImp currencyService;
+    private final CrudService<CurrencyDto, Integer> currencyService;
 
     @Autowired
     public CurrencyController(CurrencyServiceImp currencyService) {
@@ -24,7 +25,7 @@ public class CurrencyController {
     }
 
     @GetMapping("/{id}")
-    public CurrencyDto findCurrencyById(@PathVariable("id") Byte id) {
+    public CurrencyDto findCurrencyById(@PathVariable("id") Integer id) {
         return currencyService.findById(id);
     }
 
@@ -34,14 +35,19 @@ public class CurrencyController {
     }
 
     @PutMapping("/{id}")
-    public CurrencyDto updateCurrency(@RequestBody CurrencyDto currencyDTO, @PathVariable("id") Byte id) {
+    public CurrencyDto updateCurrency(@RequestBody CurrencyDto currencyDTO, @PathVariable("id") Integer id) {
         CurrencyDto newCurrencyDto = currencyService.findById(id);
-        if (newCurrencyDto != null) newCurrencyDto.setName(currencyDTO.getName());
+        if (newCurrencyDto != null) {
+            newCurrencyDto.setName(currencyDTO.getName());
+            newCurrencyDto.setCode(currencyDTO.getCode());
+            newCurrencyDto.setSymbol(currencyDTO.getSymbol());
+            newCurrencyDto.setIsActive(currencyDTO.getIsActive());
+        }
         return currencyService.save(newCurrencyDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCurrencyById(@PathVariable("id") Byte id) {
+    public void deleteCurrencyById(@PathVariable("id") Integer id) {
         CurrencyDto newCurrencyDto = currencyService.findById(id);
         if (newCurrencyDto != null) currencyService.delete(id);
     }

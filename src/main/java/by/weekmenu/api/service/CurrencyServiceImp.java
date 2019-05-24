@@ -2,10 +2,10 @@ package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.CurrencyDto;
 import by.weekmenu.api.entity.Currency;
-import by.weekmenu.api.repository.CurrencyRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Transactional(readOnly = true)
-public class CurrencyServiceImp implements CrudService<CurrencyDto, Byte> {
+public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer> {
 
-    private final CurrencyRepository currencyRepository;
+    private final CrudRepository<Currency, Integer> currencyRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -28,13 +28,13 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Byte> {
     }
 
     @Override
-    public CurrencyDto findById(Byte id) {
+    public CurrencyDto findById(Integer id) {
         return convertToDto(currencyRepository.findById(id).orElse(null));
     }
 
     @Override
     @Transactional
-    public void delete(Byte id) {
+    public void delete(Integer id) {
         currencyRepository.deleteById(id);
     }
 
@@ -56,4 +56,3 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Byte> {
         return modelMapper.map(currency, CurrencyDto.class);
     }
 }
-
