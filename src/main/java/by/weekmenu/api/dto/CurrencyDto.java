@@ -4,14 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @NoArgsConstructor
-public class CurrencyDto implements Serializable {
+public class CurrencyDto {
 
-    private Byte id;
+    private Integer id;
 
     private String name;
 
