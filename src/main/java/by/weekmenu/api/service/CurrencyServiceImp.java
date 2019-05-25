@@ -11,12 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Transactional(readOnly = true)
-public class CurrencyServiceImp implements CrudService<CurrencyDto, Byte> {
+public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer> {
 
     private final CurrencyRepository currencyRepository;
     private final ModelMapper modelMapper;
@@ -28,13 +29,13 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Byte> {
     }
 
     @Override
-    public CurrencyDto findById(Byte id) {
+    public CurrencyDto findById(Integer id) {
         return convertToDto(currencyRepository.findById(id).orElse(null));
     }
 
     @Override
     @Transactional
-    public void delete(Byte id) {
+    public void delete(Integer id) {
         currencyRepository.deleteById(id);
     }
 
@@ -44,7 +45,16 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Byte> {
         currencyRepository.findAll().forEach(list::add);
 
         return list.stream()
+                .filter(Objects::nonNull)
                 .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getAllCurrencyCodes() {
+        return currencyRepository.findAllByIsActiveTrueOrderByCode()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(Currency::getCode)
                 .collect(Collectors.toList());
     }
 

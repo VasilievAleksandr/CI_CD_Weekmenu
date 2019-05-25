@@ -11,13 +11,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id","regions"})
+@EqualsAndHashCode(exclude = "id")
 @Entity
 @Table(name = "COUNTRY")
 public class Country implements Serializable {
@@ -38,24 +36,18 @@ public class Country implements Serializable {
 
     @Column(name = "ALPHA_CODE_2", unique = true)
     @NotBlank(message = "Country must have alphaCode2.")
-    @Size(max = 2,
-            message = "Country's alphaCode2 '${validatedValue}' mustn't be more than '{max}' characters long."
+    @Size(
+            min = 2,
+            max = 2,
+            message = "Country's alphaCode2 '${validatedValue}' must be '{min}' characters long."
     )
     private String alphaCode2;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_ID",
-            updatable = false,
-            insertable = false)
+    @ManyToOne
+    @JoinColumn(name = "CURRENCY_ID")
     @Valid
     @NotNull(message = "Country's currency mustn't be null.")
     private Currency currency;
-
-    @OneToMany(mappedBy = "country", cascade = CascadeType.PERSIST)
-    private Set<
-            @Valid
-            @NotNull(message = "Country must have list of regions without null elements.")
-                    Region> regions = new HashSet<>();
 
     public Country(String name, String alphaCode2, Currency currency) {
         this.name = name;

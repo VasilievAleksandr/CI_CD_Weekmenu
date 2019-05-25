@@ -42,8 +42,6 @@ public class RecipeTest {
 
     private Region getRegion() {
         Country country = new Country("Беларусь", "BY", getCurrency());
-        country.getRegions().add(new Region("Минская область", country));
-
         return new Region("Минский район", country);
     }
 
