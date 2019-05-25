@@ -2,23 +2,24 @@ package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.CurrencyDto;
 import by.weekmenu.api.entity.Currency;
+import by.weekmenu.api.repository.CurrencyRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Transactional(readOnly = true)
-public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer> {
+public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer>, CurrencyService {
 
-    private final CrudRepository<Currency, Integer> currencyRepository;
+    private final CurrencyRepository currencyRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -44,8 +45,21 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer> {
         currencyRepository.findAll().forEach(list::add);
 
         return list.stream()
+                .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<String> getAllCurrencyCodes() {
+        return currencyRepository.findAllByIsActiveTrueOrderByCode()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(Currency::getCode)
+                .collect(Collectors.toList());
+    }
+
+    public CurrencyDto findByCode(String code) {
+        return convertToDto(currencyRepository.findByCode(code));
     }
 
     private Currency convertToEntity(CurrencyDto currencyDto) {
