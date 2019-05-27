@@ -18,9 +18,9 @@ public class CurrencyController {
     private final CrudService<CurrencyDto, Integer> currencyCrudService;
 
     @Autowired
-    public CurrencyController(CurrencyServiceImp currencyService) {
+    public CurrencyController(CurrencyService currencyService, CrudService<CurrencyDto, Integer> currencyCrudService) {
         this.currencyService = currencyService;
-        this.currencyCrudService = currencyService;
+        this.currencyCrudService = currencyCrudService;
     }
 
     @GetMapping
