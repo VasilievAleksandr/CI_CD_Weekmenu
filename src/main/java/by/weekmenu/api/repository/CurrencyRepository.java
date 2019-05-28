@@ -5,8 +5,9 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface CurrencyRepository extends CrudRepository<Currency, Integer>  {
+public interface CurrencyRepository extends CrudRepository<Currency, Integer> {
 
     Currency findByCode(String code);
+
     List<Currency> findAllByIsActiveTrueOrderByCode();
 }

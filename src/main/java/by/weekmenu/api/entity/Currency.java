@@ -29,11 +29,7 @@ public class Currency implements Serializable {
     @Size(max = 255, message = "Currency's name '${validatedValue}' must be '{max}' characters long")
     private String name;
 
-    @Column(name = "CODE", unique = true
-//            ,
-//            updatable = false,
-//            insertable = false
-            )
+    @Column(name = "CODE", unique = true)
     @NotBlank(message = "Currency must have code.")
     @Size(
             min = 3,
