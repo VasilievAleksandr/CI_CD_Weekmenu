@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Transactional(readOnly = true)
-public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer> {
+public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer>, CurrencyService {
 
     private final CurrencyRepository currencyRepository;
     private final ModelMapper modelMapper;
@@ -66,4 +66,3 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer> {
         return modelMapper.map(currency, CurrencyDto.class);
     }
 }
-
