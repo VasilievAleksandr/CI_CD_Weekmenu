@@ -58,10 +58,6 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer>, Cu
                 .collect(Collectors.toList());
     }
 
-    public CurrencyDto findByCode(String code) {
-        return convertToDto(currencyRepository.findByCode(code));
-    }
-
     private Currency convertToEntity(CurrencyDto currencyDto) {
         return modelMapper.map(currencyDto, Currency.class);
     }
