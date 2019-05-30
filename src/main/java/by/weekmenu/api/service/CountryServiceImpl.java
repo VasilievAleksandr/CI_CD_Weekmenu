@@ -12,12 +12,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class CountryServiceImpl implements CrudService<CountryDto, Long> {
+public class CountryServiceImpl implements CrudService<CountryDto, Long>, CountryService {
 
     private final CountryRepository countryRepository;
     private final CurrencyRepository currencyRepository;
@@ -46,6 +47,16 @@ public class CountryServiceImpl implements CrudService<CountryDto, Long> {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Country findByName(String name) {
+        return countryRepository.findByNameIgnoreCase(name).orElse(null);
+    }
+
+    @Override
+    public Country findByAlphaCode2(String alphaCode2) {
+        return countryRepository.findByAlphaCode2IgnoreCase(alphaCode2).orElse(null);
+    }
+
     private Country convertToEntity(CountryDto countryDto) {
         Country country = modelMapper.map(countryDto, Country.class);
         Currency currency = currencyRepository.findByCode(countryDto.getCurrencyCode());
@@ -58,4 +69,6 @@ public class CountryServiceImpl implements CrudService<CountryDto, Long> {
     private CountryDto convertToDto(Country country) {
         return modelMapper.map(country, CountryDto.class);
     }
+
+
 }
