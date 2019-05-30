@@ -34,8 +34,7 @@ public class UnitOfMeasureController {
     
     @GetMapping("/checkUniqueShortName")
     public Integer checkUniqueShortName(@RequestParam String shortName) {
-        UnitOfMeasure uom = unitOfMeasureService.findByShortName(shortName);
-        if (uom!= null) {
+        if (unitOfMeasureService.findByShortName(shortName) != null) {
             return -1;
         } else {
             return 0;
@@ -44,8 +43,7 @@ public class UnitOfMeasureController {
 
     @GetMapping("/checkUniqueFullName")
     public Integer checkUniqueFullName(@RequestParam String fullName) {
-        UnitOfMeasure uom = unitOfMeasureService.findByFullName(fullName);
-        if (uom!= null) {
+        if (unitOfMeasureService.findByFullName(fullName) != null) {
             return -1;
         } else {
             return 0;

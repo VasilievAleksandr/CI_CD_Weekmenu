@@ -51,16 +51,14 @@ public class UnitOfMeasureServiceImp implements CrudService<UnitOfMeasureDto, Lo
 
     @Override
     public UnitOfMeasure findByShortName(String shortName) {
-        Optional<UnitOfMeasure> uom = unitOfMeasureRepository
-                .findByShortNameIgnoreCase(shortName);
-        return uom.orElse(null);
+        return unitOfMeasureRepository
+                .findByShortNameIgnoreCase(shortName).orElse(null);
     }
 
     @Override
     public UnitOfMeasure findByFullName(String fullName) {
-        Optional<UnitOfMeasure> uom = unitOfMeasureRepository
-                .findByFullNameIgnoreCase(fullName);
-        return uom.orElse(null);
+        return unitOfMeasureRepository
+                .findByFullNameIgnoreCase(fullName).orElse(null);
     }
 
     private UnitOfMeasure convertToEntity(UnitOfMeasureDto unitOfMeasureDto) {
