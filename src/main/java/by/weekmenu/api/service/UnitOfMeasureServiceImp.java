@@ -11,12 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Transactional(readOnly = true)
-public class UnitOfMeasureServiceImp implements CrudService<UnitOfMeasureDto, Long> {
+public class UnitOfMeasureServiceImp implements CrudService<UnitOfMeasureDto, Long>, UnitOfMeasureService {
 
     private final UnitOfMeasureRepository unitOfMeasureRepository;
     private final ModelMapper modelMapper;
@@ -46,6 +47,18 @@ public class UnitOfMeasureServiceImp implements CrudService<UnitOfMeasureDto, Lo
         return list.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public UnitOfMeasure findByShortName(String shortName) {
+        return unitOfMeasureRepository
+                .findByShortNameIgnoreCase(shortName).orElse(null);
+    }
+
+    @Override
+    public UnitOfMeasure findByFullName(String fullName) {
+        return unitOfMeasureRepository
+                .findByFullNameIgnoreCase(fullName).orElse(null);
     }
 
     private UnitOfMeasure convertToEntity(UnitOfMeasureDto unitOfMeasureDto) {
