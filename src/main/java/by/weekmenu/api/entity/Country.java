@@ -43,7 +43,7 @@ public class Country implements Serializable {
     )
     private String alphaCode2;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "CURRENCY_ID")
     @Valid
     @NotNull(message = "Country's currency mustn't be null.")
