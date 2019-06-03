@@ -16,5 +16,4 @@ public class ApiApplication extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(ApiApplication.class);
     }
-
 }

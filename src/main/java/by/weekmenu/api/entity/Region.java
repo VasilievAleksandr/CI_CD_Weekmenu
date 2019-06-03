@@ -37,10 +37,8 @@ public class Region implements Serializable {
     )
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COUNTRY_ID",
-            updatable = false,
-            insertable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "COUNTRY_ID")
     @Valid
     @NotNull(message = "Region's Country mustn't be null.")
     private Country country;
