@@ -131,4 +131,13 @@ public class RegionIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void checkUniqueNameTest() throws Exception {
+        Region region = createRegion("Минск");
+        mockMvc.perform(get("/regions/checkUniqueName?name=" + region.getName())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(-1)));
+    }
 }

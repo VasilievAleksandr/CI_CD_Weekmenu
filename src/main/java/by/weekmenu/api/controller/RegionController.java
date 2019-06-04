@@ -1,7 +1,7 @@
 package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.RegionDto;
-import by.weekmenu.api.service.CrudService;
+import by.weekmenu.api.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +13,10 @@ import java.util.List;
 @RequestMapping("/regions")
 public class RegionController {
 
-    private final CrudService<RegionDto, Long> regionService;
+    private final RegionService regionService;
 
     @Autowired
-    public RegionController(CrudService<RegionDto, Long> regionService) {
+    public RegionController(RegionService regionService) {
         this.regionService = regionService;
     }
 
@@ -51,6 +51,15 @@ public class RegionController {
         RegionDto regionDto = regionService.findById(id);
         if (regionDto!=null) {
             regionService.delete(id);
+        }
+    }
+
+    @GetMapping("/checkUniqueName")
+    public Integer checkUniqueName(@RequestParam String name) {
+        if(regionService.findByName(name)!=null) {
+            return -1;
+        } else {
+            return 0;
         }
     }
 }

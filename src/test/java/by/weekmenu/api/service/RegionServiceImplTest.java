@@ -33,7 +33,7 @@ public class RegionServiceImplTest {
     @MockBean
     private ModelMapper modelMapper;
 
-    private CrudService<RegionDto, Long> regionService;
+    private RegionService regionService;
 
     @Mock
     private Region regionOne;
@@ -104,5 +104,12 @@ public class RegionServiceImplTest {
     public void deleteRegionTest() {
         regionService.delete(1L);
         verify(regionRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    public void checkUniqueNameTest() {
+        when(regionRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
+        Region region = regionService.findByName("Минск");
+        assertThat(region).isNull();
     }
 }

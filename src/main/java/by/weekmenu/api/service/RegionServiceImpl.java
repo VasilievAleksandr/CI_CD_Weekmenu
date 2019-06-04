@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class RegionServiceImpl implements CrudService<RegionDto, Long> {
+public class RegionServiceImpl implements RegionService {
 
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
@@ -46,6 +46,11 @@ public class RegionServiceImpl implements CrudService<RegionDto, Long> {
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Region findByName(String name) {
+        return regionRepository.findByNameIgnoreCase(name).orElse(null);
     }
 
     private RegionDto convertToDto(Region region) {

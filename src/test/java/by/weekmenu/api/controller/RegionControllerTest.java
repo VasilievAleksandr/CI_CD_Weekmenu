@@ -1,7 +1,7 @@
 package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.RegionDto;
-import by.weekmenu.api.service.CrudService;
+import by.weekmenu.api.service.RegionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +30,7 @@ public class RegionControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private CrudService<RegionDto, Long> regionService;
+    private RegionService regionService;
 
     @Test
     public void getAllRegionsTest() throws Exception {
@@ -107,5 +107,15 @@ public class RegionControllerTest {
         mockMvc.perform(delete("/regions/1")
         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void checkUniqueName() throws Exception {
+        String name = "Минск";
+        when(regionService.findByName(name)).thenReturn(null);
+        mockMvc.perform(get("/regions/checkUniqueName?name=" + name)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(0)));
     }
 }
