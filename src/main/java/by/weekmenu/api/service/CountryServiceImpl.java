@@ -59,7 +59,7 @@ public class CountryServiceImpl implements CrudService<CountryDto, Long>, Countr
 
     private Country convertToEntity(CountryDto countryDto) {
         Country country = modelMapper.map(countryDto, Country.class);
-        Currency currency = currencyRepository.findByCode(countryDto.getCurrencyCode());
+        Currency currency = currencyRepository.findByCodeIgnoreCase(countryDto.getCurrencyCode()).orElse(null);
         if (currency!=null) {
             country.setCurrency(currency);
         }

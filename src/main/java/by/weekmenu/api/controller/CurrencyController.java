@@ -32,6 +32,33 @@ public class CurrencyController {
         return currencyCrudService.findById(id);
     }
 
+    @GetMapping("/checkCurrencyUniqueName")
+    public Integer checkCurrencyUniqueName(@RequestParam String name) {
+        if (currencyService.findByName(name) != null) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    @GetMapping("/checkCurrencyUniqueCode")
+    public Integer checkCurrencyUniqueCode(@RequestParam String code) {
+        if (currencyService.findByCode(code) != null) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    @GetMapping("/checkCurrencyUniqueSymbol")
+    public Integer checkCurrencyUniqueSymbol(@RequestParam String symbol) {
+        if (currencyService.findBySymbol(symbol) != null) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
     @PostMapping
     public CurrencyDto addCurrency(@RequestBody CurrencyDto currencyDTO) {
         return currencyCrudService.save(currencyDTO);
