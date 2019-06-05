@@ -18,7 +18,7 @@ import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class CountryServiceImpl implements CrudService<CountryDto, Long>, CountryService {
+public class CountryServiceImpl implements CountryService {
 
     private final CountryRepository countryRepository;
     private final CurrencyRepository currencyRepository;
