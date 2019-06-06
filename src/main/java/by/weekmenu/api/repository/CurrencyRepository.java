@@ -8,12 +8,17 @@ import java.util.Optional;
 
 public interface CurrencyRepository extends CrudRepository<Currency, Integer> {
 
+    Currency findByCode(String code);
+
     List<Currency> findAllByIsActiveTrueOrderByCode();
+
+    List<Currency> findAllByIsActiveTrueOrderByIsActive();
+
+    List<Currency> findAllByIsActiveFalseOrderByIsActive();
 
     Optional<Currency> findByNameIgnoreCase(String name);
 
     Optional<Currency> findByCodeIgnoreCase(String code);
 
     Optional<Currency> findBySymbolIgnoreCase(String symbol);
-
 }
