@@ -4,6 +4,7 @@ import by.weekmenu.api.dto.CurrencyDto;
 import by.weekmenu.api.service.CrudService;
 import by.weekmenu.api.service.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -87,4 +88,12 @@ public class CurrencyController {
         return currencyService.getAllCurrencyCodes();
     }
 
+    @GetMapping("/isActive")
+    public ResponseEntity getAllCurrencyIsActiveIsTrue(@RequestParam Boolean isActive) {
+        if (isActive) {
+            return ResponseEntity.ok(currencyService.findAllByIsActiveTrueOrderByIsActive());
+        }
+
+        return ResponseEntity.ok(currencyService.findAllByIsActiveFalseOrderByIsActive());
+    }
 }
