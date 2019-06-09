@@ -122,7 +122,7 @@ public class RegionTest {
 
     private IngredientPrice getIngredientPrice() {
         return new IngredientPrice(new BigDecimal("111"),
-                new Ingredient("курица", new Ownership("пользователь"), new UnitOfMeasure("л","литр")),
+                new Ingredient("курица", new Ownership(OwnershipName.USER), new UnitOfMeasure("л","литр")),
                 new Region("Минская область", getCountry()));
     }
 
@@ -132,14 +132,14 @@ public class RegionTest {
 
     private RecipePrice getRecipePrice() {
         return new RecipePrice(new BigDecimal("111"),
-                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")),
+                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership(OwnershipName.USER)),
                 getRegion());
     }
 
     private DailyMenuStatistics getDailyMenuStatistics() {
         DailyMenuStatistics dailyMenuStatistics = new DailyMenuStatistics();
         dailyMenuStatistics.setDayOfWeek(new DayOfWeek(WeekDay.MONDAY));
-        dailyMenuStatistics.setMenu(new Menu("Бюджетное", true, new Ownership("Пользователь")));
+        dailyMenuStatistics.setMenu(new Menu("Бюджетное", true, new Ownership(OwnershipName.USER)));
         return dailyMenuStatistics;
     }
 

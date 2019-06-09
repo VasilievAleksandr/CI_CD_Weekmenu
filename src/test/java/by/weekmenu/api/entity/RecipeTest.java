@@ -29,7 +29,7 @@ public class RecipeTest {
     }
 
     private Menu getValidMenu() {
-        return new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        return new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
     }
 
     private DishType getInvalidDishType() {
@@ -51,7 +51,7 @@ public class RecipeTest {
 
     @Test
     public void testNameIsNull() {
-        Recipe recipe = new Recipe(null, true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe(null, true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe must have name.",
@@ -60,7 +60,7 @@ public class RecipeTest {
 
     @Test
     public void testNameIsBlank() {
-        Recipe recipe = new Recipe("   ", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("   ", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe must have name.",
@@ -69,7 +69,7 @@ public class RecipeTest {
 
     @Test
     public void testNameIsEmpty() {
-        Recipe recipe = new Recipe("", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe must have name.",
@@ -78,7 +78,7 @@ public class RecipeTest {
 
     @Test
     public void testNameIsTooLong() {
-        Recipe recipe = new Recipe("", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         String name = StringUtils.repeat("очень_длинное_название_рецепта", 20);
         recipe.setName(name);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
@@ -89,7 +89,7 @@ public class RecipeTest {
 
     @Test
     public void testCookingTimeIsNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.setCookingTime((new Short("-30")));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
@@ -99,7 +99,7 @@ public class RecipeTest {
 
     @Test
     public void testPreparingTimeIsNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.setPreparingTime((new Short("-15")));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
@@ -109,7 +109,7 @@ public class RecipeTest {
 
     @Test
     public void testCaloriesAreNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.setCalories(-100);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
@@ -119,7 +119,7 @@ public class RecipeTest {
 
     @Test
     public void testCaloriesAreZero() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.setCalories(0);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
@@ -129,7 +129,7 @@ public class RecipeTest {
 
     @Test
     public void testProteinsAreNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.setProteins(-100);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
@@ -139,7 +139,7 @@ public class RecipeTest {
 
     @Test
     public void testFatsAreNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.setFats(-100);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
@@ -149,7 +149,7 @@ public class RecipeTest {
 
     @Test
     public void testCarbsAreNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.setCarbs(-100);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
@@ -159,7 +159,7 @@ public class RecipeTest {
 
     @Test
     public void testImageLinkIsTooLong() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         String imageLink = StringUtils.repeat("path_to_the_image", "/", 20);
         recipe.setImageLink(imageLink);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
@@ -170,7 +170,7 @@ public class RecipeTest {
 
     @Test
     public void testIsActiveIsNull() {
-        Recipe recipe = new Recipe("Курица с ананасами", null, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", null, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe must have field 'isActive' defined.",
@@ -179,7 +179,7 @@ public class RecipeTest {
 
     @Test
     public void testHasInvalidRecipePrice() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         RecipePrice recipeCurrency = new RecipePrice(new BigDecimal("-1.11"), recipe, getRegion());
         recipe.getRecipePrices().add(recipeCurrency);
         recipe.getRecipePrices().add(null);
@@ -194,10 +194,10 @@ public class RecipeTest {
 
     @Test
     public void testHasInvalidRecipeIngredients() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.getRecipeIngredients().add(
                 new RecipeIngredient(new BigDecimal("-100"),
-                        new Ingredient("курица", new Ownership("пользователь"),
+                        new Ingredient("курица", new Ownership(OwnershipName.USER),
                                 new UnitOfMeasure("л","литр")), recipe)
         );
         recipe.getRecipeIngredients().add(null);
@@ -212,7 +212,7 @@ public class RecipeTest {
 
     @Test
     public void testHasInvalidMenuRecipes() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.getMenuRecipes().add(new MenuRecipe(getValidMenu(), null, getInvalidDishType(), getValidDayOfWeek()));
         recipe.getMenuRecipes().add(null);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
@@ -227,7 +227,7 @@ public class RecipeTest {
 
     @Test
     public void testCookingMethodIsInvalid() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod(null), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod(null), new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Cooking Method must have name.",
@@ -236,7 +236,7 @@ public class RecipeTest {
 
     @Test
     public void testCookingMethodIsNull() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, null, new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, null, new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe's cookingMethod mustn't be null.",
@@ -245,7 +245,7 @@ public class RecipeTest {
 
     @Test
     public void testHasInvalidCookingSteps() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.getCookingSteps().add(new CookingStep(100, null, "path/to/image"));
         recipe.getMenuRecipes().add(null);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
@@ -259,7 +259,7 @@ public class RecipeTest {
 
     @Test
     public void testOwnershipIsInvalid() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("   "));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(null));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Ownership must have name.",
@@ -277,7 +277,7 @@ public class RecipeTest {
 
     @Test
     public void testRecipeIsValid() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.setCarbs(100);
         recipe.setProteins(100);
         recipe.setCalories(300);
@@ -287,11 +287,11 @@ public class RecipeTest {
         recipe.setImageLink("images/recipe.jpg");
         recipe.getRecipeIngredients().add(
                 new RecipeIngredient(new BigDecimal("100"),
-                        new Ingredient("курица", new Ownership("пользователь"),
+                        new Ingredient("курица", new Ownership(OwnershipName.USER),
                                 new UnitOfMeasure("л","литр")), recipe)
         );
         recipe.getRecipePrices().add(new RecipePrice(new BigDecimal("1.11"),
-                new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь")),
+                new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER)),
                 getRegion()));
         recipe.getCookingSteps().add(new CookingStep(100, "Нарезать курицу", "images/choped_chicken.jpg"));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);

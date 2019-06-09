@@ -25,11 +25,11 @@ public class MenuRecipeTest {
     }
 
     private Menu getValidMenu() {
-        return new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        return new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
     }
 
     private Recipe getValidRecipe() {
-        return new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        return new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
     }
 
     private DishType getValidDishType() {
@@ -42,7 +42,7 @@ public class MenuRecipeTest {
 
     @Test
     public void testMenuIsInvalid() {
-        MenuRecipe menuRecipe = new MenuRecipe(new Menu("Бюджетное", null, new Ownership("Пользователь")),
+        MenuRecipe menuRecipe = new MenuRecipe(new Menu("Бюджетное", null, new Ownership(OwnershipName.USER)),
                 getValidRecipe(), getValidDishType(), getValidDayOfWeek());
         Set<ConstraintViolation<MenuRecipe>> violations = validator.validate(menuRecipe);
         assertEquals(violations.size(), 1);
@@ -63,7 +63,7 @@ public class MenuRecipeTest {
     @Test
     public void testRecipeIsInvalid() {
         MenuRecipe menuRecipe = new MenuRecipe(getValidMenu(),
-                new Recipe("Курица с ананасами", true, null, new Ownership("Пользователь")),
+                new Recipe("Курица с ананасами", true, null, new Ownership(OwnershipName.USER)),
                 getValidDishType(), getValidDayOfWeek());
         Set<ConstraintViolation<MenuRecipe>> violations = validator.validate(menuRecipe);
         assertEquals(violations.size(), 1);
