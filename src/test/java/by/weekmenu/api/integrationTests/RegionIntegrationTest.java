@@ -62,7 +62,7 @@ public class RegionIntegrationTest {
     private Region createRegion(String name) {
         Region region = new Region();
         region.setName(name);
-        region.setCountry(countryRepository.findByNameIgnoreCase("Беларусь"));
+        region.setCountry(countryRepository.findByNameIgnoreCase("Беларусь").orElse(null));
         return regionRepository.save(region);
     }
 

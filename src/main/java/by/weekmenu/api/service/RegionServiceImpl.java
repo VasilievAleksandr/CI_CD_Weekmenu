@@ -59,7 +59,7 @@ public class RegionServiceImpl implements RegionService {
 
     private Region convertToEntity(RegionDto regionDto) {
         Region region = modelMapper.map(regionDto, Region.class);
-        Country country = countryRepository.findByNameIgnoreCase(regionDto.getCountryName());
+        Country country = countryRepository.findByNameIgnoreCase(regionDto.getCountryName()).orElse(null);
         if(country!=null) {
             region.setCountry(country);
         }

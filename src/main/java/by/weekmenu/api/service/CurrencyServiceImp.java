@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Transactional(readOnly = true)
-public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer> {
+public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer>, CurrencyService {
 
     private final CurrencyRepository currencyRepository;
     private final ModelMapper modelMapper;
@@ -49,13 +49,46 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer> {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-
+    @Override
     public List<String> getAllCurrencyCodes() {
         return currencyRepository.findAllByIsActiveTrueOrderByCode()
                 .stream()
                 .filter(Objects::nonNull)
                 .map(Currency::getCode)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Currency findBySymbol(String symbol) {
+        return currencyRepository.findBySymbolIgnoreCase(symbol).orElse(null);
+    }
+
+    @Override
+    public List<CurrencyDto> findAllByIsActiveTrueOrderByIsActive() {
+        return currencyRepository.findAllByIsActiveTrueOrderByIsActive()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CurrencyDto> findAllByIsActiveFalseOrderByIsActive() {
+        return currencyRepository.findAllByIsActiveFalseOrderByIsActive()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Currency findByName(String name) {
+        return currencyRepository.findByNameIgnoreCase(name).orElse(null);
+    }
+
+    @Override
+    public Currency findByCode(String code) {
+        return currencyRepository.findByCodeIgnoreCase(code).orElse(null);
     }
 
     private Currency convertToEntity(CurrencyDto currencyDto) {
@@ -66,4 +99,3 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer> {
         return modelMapper.map(currency, CurrencyDto.class);
     }
 }
-
