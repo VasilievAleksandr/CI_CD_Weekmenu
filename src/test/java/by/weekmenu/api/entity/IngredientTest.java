@@ -40,7 +40,7 @@
 //    @Test
 //    public void testIngerdientNameIsTooLong() {
 //        String name = StringUtils.repeat("name", "/", 60);
-//        Ingredient ingredient = new Ingredient(null, new Ownership("Пользователь"), new UnitOfMeasure("л","литр"));
+//        Ingredient ingredient = new Ingredient(null, new Ownership("Пользователь"), new BaseUnitOfMeasure("л","литр"));
 //        ingredient.setName(name);
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
@@ -50,7 +50,7 @@
 //
 //    @Test
 //    public void testIngredientNameIsNull() {
-//        Ingredient ingredient = new Ingredient(null, new Ownership("Пользователь"), new UnitOfMeasure("л","литр"));
+//        Ingredient ingredient = new Ingredient(null, new Ownership("Пользователь"), new BaseUnitOfMeasure("л","литр"));
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
 //        assertEquals("Ingredient must have name.",
@@ -59,7 +59,7 @@
 //
 //    @Test
 //    public void testIngredientNameIsBlank() {
-//        Ingredient ingredient = new Ingredient("   ", new Ownership("Пользователь"), new UnitOfMeasure("л","литр"));
+//        Ingredient ingredient = new Ingredient("   ", new Ownership("Пользователь"), new BaseUnitOfMeasure("л","литр"));
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
 //        assertEquals("Ingredient must have name.",
@@ -68,7 +68,7 @@
 //
 //    @Test
 //    public void testIngredientNameIsEmpty() {
-//        Ingredient ingredient = new Ingredient("", new Ownership("Пользователь"), new UnitOfMeasure("л","литр"));
+//        Ingredient ingredient = new Ingredient("", new Ownership("Пользователь"), new BaseUnitOfMeasure("л","литр"));
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
 //        assertEquals("Ingredient must have name.",
@@ -79,7 +79,7 @@
 //    public void testIngredientCaloriesAreNegative() {
 //        Ingredient ingredient = new Ingredient(-100, 100, 100, 100);
 //        ingredient.setName("молоко");
-//        ingredient.setUnitOfMeasure(new UnitOfMeasure("л","литр"));
+//        ingredient.setUnitOfMeasure(new BaseUnitOfMeasure("л","литр"));
 //        ingredient.setOwnership(new Ownership("Пользователь"));
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
@@ -91,7 +91,7 @@
 //    public void testIngredientCaloriesAreZero() {
 //        Ingredient ingredient = new Ingredient(0, 100, 100, 100);
 //        ingredient.setName("молоко");
-//        ingredient.setUnitOfMeasure(new UnitOfMeasure("л","литр"));
+//        ingredient.setUnitOfMeasure(new BaseUnitOfMeasure("л","литр"));
 //        ingredient.setOwnership(new Ownership("Пользователь"));
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
@@ -104,7 +104,7 @@
 //    public void testIngredientProteinsAreNegative() {
 //        Ingredient ingredient = new Ingredient(100, -100, 100, 100);
 //        ingredient.setName("молоко");
-//        ingredient.setUnitOfMeasure(new UnitOfMeasure("л","литр"));
+//        ingredient.setUnitOfMeasure(new BaseUnitOfMeasure("л","литр"));
 //        ingredient.setOwnership(new Ownership("Пользователь"));
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
@@ -116,7 +116,7 @@
 //    public void testIngredientFatsAreNegative() {
 //        Ingredient ingredient = new Ingredient(100, 100, -100, 100);
 //        ingredient.setName("молоко");
-//        ingredient.setUnitOfMeasure(new UnitOfMeasure("л","литр"));
+//        ingredient.setUnitOfMeasure(new BaseUnitOfMeasure("л","литр"));
 //        ingredient.setOwnership(new Ownership("Пользователь"));
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
@@ -128,7 +128,7 @@
 //    public void testIngredientCarbsAreNegative() {
 //        Ingredient ingredient = new Ingredient(100, 100, 100, -100);
 //        ingredient.setName("молоко");
-//        ingredient.setUnitOfMeasure(new UnitOfMeasure("л","литр"));
+//        ingredient.setUnitOfMeasure(new BaseUnitOfMeasure("л","литр"));
 //        ingredient.setOwnership(new Ownership("Пользователь"));
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
@@ -138,7 +138,7 @@
 //
 //    @Test
 //    public void testHasInvalidIngredientPrice() {
-//        Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), new UnitOfMeasure("л","литр"));
+//        Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), new BaseUnitOfMeasure("л","литр"));
 //        IngredientPrice ingredientPrice = new IngredientPrice(new BigDecimal("-1.11"), ingredient, getRegion());
 //        ingredient.getIngredientPrices().add(ingredientPrice);
 //        ingredient.getIngredientPrices().add(null);
@@ -153,9 +153,9 @@
 //
 //    @Test
 //    public void testHasInvalidRecipeIngredients() {
-//        Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), new UnitOfMeasure("л","литр"));
+//        Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), new BaseUnitOfMeasure("л","литр"));
 //        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("-111.12"),
-//                new Ingredient("курица", new Ownership("пользователь"), new UnitOfMeasure("л","литр")),
+//                new Ingredient("курица", new Ownership("пользователь"), new BaseUnitOfMeasure("л","литр")),
 //                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")));
 //        ingredient.getRecipeIngredients().add(recipeIngredient);
 //        ingredient.getRecipeIngredients().add(null);
@@ -179,16 +179,16 @@
 //
 //    @Test
 //    public void testUnitOfMeasureIsInvalid() {
-//        Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), new UnitOfMeasure("", "литр"));
+//        Ingredient ingredient = new Ingredient("курица", new Ownership("Пользователь"), new BaseUnitOfMeasure("", "литр"));
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
-//        assertEquals("UnitOfMeasure must have short name.",
+//        assertEquals("BaseUnitOfMeasure must have short name.",
 //                violations.iterator().next().getMessage());
 //    }
 //
 //    @Test
 //    public void testOwnershipIsNull() {
-//        Ingredient ingredient = new Ingredient("курица", null, new UnitOfMeasure("л","литр"));
+//        Ingredient ingredient = new Ingredient("курица", null, new BaseUnitOfMeasure("л","литр"));
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
 //        assertEquals("Ingredient's ownership mustn't be null.",
@@ -197,7 +197,7 @@
 //
 //    @Test
 //    public void testOwnershipIsInvalid() {
-//        Ingredient ingredient = new Ingredient("курица", new Ownership(""), new UnitOfMeasure("л","литр"));
+//        Ingredient ingredient = new Ingredient("курица", new Ownership(""), new BaseUnitOfMeasure("л","литр"));
 //        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
 //        assertEquals(violations.size(), 1);
 //        assertEquals("Ownership must have name.",
@@ -207,9 +207,9 @@
 //    @Test
 //    public void testIngredientIsValid() {
 //        Ingredient ingredient = new Ingredient("молоко", 100, 100, 100, 100,
-//                new UnitOfMeasure("л","литр"), new Ownership("Пользователь"));
+//                new BaseUnitOfMeasure("л","литр"), new Ownership("Пользователь"));
 //        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111.12"),
-//                new Ingredient("курица", new Ownership("пользователь"), new UnitOfMeasure("кг","килограмм")),
+//                new Ingredient("курица", new Ownership("пользователь"), new BaseUnitOfMeasure("кг","килограмм")),
 //                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")));
 //        ingredient.getRecipeIngredients().add(recipeIngredient);
 //        ingredient.getIngredientPrices().add(new IngredientPrice(new BigDecimal("1.11"), ingredient, getRegion()));

@@ -122,7 +122,7 @@ public class RegionTest {
 
     private IngredientPrice getIngredientPrice() {
         return new IngredientPrice(new BigDecimal("111"),
-                new Ingredient("курица", new Ownership(OwnershipName.USER), new UnitOfMeasure("л","литр")),
+                new Ingredient("курица", new Ownership(OwnershipName.USER), new BaseUnitOfMeasure("л","литр")),
                 new Region("Минская область", getCountry()));
     }
 
