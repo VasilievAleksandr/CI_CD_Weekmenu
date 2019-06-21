@@ -14,10 +14,10 @@ public class IngredientDto {
 
     private Long id;
     private String name;
-    private Integer calories;
-    private Integer proteins;
-    private Integer fats;
-    private Integer carbs;
+    private BigDecimal calories;
+    private BigDecimal proteins;
+    private BigDecimal fats;
+    private BigDecimal carbs;
     //key - uom name, Value - equivalent
     private Map<String, BigDecimal> unitOfMeasureEquivalent;
 }

@@ -9,8 +9,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.math.BigDecimal;
 
 @NoArgsConstructor
 @Getter
@@ -35,71 +34,87 @@ public class Ingredient implements Serializable {
     private String name;
 
     @Column(name = "CALORIES")
+    @Digits(
+            integer = 7,
+            fraction = 1,
+            message = "Calories '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
     @Positive(message = "Ingredient's calories '${validatedValue}' must be positive.")
-    private Integer calories;
+    private BigDecimal calories;
 
     @Column(name = "PROTEINS")
+    @Digits(
+            integer = 3,
+            fraction = 1,
+            message = "Proteins '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
     @PositiveOrZero(message = "Ingredient's proteins '${validatedValue}' must be positive or '0'.")
-    private Integer proteins;
+    private BigDecimal proteins;
 
     @Column(name = "FATS")
+    @Digits(
+            integer = 3,
+            fraction = 1,
+            message = "Fats '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
     @PositiveOrZero(message = "Ingredient's fats '${validatedValue}' must be positive or '0'.")
-    private Integer fats;
+    private BigDecimal fats;
 
     @Column(name = "CARBS")
+    @Digits(
+            integer = 3,
+            fraction = 1,
+            message = "Carbs '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
     @PositiveOrZero(message = "Ingredient's carbs '${validatedValue}' must be positive or '0'.")
-    private Integer carbs;
+    private BigDecimal carbs;
 
-    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.PERSIST)
-    private Set<
-            @Valid
-            @NotNull(message = "Ingredient must have list of ingredientPrice without null elements.")
-                    IngredientPrice> ingredientPrices = new HashSet<>();
+//    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.PERSIST)
+//    private Set<
+//            @Valid
+//            @NotNull(message = "Ingredient must have list of ingredientPrice without null elements.")
+//                    IngredientPrice> ingredientPrices = new HashSet<>();
+//
+//    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
+//    private Set<
+//            @Valid
+//            @NotNull(message = "Ingredient must have list of recipeIngredients without null elements.")
+//                    RecipeIngredient> recipeIngredients = new HashSet<>();
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
-    private Set<
-            @Valid
-            @NotNull(message = "Ingredient must have list of recipeIngredients without null elements.")
-                    RecipeIngredient> recipeIngredients = new HashSet<RecipeIngredient>();
+//    @ManyToOne
+//    @JoinColumn(name = "BASE_UNIT_OF_MEASURE_ID")
+//    @Valid
+//    @NotNull(message = "Ingredient's unitOfMeasure mustn't be null.")
+//    private UnitOfMeasure unitOfMeasure;
+
+    @Transient
+    private BaseUOM baseUOM = BaseUOM.GRAMM;
 
     @ManyToOne
-    @JoinColumn(name = "UNIT_OF_MEASURE_ID",
-            updatable = false,
-            insertable = false)
-    @Valid
-    @NotNull(message = "Ingredient's unitOfMeasure mustn't be null.")
-    private UnitOfMeasure unitOfMeasure;
-
-    @ManyToOne
-    @JoinColumn(name = "OWNERSHIP_ID",
-            updatable = false,
-            insertable = false)
+    @JoinColumn(name = "OWNERSHIP_ID")
     @Valid
     @NotNull(message = "Ingredient's ownership mustn't be null.")
     private Ownership ownership;
 
-
-    public Ingredient(String name, Integer calories, Integer proteins, Integer fats, Integer carbs,
-                      @Valid UnitOfMeasure unitOfMeasure, @Valid Ownership ownership) {
+    public Ingredient(String name, BigDecimal calories, BigDecimal proteins, BigDecimal fats, BigDecimal carbs,
+                      @Valid Ownership ownership) {
         this.name = name;
         this.calories = calories;
         this.proteins = proteins;
         this.fats = fats;
         this.carbs = carbs;
-        this.unitOfMeasure = unitOfMeasure;
         this.ownership = ownership;
     }
 
-    public Ingredient(Integer calories, Integer proteins, Integer fats, Integer carbs) {
+    public Ingredient(BigDecimal calories, BigDecimal proteins, BigDecimal fats, BigDecimal carbs) {
         this.calories = calories;
         this.proteins = proteins;
         this.fats = fats;
         this.carbs = carbs;
     }
 
-    public Ingredient(String name, Ownership ownership, UnitOfMeasure unitOfMeasure) {
+    public Ingredient(String name, Ownership ownership) {
         this.name = name;
         this.ownership = ownership;
-        this.unitOfMeasure = unitOfMeasure;
     }
 }
