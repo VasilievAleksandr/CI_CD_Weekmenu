@@ -57,10 +57,19 @@ public class CountryServiceImpl implements CrudService<CountryDto, Long>, Countr
         return countryRepository.findByAlphaCode2IgnoreCase(alphaCode2).orElse(null);
     }
 
+    @Override
+    public List<String> getAllCountryNames() {
+        return countryRepository.findAll().
+                stream()
+                .filter(Objects::nonNull)
+                .map(Country::getName)
+                .collect(Collectors.toList());
+    }
+
     private Country convertToEntity(CountryDto countryDto) {
         Country country = modelMapper.map(countryDto, Country.class);
         Currency currency = currencyRepository.findByCodeIgnoreCase(countryDto.getCurrencyCode()).orElse(null);
-        if (currency!=null) {
+        if (currency != null) {
             country.setCurrency(currency);
         }
         return country;
