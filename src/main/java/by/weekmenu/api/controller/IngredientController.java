@@ -43,6 +43,7 @@ public class IngredientController {
             ingredientDto.setFats(updatedIngredientDto.getFats());
             ingredientDto.setProteins(updatedIngredientDto.getProteins());
             ingredientDto.setUnitOfMeasureEquivalent(updatedIngredientDto.getUnitOfMeasureEquivalent());
+            ingredientDto.setIngredientPrices(updatedIngredientDto.getIngredientPrices());
         }
         return ingredientService.save(ingredientDto);
     }
