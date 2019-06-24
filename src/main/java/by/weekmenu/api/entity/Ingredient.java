@@ -48,6 +48,7 @@ public class Ingredient implements Serializable {
             fraction = 1,
             message = "Proteins '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
+    @DecimalMax(value = "100", message = "Ingredient's proteins '${validatedValue}' must be lower than '{value}'.")
     @PositiveOrZero(message = "Ingredient's proteins '${validatedValue}' must be positive or '0'.")
     private BigDecimal proteins;
 
@@ -57,6 +58,7 @@ public class Ingredient implements Serializable {
             fraction = 1,
             message = "Fats '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
+    @DecimalMax(value = "100", message = "Ingredient's fats '${validatedValue}' must be lower than '{value}'.")
     @PositiveOrZero(message = "Ingredient's fats '${validatedValue}' must be positive or '0'.")
     private BigDecimal fats;
 
@@ -66,6 +68,7 @@ public class Ingredient implements Serializable {
             fraction = 1,
             message = "Carbs '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
+    @DecimalMax(value = "100", message = "Ingredient's carbs '${validatedValue}' must be lower than '{value}'.")
     @PositiveOrZero(message = "Ingredient's carbs '${validatedValue}' must be positive or '0'.")
     private BigDecimal carbs;
 
@@ -79,7 +82,7 @@ public class Ingredient implements Serializable {
     private Ownership ownership;
 
     public Ingredient(String name, BigDecimal calories, BigDecimal proteins, BigDecimal fats, BigDecimal carbs,
-                      @Valid Ownership ownership) {
+                      Ownership ownership) {
         this.name = name;
         this.calories = calories;
         this.proteins = proteins;
