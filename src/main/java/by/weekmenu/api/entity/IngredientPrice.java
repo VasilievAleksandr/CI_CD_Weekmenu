@@ -1,5 +1,6 @@
 package by.weekmenu.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(exclude = {"id"})
 @Entity
 @Table(name = "INGREDIENT_PRICE")
-public class IngredientPrice {
+public class IngredientPrice implements Serializable{
 
     private static final long serialVersionUID = -2495048957992775103L;
 
@@ -34,7 +35,7 @@ public class IngredientPrice {
         @Column(name = "REGION_ID")
         private Long regionId;
 
-        public Id() {
+        Id() {
 
         }
 
@@ -44,7 +45,7 @@ public class IngredientPrice {
         }
 
         public boolean equals(Object o) {
-            if (o != null && o instanceof Id) {
+            if (o instanceof Id) {
                 Id that = (Id) o;
                 return this.ingredientId.equals(that.ingredientId) && this.regionId.equals(that.regionId);
             }
@@ -68,21 +69,13 @@ public class IngredientPrice {
     @EmbeddedId
     private Id id = new Id();
 
-    @Column(name = "PRICE_VALUE")
-    @Digits(
-            integer = 7,
-            fraction = 2,
-            message = "Ingredient_Price's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
-    )
-    @Positive(message = "Ingredient_Price's Price_Value '${validatedValue}' must be positive.")
-    private BigDecimal priceValue;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INGREDIENT_ID",
             updatable = false,
             insertable = false)
     @Valid
     @NotNull(message = "Ingredient_Price's Ingredient mustn't be null.")
+    @JsonIgnore
     private Ingredient ingredient;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -93,13 +86,33 @@ public class IngredientPrice {
     @NotNull(message = "Ingredient_Price's Region mustn't be null.")
     private Region region;
 
-    public IngredientPrice(BigDecimal priceValue, Ingredient ingredient, Region region) {
-        this.priceValue = priceValue;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "UNIT_OF_MEASURE_ID")
+    @NotNull(message = "IngredientPrice must have UnitOfMeasure")
+    private UnitOfMeasure unitOfMeasure;
+
+    @Column(name = "QUANTITY")
+    @Digits(
+            integer = 7,
+            fraction = 1,
+            message = "Quantity '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
+    @Positive(message = "Quantity '${validatedValue}' must be positive.")
+    @NotNull(message = "IngredientPrice must have quantity")
+    private BigDecimal quantity;
+
+    @Column(name = "PRICE_VALUE")
+    @Digits(
+            integer = 7,
+            fraction = 2,
+            message = "Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
+    @Positive(message = "Price_Value '${validatedValue}' must be positive.")
+    @NotNull(message = "IngredientPrice must have priceValue")
+    private BigDecimal priceValue;
+
+    public IngredientPrice(Ingredient ingredient, Region region) {
         this.ingredient = ingredient;
         this.region = region;
-    }
-
-    public IngredientPrice(BigDecimal priceValue) {
-        this.priceValue = priceValue;
     }
 }
