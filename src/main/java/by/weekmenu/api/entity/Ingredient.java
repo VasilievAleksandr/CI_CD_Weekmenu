@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id", "recipeIngredients", "ingredientPrices"})
+@EqualsAndHashCode(exclude = {"id"})
 @Entity
 @Table(name = "INGREDIENT")
 public class Ingredient implements Serializable {
@@ -68,24 +68,6 @@ public class Ingredient implements Serializable {
     )
     @PositiveOrZero(message = "Ingredient's carbs '${validatedValue}' must be positive or '0'.")
     private BigDecimal carbs;
-
-//    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.PERSIST)
-//    private Set<
-//            @Valid
-//            @NotNull(message = "Ingredient must have list of ingredientPrice without null elements.")
-//                    IngredientPrice> ingredientPrices = new HashSet<>();
-//
-//    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
-//    private Set<
-//            @Valid
-//            @NotNull(message = "Ingredient must have list of recipeIngredients without null elements.")
-//                    RecipeIngredient> recipeIngredients = new HashSet<>();
-
-//    @ManyToOne
-//    @JoinColumn(name = "BASE_UNIT_OF_MEASURE_ID")
-//    @Valid
-//    @NotNull(message = "Ingredient's unitOfMeasure mustn't be null.")
-//    private UnitOfMeasure unitOfMeasure;
 
     @Transient
     private BaseUOM baseUOM = BaseUOM.GRAMM;
