@@ -83,6 +83,7 @@ public class IngredientServiceImpl implements IngredientService {
     @Transactional
     public void delete(Long id) {
         ingredientUnitOfMeasureRepository.deleteIngredientUnitOfMeasuresById_IngredientId(id);
+        ingredientPriceRepository.deleteIngredientPricesById_IngredientId(id);
         ingredientRepository.deleteById(id);
     }
 
