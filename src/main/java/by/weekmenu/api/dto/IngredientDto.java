@@ -6,10 +6,11 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Set;
 
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 public class IngredientDto {
 
     private Long id;
@@ -20,4 +21,5 @@ public class IngredientDto {
     private BigDecimal carbs;
     //key - uom name, Value - equivalent
     private Map<String, BigDecimal> unitOfMeasureEquivalent;
+    private Set<IngredientPriceDTO> ingredientPrices;
 }
