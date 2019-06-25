@@ -38,7 +38,7 @@ public class IngredientTest {
     }
 
     @Test
-    public void testIngerdientNameIsTooLong() {
+    public void testIngredientNameIsTooLong() {
         String name = StringUtils.repeat("name", "/", 60);
         Ingredient ingredient = createIngredient(null);
         ingredient.setName(name);

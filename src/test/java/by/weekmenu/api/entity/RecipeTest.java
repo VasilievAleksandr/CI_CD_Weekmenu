@@ -197,8 +197,7 @@ public class RecipeTest {
         Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.getRecipeIngredients().add(
                 new RecipeIngredient(new BigDecimal("-100"),
-                        new Ingredient("курица", new Ownership(OwnershipName.USER),
-                                new BaseUnitOfMeasure("л","литр")), recipe)
+                        new Ingredient("курица", new Ownership(OwnershipName.USER)), recipe)
         );
         recipe.getRecipeIngredients().add(null);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
@@ -287,8 +286,7 @@ public class RecipeTest {
         recipe.setImageLink("images/recipe.jpg");
         recipe.getRecipeIngredients().add(
                 new RecipeIngredient(new BigDecimal("100"),
-                        new Ingredient("курица", new Ownership(OwnershipName.USER),
-                                new BaseUnitOfMeasure("л","литр")), recipe)
+                        new Ingredient("курица", new Ownership(OwnershipName.USER)), recipe)
         );
         recipe.getRecipePrices().add(new RecipePrice(new BigDecimal("1.11"),
                 new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER)),

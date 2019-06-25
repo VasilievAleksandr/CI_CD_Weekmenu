@@ -19,7 +19,7 @@ public class IngredientPriceTest {
     private static Validator validator;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
@@ -38,45 +38,98 @@ public class IngredientPriceTest {
         return new Currency("руб.", "BYN", true);
     }
 
+    private Ingredient getIngredient() {
+        return new Ingredient("Курица", new Ownership(OwnershipName.USER));
+    }
+
+    private UnitOfMeasure getUnitOfMeasure() {
+        return new UnitOfMeasure("Кг", "Килограмм");
+    }
+
     @Test
     public void testIngredientPricePriceValueHasTooManyFractionDigits() {
-        IngredientPrice ingredientPrice = new IngredientPrice(new BigDecimal("111.123"));
-
-        ingredientPrice.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER), new BaseUnitOfMeasure("л","литр")));
-        ingredientPrice.setRegion(getRegion());
+        IngredientPrice ingredientPrice = new IngredientPrice(getIngredient(), getRegion(), getUnitOfMeasure(),
+                new BigDecimal("1"), new BigDecimal("111.123"));
         Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
         assertEquals(violations.size(), 1);
-        assertEquals("Ingredient_Price's Price_Value '111.123' must have up to '7' integer digits and '2' fraction digits.",
+        assertEquals("Price_Value '111.123' must have up to '7' integer digits and '2' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
     public void testIngredientPricePriceValueIsTooHigh() {
-        IngredientPrice ingredientPrice = new IngredientPrice(new BigDecimal("1111111111.123"));
-        ingredientPrice.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER), new BaseUnitOfMeasure("л","литр")));
-        ingredientPrice.setRegion(getRegion());
+        IngredientPrice ingredientPrice = new IngredientPrice(getIngredient(), getRegion(), getUnitOfMeasure(),
+                new BigDecimal("1"), new BigDecimal("12345678.12"));
         Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
-
         assertEquals(violations.size(), 1);
-        assertEquals("Ingredient_Price's Price_Value '1111111111.123' must have up to '7' integer digits and '2' fraction digits.",
+        assertEquals("Price_Value '12345678.12' must have up to '7' integer digits and '2' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
     public void testIngredientPricePriceValueIsNegative() {
-        IngredientPrice ingredientPrice = new IngredientPrice(new BigDecimal("-111"));
-        ingredientPrice.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER), new BaseUnitOfMeasure("л","литр")));
-        ingredientPrice.setRegion(getRegion());
+        IngredientPrice ingredientPrice = new IngredientPrice(getIngredient(), getRegion(), getUnitOfMeasure(),
+                new BigDecimal("1"), new BigDecimal("-111"));
         Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
         assertEquals(violations.size(), 1);
-        assertEquals("Ingredient_Price's Price_Value '-111' must be positive.",
+        assertEquals("Price_Value '-111' must be positive.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testIngredientPricePriceValueIsNull() {
+        IngredientPrice ingredientPrice = new IngredientPrice(getIngredient(), getRegion(), getUnitOfMeasure(),
+                new BigDecimal("1"), null);
+        Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
+        assertEquals(violations.size(), 1);
+        assertEquals("IngredientPrice must have priceValue",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testIngredientPriceQuantityValueIsTooHigh() {
+        IngredientPrice ingredientPrice = new IngredientPrice(getIngredient(), getRegion(), getUnitOfMeasure(),
+                new BigDecimal("12345678.1"), new BigDecimal("111.12"));
+        Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
+        assertEquals(violations.size(), 1);
+        assertEquals("Quantity '12345678.1' must have up to '7' integer digits and '1' fraction digits.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testIngredientPriceQuantityIsNegative() {
+        IngredientPrice ingredientPrice = new IngredientPrice(getIngredient(), getRegion(), getUnitOfMeasure(),
+                new BigDecimal("-111"), new BigDecimal("111.12"));
+        Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
+        assertEquals(violations.size(), 1);
+        assertEquals("Quantity '-111' must be positive.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testIngredientPriceQuantityHasTooManyFractionDigits() {
+        IngredientPrice ingredientPrice = new IngredientPrice(getIngredient(), getRegion(), getUnitOfMeasure(),
+                new BigDecimal("1.12"), new BigDecimal("111.12"));
+        Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
+        assertEquals(violations.size(), 1);
+        assertEquals("Quantity '1.12' must have up to '7' integer digits and '1' fraction digits.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testIngredientPriceQuantityIsNull() {
+        IngredientPrice ingredientPrice = new IngredientPrice(getIngredient(), getRegion(), getUnitOfMeasure(),
+                null, new BigDecimal("111.12"));
+        Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
+        assertEquals(violations.size(), 1);
+        assertEquals("IngredientPrice must have quantity.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
     public void testIngredientIsNull() {
-        IngredientPrice ingredientPrice = new IngredientPrice(new BigDecimal("111"), null,
-                getRegion());
+        IngredientPrice ingredientPrice = new IngredientPrice(null, getRegion(), getUnitOfMeasure(),
+                new BigDecimal("1"), new BigDecimal("123.12"));
         Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
         assertEquals(violations.size(), 1);
         assertEquals("Ingredient_Price's Ingredient mustn't be null.",
@@ -84,21 +137,9 @@ public class IngredientPriceTest {
     }
 
     @Test
-    public void testIngredientIsInvalid() {
-        IngredientPrice ingredientPrice = new IngredientPrice(new BigDecimal("111"),
-                new Ingredient(null, new Ownership(OwnershipName.USER), new BaseUnitOfMeasure("л","литр")),
-                getRegion());
-        Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
-        assertEquals(violations.size(), 1);
-        assertEquals("Ingredient must have name.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
     public void testRegionIsNull() {
-        IngredientPrice ingredientPrice = new IngredientPrice(new BigDecimal("111"),
-                new Ingredient("курица", new Ownership(OwnershipName.USER), new BaseUnitOfMeasure("л","литр")),
-                null);
+        IngredientPrice ingredientPrice = new IngredientPrice(getIngredient(), null, getUnitOfMeasure(),
+                new BigDecimal("1"), new BigDecimal("123.12"));
         Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
         assertEquals(violations.size(), 1);
         assertEquals("Ingredient_Price's Region mustn't be null.",
@@ -106,10 +147,19 @@ public class IngredientPriceTest {
     }
 
     @Test
-    public void testIngredientCurrencyIsValid() {
-        IngredientPrice ingredientPrice = new IngredientPrice(new BigDecimal("111"),
-                new Ingredient("курица", new Ownership(OwnershipName.USER), new BaseUnitOfMeasure("л","литр")),
-                getRegion());
+    public void testUnitOfMeasureIsNull() {
+        IngredientPrice ingredientPrice = new IngredientPrice(getIngredient(), getRegion(), null,
+                new BigDecimal("1"), new BigDecimal("123.12"));
+        Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
+        assertEquals(violations.size(), 1);
+        assertEquals("IngredientPrice must have UnitOfMeasure",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testIngredientPriceIsValid() {
+        IngredientPrice ingredientPrice = new IngredientPrice(getIngredient(), getRegion(), getUnitOfMeasure(),
+                new BigDecimal("1"), new BigDecimal("123.12"));
         Set<ConstraintViolation<IngredientPrice>> violations = validator.validate(ingredientPrice);
         assertEquals(violations.size(), 0);
     }
