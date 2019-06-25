@@ -98,7 +98,7 @@ public class IngredientPrice implements Serializable{
             message = "Quantity '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
     @Positive(message = "Quantity '${validatedValue}' must be positive.")
-    @NotNull(message = "IngredientPrice must have quantity")
+    @NotNull(message = "IngredientPrice must have quantity.")
     private BigDecimal quantity;
 
     @Column(name = "PRICE_VALUE")
@@ -111,8 +111,12 @@ public class IngredientPrice implements Serializable{
     @NotNull(message = "IngredientPrice must have priceValue")
     private BigDecimal priceValue;
 
-    public IngredientPrice(Ingredient ingredient, Region region) {
+    public IngredientPrice(Ingredient ingredient, Region region, UnitOfMeasure unitOfMeasure,
+                           BigDecimal quantity, BigDecimal priceValue) {
         this.ingredient = ingredient;
         this.region = region;
+        this.unitOfMeasure = unitOfMeasure;
+        this.quantity = quantity;
+        this.priceValue = priceValue;
     }
 }
