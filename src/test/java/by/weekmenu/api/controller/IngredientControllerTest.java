@@ -7,6 +7,7 @@ import by.weekmenu.api.service.IngredientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,6 +39,9 @@ public class IngredientControllerTest {
 
     @MockBean
     private OwnershipRepository ownershipRepository;
+
+    @MockBean
+    private ModelMapper modelMapper;
 
     private IngredientDto createIngredientDto(Long id, String name) {
         IngredientDto ingredientDto = new IngredientDto();
@@ -124,6 +128,7 @@ public class IngredientControllerTest {
         when(ingredientService.findById(ingredientDto.getId())).thenReturn(ingredientDto);
         ingredientDto.setName("Ананас");
         ingredientDto.setFats(new BigDecimal("50"));
+        when(modelMapper.map(any(), any())).thenReturn(ingredientDto);
         when(ingredientService.save(any(IngredientDto.class))).thenReturn(ingredientDto);
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(put("/ingredients/1")
@@ -144,7 +149,7 @@ public class IngredientControllerTest {
         when(ingredientService.findById(ingredientDto.getId())).thenReturn(ingredientDto);
         mockMvc.perform(delete("/ingredients/1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test

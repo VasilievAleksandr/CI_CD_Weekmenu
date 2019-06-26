@@ -241,7 +241,7 @@ public class IngredientIntegrationTest {
 
         mockMvc.perform(delete("/ingredients/" + ingredientDto.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
