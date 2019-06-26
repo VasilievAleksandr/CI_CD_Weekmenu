@@ -1,10 +1,7 @@
 package by.weekmenu.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -24,6 +21,9 @@ public class IngredientPrice implements Serializable{
 
     private static final long serialVersionUID = -2495048957992775103L;
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Embeddable
     public static class Id implements Serializable {
 
@@ -34,36 +34,6 @@ public class IngredientPrice implements Serializable{
 
         @Column(name = "REGION_ID")
         private Long regionId;
-
-        Id() {
-
-        }
-
-        public Id(Long ingredientId, Long regionId) {
-            this.ingredientId = ingredientId;
-            this.regionId = regionId;
-        }
-
-        public boolean equals(Object o) {
-            if (o instanceof Id) {
-                Id that = (Id) o;
-                return this.ingredientId.equals(that.ingredientId) && this.regionId.equals(that.regionId);
-            }
-
-            return false;
-        }
-
-        public int hashCode() {
-            return ingredientId.hashCode() + regionId.hashCode();
-        }
-
-        public Long getRegionId() {
-            return regionId;
-        }
-
-        public Long getIngredientId() {
-            return ingredientId;
-        }
     }
 
     @EmbeddedId
