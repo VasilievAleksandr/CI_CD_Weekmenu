@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.IngredientDto;
 import by.weekmenu.api.service.IngredientService;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,19 +14,25 @@ import java.util.List;
 public class IngredientController {
 
     private final IngredientService ingredientService;
+    private final ModelMapper modelMapper;
 
-    public IngredientController(IngredientService ingredientService) {
+    public IngredientController(IngredientService ingredientService, ModelMapper modelMapper) {
         this.ingredientService = ingredientService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
-    public List<IngredientDto> findAllIngredients() {
-        return ingredientService.findAll();
+    public ResponseEntity<List<IngredientDto>> findAllIngredients() {
+        return new ResponseEntity<>(ingredientService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public IngredientDto findIngredientById(@PathVariable("id") Long id) {
-        return ingredientService.findById(id);
+    public ResponseEntity<IngredientDto> findIngredientById(@PathVariable("id") Long id) {
+        try {
+            return new ResponseEntity<>(ingredientService.findById(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping
@@ -34,25 +41,24 @@ public class IngredientController {
     }
 
     @PutMapping("/{id}")
-    public IngredientDto updateIngredient(@RequestBody IngredientDto updatedIngredientDto, @PathVariable ("id") Long id) {
+    public ResponseEntity<IngredientDto> updateIngredient(@RequestBody IngredientDto updatedIngredientDto, @PathVariable ("id") Long id) {
         IngredientDto ingredientDto = ingredientService.findById(id);
         if (ingredientDto!=null) {
-            ingredientDto.setName(updatedIngredientDto.getName());
-            ingredientDto.setCalories(updatedIngredientDto.getCalories());
-            ingredientDto.setCarbs(updatedIngredientDto.getCarbs());
-            ingredientDto.setFats(updatedIngredientDto.getFats());
-            ingredientDto.setProteins(updatedIngredientDto.getProteins());
-            ingredientDto.setUnitOfMeasureEquivalent(updatedIngredientDto.getUnitOfMeasureEquivalent());
-            ingredientDto.setIngredientPrices(updatedIngredientDto.getIngredientPrices());
+            return new ResponseEntity<>(ingredientService.save(modelMapper.map(updatedIngredientDto, IngredientDto.class)),
+                    HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-        return ingredientService.save(ingredientDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteIngredient(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteIngredient(@PathVariable("id") Long id) {
         IngredientDto ingredientDto = ingredientService.findById(id);
         if (ingredientDto!=null) {
             ingredientService.delete(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
