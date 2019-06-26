@@ -100,29 +100,33 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     private IngredientDto convertToDto(Ingredient ingredient) {
-        IngredientDto ingredientDto = modelMapper.map(ingredient, IngredientDto.class);
-        List<IngredientUnitOfMeasure> ingredientUOMlist = ingredientUnitOfMeasureRepository.findAllById_IngredientId(ingredient.getId());
-        Map<String, BigDecimal> map = new HashMap<>();
-        ingredientUOMlist.forEach(ingredientUnitOfMeasure ->
-                map.put(Objects.requireNonNull(unitOfMeasureRepository.findById(ingredientUnitOfMeasure.getUnitOfMeasure().getId())
-                                .orElse(null)).getFullName(),
-                ingredientUnitOfMeasure.getEquivalent()));
-        ingredientDto.setUnitOfMeasureEquivalent(map);
+        if (ingredient!=null) {
+            IngredientDto ingredientDto = modelMapper.map(ingredient, IngredientDto.class);
+            List<IngredientUnitOfMeasure> ingredientUOMlist = ingredientUnitOfMeasureRepository.findAllById_IngredientId(ingredient.getId());
+            Map<String, BigDecimal> map = new HashMap<>();
+            ingredientUOMlist.forEach(ingredientUnitOfMeasure ->
+                    map.put(Objects.requireNonNull(unitOfMeasureRepository.findById(ingredientUnitOfMeasure.getUnitOfMeasure().getId())
+                                    .orElse(null)).getFullName(),
+                            ingredientUnitOfMeasure.getEquivalent()));
+            ingredientDto.setUnitOfMeasureEquivalent(map);
 
-        Set<IngredientPriceDTO> ingredientPriceDTOS = new HashSet<>();
-        Set<IngredientPrice> ingredientPrices = ingredientPriceRepository.findAllById_IngredientId(ingredient.getId());
-        for(IngredientPrice tempIngredientPrice : ingredientPrices) {
-            IngredientPriceDTO ingredientPriceDTO = new IngredientPriceDTO();
-            ingredientPriceDTO.setUnitOfMeasureName(tempIngredientPrice.getUnitOfMeasure().getFullName());
-            ingredientPriceDTO.setRegionName(tempIngredientPrice.getRegion().getName());
-            ingredientPriceDTO.setPriceValue(tempIngredientPrice.getPriceValue());
-            ingredientPriceDTO.setQuantity(tempIngredientPrice.getQuantity());
-            regionRepository.findByNameIgnoreCase(tempIngredientPrice.getRegion().getName())
-                    .ifPresent(region -> ingredientPriceDTO.setCurrencyCode(region.getCountry().getCurrency().getCode()));
-            ingredientPriceDTOS.add(ingredientPriceDTO);
+            Set<IngredientPriceDTO> ingredientPriceDTOS = new HashSet<>();
+            Set<IngredientPrice> ingredientPrices = ingredientPriceRepository.findAllById_IngredientId(ingredient.getId());
+            for (IngredientPrice tempIngredientPrice : ingredientPrices) {
+                IngredientPriceDTO ingredientPriceDTO = new IngredientPriceDTO();
+                ingredientPriceDTO.setUnitOfMeasureName(tempIngredientPrice.getUnitOfMeasure().getFullName());
+                ingredientPriceDTO.setRegionName(tempIngredientPrice.getRegion().getName());
+                ingredientPriceDTO.setPriceValue(tempIngredientPrice.getPriceValue());
+                ingredientPriceDTO.setQuantity(tempIngredientPrice.getQuantity());
+                regionRepository.findByNameIgnoreCase(tempIngredientPrice.getRegion().getName())
+                        .ifPresent(region -> ingredientPriceDTO.setCurrencyCode(region.getCountry().getCurrency().getCode()));
+                ingredientPriceDTOS.add(ingredientPriceDTO);
+            }
+            ingredientDto.setIngredientPrices(ingredientPriceDTOS);
+            return ingredientDto;
+        } else {
+            return null;
         }
-        ingredientDto.setIngredientPrices(ingredientPriceDTOS);
-        return ingredientDto;
     }
 
     @Override
