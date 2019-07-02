@@ -62,4 +62,10 @@ public class RegionController {
             return 0;
         }
     }
+
+    @GetMapping("/name")
+    public RegionDto findRegionByName(@RequestParam String name) {
+        return regionService.findByName(name);
+    }
+
 }

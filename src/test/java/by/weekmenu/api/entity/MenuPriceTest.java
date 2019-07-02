@@ -31,7 +31,7 @@ public class MenuPriceTest {
     }
 
     private Menu getMenu() {
-        return new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        return new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
     }
 
     private Currency getCurrency() {

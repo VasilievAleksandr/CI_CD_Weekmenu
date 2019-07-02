@@ -11,13 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Transactional(readOnly = true)
-public class UnitOfMeasureServiceImp implements CrudService<UnitOfMeasureDto, Long>, UnitOfMeasureService {
+public class UnitOfMeasureServiceImp implements UnitOfMeasureService {
 
     private final UnitOfMeasureRepository unitOfMeasureRepository;
     private final ModelMapper modelMapper;

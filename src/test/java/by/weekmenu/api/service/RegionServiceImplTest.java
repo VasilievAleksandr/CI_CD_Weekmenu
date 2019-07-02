@@ -109,7 +109,7 @@ public class RegionServiceImplTest {
     @Test
     public void checkUniqueNameTest() {
         when(regionRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
-        Region region = regionService.findByName("Минск");
-        assertThat(region).isNull();
+        RegionDto regionDto = regionService.findByName("Минск");
+        assertThat(regionDto).isNull();
     }
 }

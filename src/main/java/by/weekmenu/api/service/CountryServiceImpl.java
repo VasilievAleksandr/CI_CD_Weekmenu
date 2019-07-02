@@ -2,7 +2,6 @@ package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.CountryDto;
 import by.weekmenu.api.entity.Country;
-import by.weekmenu.api.entity.Currency;
 import by.weekmenu.api.repository.CountryRepository;
 import by.weekmenu.api.repository.CurrencyRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,13 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class CountryServiceImpl implements CrudService<CountryDto, Long>, CountryService {
+public class CountryServiceImpl implements CountryService {
 
     private final CountryRepository countryRepository;
     private final CurrencyRepository currencyRepository;
@@ -59,10 +57,7 @@ public class CountryServiceImpl implements CrudService<CountryDto, Long>, Countr
 
     private Country convertToEntity(CountryDto countryDto) {
         Country country = modelMapper.map(countryDto, Country.class);
-        Currency currency = currencyRepository.findByCodeIgnoreCase(countryDto.getCurrencyCode()).orElse(null);
-        if (currency!=null) {
-            country.setCurrency(currency);
-        }
+        currencyRepository.findByCodeIgnoreCase(countryDto.getCurrencyCode()).ifPresent(country::setCurrency);
         return country;
     }
 

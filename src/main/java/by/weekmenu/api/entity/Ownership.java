@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
@@ -27,13 +26,10 @@ public class Ownership implements Serializable {
     private Long id;
 
     @Column (name = "NAME", unique = true)
-    @NotBlank(message = "Ownership must have name.")
-    @Size(max = 255,
-            message = "Ownership's name '${validatedValue}' mustn't be more than '{max}' characters long."
-    )
-    private String name;
+    @NotNull(message = "Ownership must have name.")
+    private OwnershipName name;
 
-    public Ownership(String name) {
+    public Ownership(OwnershipName name) {
         this.name = name;
     }
 }

@@ -29,7 +29,7 @@ public class CookingMethodTest {
     }
 
     private Recipe getRecipe() {
-        return new Recipe("Жаркое", true, new CookingMethod("Жарка"), new Ownership("Пользователь"));
+        return new Recipe("Жаркое", true, new CookingMethod("Жарка"), new Ownership(OwnershipName.USER));
     }
 
     @Test

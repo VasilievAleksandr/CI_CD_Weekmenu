@@ -1,6 +1,7 @@
 package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.RegionDto;
+import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.service.RegionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -32,11 +33,14 @@ public class RegionControllerTest {
     @MockBean
     private RegionService regionService;
 
+    @MockBean
+    private OwnershipRepository ownershipRepository;
+
     @Test
     public void getAllRegionsTest() throws Exception {
         List<RegionDto> regions = new ArrayList<>();
-        regions.add(new RegionDto(1L, "Минск", "Беларусь"));
-        regions.add(new RegionDto(2L, "Гродно", "Беларусь"));
+        regions.add(new RegionDto(1L, "Минск", "Беларусь", "BYN"));
+        regions.add(new RegionDto(2L, "Гродно", "Беларусь", "BYN"));
         when(regionService.findAll()).thenReturn(regions);
 
         mockMvc.perform(get("/regions")
@@ -54,7 +58,7 @@ public class RegionControllerTest {
 
     @Test
     public void saveRegionTest() throws Exception {
-        RegionDto regionDto = new RegionDto(1L, "Минск", "Беларусь");
+        RegionDto regionDto = new RegionDto(1L, "Минск", "Беларусь", "BYN");
         when(regionService.save(any(RegionDto.class))).thenReturn(regionDto);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -71,7 +75,7 @@ public class RegionControllerTest {
 
     @Test
     public void findRegionByIdTest() throws Exception {
-        RegionDto regionDto = new RegionDto(1L, "Минск", "Беларусь");
+        RegionDto regionDto = new RegionDto(1L, "Минск", "Беларусь", "BYN");
         when(regionService.findById(regionDto.getId())).thenReturn(regionDto);
 
         mockMvc.perform(get("/regions/1")
@@ -85,7 +89,7 @@ public class RegionControllerTest {
 
     @Test
     public void updateRegionTest() throws Exception {
-        RegionDto regionDto = new RegionDto(1L, "Минск", "Беларусь");
+        RegionDto regionDto = new RegionDto(1L, "Минск", "Беларусь", "BYN");
         when(regionService.findById(regionDto.getId())).thenReturn(regionDto);
         regionDto.setName("Гродно");
         when(regionService.save(any(RegionDto.class))).thenReturn(regionDto);
@@ -102,7 +106,7 @@ public class RegionControllerTest {
 
     @Test
     public void deleteRegionTest() throws Exception {
-        RegionDto regionDto = new RegionDto(1L, "Минск", "Беларусь");
+        RegionDto regionDto = new RegionDto(1L, "Минск", "Беларусь", "BYN");
         when(regionService.findById(regionDto.getId())).thenReturn(regionDto);
         mockMvc.perform(delete("/regions/1")
         .contentType(MediaType.APPLICATION_JSON))
