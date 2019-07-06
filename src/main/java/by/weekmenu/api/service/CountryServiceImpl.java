@@ -55,6 +55,15 @@ public class CountryServiceImpl implements CountryService {
         return countryRepository.findByAlphaCode2IgnoreCase(alphaCode2).orElse(null);
     }
 
+    @Override
+    public List<String> getAllCountryNames() {
+        return countryRepository.findAll().
+                stream()
+                .filter(Objects::nonNull)
+                .map(Country::getName)
+                .collect(Collectors.toList());
+    }
+
     private Country convertToEntity(CountryDto countryDto) {
         Country country = modelMapper.map(countryDto, Country.class);
         currencyRepository.findByCodeIgnoreCase(countryDto.getCurrencyCode()).ifPresent(country::setCurrency);

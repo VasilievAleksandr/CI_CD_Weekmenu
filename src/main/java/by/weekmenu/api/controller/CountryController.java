@@ -68,4 +68,9 @@ public class CountryController {
             return 0;
         }
     }
+
+    @GetMapping("/names")
+    public List<String> getAllCountryNames() {
+        return countryService.getAllCountryNames();
+    }
 }
