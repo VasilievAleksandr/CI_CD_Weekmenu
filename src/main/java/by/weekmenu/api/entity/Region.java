@@ -11,14 +11,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id", "recipePrices", "dailyMenuStatisticsPrices"})
+@EqualsAndHashCode(exclude = {"id"})
 @Entity
 @Table(name = "REGION")
 public class Region implements Serializable {
@@ -42,24 +40,6 @@ public class Region implements Serializable {
     @Valid
     @NotNull(message = "Region's Country mustn't be null.")
     private Country country;
-
-    @OneToMany(mappedBy = "region", cascade = CascadeType.PERSIST)
-    private Set<
-            @Valid
-            @NotNull(message = "Region must have list of recipePrices without null elements.")
-                    RecipePrice> recipePrices = new HashSet<>();
-
-    @OneToMany(mappedBy = "region", cascade = CascadeType.PERSIST)
-    private Set<
-            @Valid
-            @NotNull(message = "Region must have list of dailyMenuStatisticsPrices without null elements.")
-                    DailyMenuStatisticsPrice> dailyMenuStatisticsPrices = new HashSet<>();
-
-    @OneToMany(mappedBy = "region", cascade = CascadeType.PERSIST)
-    private Set<
-            @Valid
-            @NotNull(message = "Region must have list of ingredientPrices without null elements.")
-                    IngredientPrice> ingredientPrices = new HashSet<>();
 
     public Region(String name, Country country) {
         this.name = name;

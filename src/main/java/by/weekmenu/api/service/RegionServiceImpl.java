@@ -1,7 +1,6 @@
 package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.RegionDto;
-import by.weekmenu.api.entity.Country;
 import by.weekmenu.api.entity.Region;
 import by.weekmenu.api.repository.CountryRepository;
 import by.weekmenu.api.repository.RegionRepository;
@@ -49,8 +48,8 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public Region findByName(String name) {
-        return regionRepository.findByNameIgnoreCase(name).orElse(null);
+    public RegionDto findByName(String name) {
+        return convertToDto(regionRepository.findByNameIgnoreCase(name).orElse(null));
     }
 
     private RegionDto convertToDto(Region region) {
@@ -59,10 +58,7 @@ public class RegionServiceImpl implements RegionService {
 
     private Region convertToEntity(RegionDto regionDto) {
         Region region = modelMapper.map(regionDto, Region.class);
-        Country country = countryRepository.findByNameIgnoreCase(regionDto.getCountryName()).orElse(null);
-        if(country!=null) {
-            region.setCountry(country);
-        }
+        countryRepository.findByNameIgnoreCase(regionDto.getCountryName()).ifPresent(region::setCountry);
         return region;
     }
 }

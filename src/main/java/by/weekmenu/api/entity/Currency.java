@@ -37,8 +37,8 @@ public class Currency implements Serializable {
             message = "Currency's code '${validatedValue}' must be '{min}' characters long.")
     private String code;
 
-    @Column(name = "SYMBOL")
-    @Pattern(regexp = "\\p{Sc}|\\s*", message = "Currency's symbol '${validatedValue}' must match pattern.")
+    @Column(name = "SYMBOL", unique = true)
+    @Pattern(regexp = "\\p{Sc}|\\s", message = "Currency's symbol '${validatedValue}' must match pattern.")
     private String symbol;
 
     @Column(name = "IS_ACTIVE")

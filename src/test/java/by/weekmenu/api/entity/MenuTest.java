@@ -28,7 +28,7 @@ public class MenuTest {
     }
 
     private Recipe getValidRecipe() {
-        return new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        return new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
     }
 
     private DishType getValidDishType() {
@@ -54,7 +54,7 @@ public class MenuTest {
 
     @Test
     public void testNameIsNull() {
-        Menu menu = new Menu(null, true, new Ownership("Пользователь"));
+        Menu menu = new Menu(null, true, new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
         assertEquals("Menu must have name.",
@@ -63,7 +63,7 @@ public class MenuTest {
 
     @Test
     public void testNameIsBlank() {
-        Menu menu = new Menu("   ", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("   ", true, new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
         assertEquals("Menu must have name.",
@@ -72,7 +72,7 @@ public class MenuTest {
 
     @Test
     public void testNameIsEmpty() {
-        Menu menu = new Menu("", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("", true, new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
         assertEquals("Menu must have name.",
@@ -81,7 +81,7 @@ public class MenuTest {
 
     @Test
     public void testNameIsTooLong() {
-        Menu menu = new Menu("", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("", true, new Ownership(OwnershipName.USER));
         String name = StringUtils.repeat("очень_длинное_название_меню", 20);
         menu.setName(name);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
@@ -92,7 +92,7 @@ public class MenuTest {
 
     @Test
     public void testCaloriesAreNegative() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         menu.setCalories(-100);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
@@ -102,7 +102,7 @@ public class MenuTest {
 
     @Test
     public void testCaloriesAreZero() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         menu.setCalories(0);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
@@ -112,7 +112,7 @@ public class MenuTest {
 
     @Test
     public void testProteinsAreNegative() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         menu.setProteins(-150);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
@@ -122,7 +122,7 @@ public class MenuTest {
 
     @Test
     public void testFatsAreNegative() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         menu.setFats(-150);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
@@ -132,7 +132,7 @@ public class MenuTest {
 
     @Test
     public void testCarbsAreNegative() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         menu.setCarbs(-150);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
@@ -142,7 +142,7 @@ public class MenuTest {
 
     @Test
     public void testIsActiveIsNull() {
-        Menu menu = new Menu("Бюджетное", null, new Ownership("Пользователь"));
+        Menu menu = new Menu("Бюджетное", null, new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
         assertEquals("Menu must have field 'isActive' defined.",
@@ -151,7 +151,7 @@ public class MenuTest {
 
     @Test
     public void testHasInvalidMenuPrice() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         MenuPrice menuPrice = new MenuPrice(menu, new Region("Минский район", null));
         menu.getMenuPrices().add(menuPrice);
         menu.getMenuPrices().add(null);
@@ -166,7 +166,7 @@ public class MenuTest {
 
     @Test
     public void testHasInvalidMenuRecipes() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         menu.getMenuRecipes().add(new MenuRecipe(getValidRecipe(), getInvalidDishType(), getValidDayOfWeek()));
         menu.getMenuRecipes().add(null);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
@@ -181,7 +181,7 @@ public class MenuTest {
 
     @Test
     public void testHasInvalidMenuCategory() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         menu.setMenuCategory(new MenuCategory("", true));
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
@@ -209,7 +209,7 @@ public class MenuTest {
 
     @Test
     public void testHasInvalidDailyMenuStatistics() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         menu.getDailyMenuStatistics().add(new DailyMenuStatistics(null, menu));
         menu.getDailyMenuStatistics().add(null);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
@@ -223,7 +223,7 @@ public class MenuTest {
 
     @Test
     public void testMenuIsValid() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership("Пользователь"));
+        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         menu.setMenuCategory(new MenuCategory("Вегетарианское", true));
         menu.getMenuRecipes().add(new MenuRecipe(menu, getValidRecipe(), getValidDishType(), getValidDayOfWeek()));
         menu.setCarbs(100);

@@ -15,7 +15,6 @@ import static org.junit.Assert.*;
 
 public class RecipePriceTest {
 
-
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
@@ -43,7 +42,7 @@ public class RecipePriceTest {
     public void testRecipePricePriceValueHasTooManyFractionDigits() {
         RecipePrice recipePrice = new RecipePrice(new BigDecimal("111.123"));
         recipePrice.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
-                new Ownership("пользователь")));
+                new Ownership(OwnershipName.USER)));
         recipePrice.setRegion(getRegion());
         Set<ConstraintViolation<RecipePrice>> violations = validator.validate(recipePrice);
         assertEquals(violations.size(), 1);
@@ -55,7 +54,7 @@ public class RecipePriceTest {
     public void testRecipePricePriceValueIsTooHigh() {
         RecipePrice recipePrice = new RecipePrice(new BigDecimal("1111111111.123"));
         recipePrice.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
-                new Ownership("пользователь")));
+                new Ownership(OwnershipName.USER)));
         recipePrice.setRegion(getRegion());
         Set<ConstraintViolation<RecipePrice>> violations = validator.validate(recipePrice);
         assertEquals(violations.size(), 1);
@@ -67,7 +66,7 @@ public class RecipePriceTest {
     public void testRecipePricePriceValueIsNegative() {
         RecipePrice recipePrice = new RecipePrice(new BigDecimal("-111"));
         recipePrice.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
-                new Ownership("пользователь")));
+                new Ownership(OwnershipName.USER)));
         recipePrice.setRegion(getRegion());
         Set<ConstraintViolation<RecipePrice>> violations = validator.validate(recipePrice);
         assertEquals(violations.size(), 1);
@@ -88,7 +87,7 @@ public class RecipePriceTest {
     @Test
     public void testRecipeIsInvalid() {
         RecipePrice recipePrice = new RecipePrice(new BigDecimal("111"),
-                new Recipe(null, true, new CookingMethod("жарка"), new Ownership("пользователь")),
+                new Recipe(null, true, new CookingMethod("жарка"), new Ownership(OwnershipName.USER)),
                 getRegion());
         Set<ConstraintViolation<RecipePrice>> violations = validator.validate(recipePrice);
         assertEquals(violations.size(), 1);
@@ -99,7 +98,7 @@ public class RecipePriceTest {
     @Test
     public void testRegionIsNull() {
         RecipePrice recipePrice = new RecipePrice(new BigDecimal("111"),
-                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")),
+                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership(OwnershipName.USER)),
                 null);
         Set<ConstraintViolation<RecipePrice>> violations = validator.validate(recipePrice);
         assertEquals(violations.size(), 1);
@@ -110,7 +109,7 @@ public class RecipePriceTest {
     @Test
     public void testRecipePriceIsValid() {
         RecipePrice recipePrice = new RecipePrice(new BigDecimal("111"),
-                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership("пользователь")),
+                new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership(OwnershipName.USER)),
                 getRegion());
         Set<ConstraintViolation<RecipePrice>> violations = validator.validate(recipePrice);
         assertEquals(violations.size(), 0);

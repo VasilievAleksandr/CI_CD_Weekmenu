@@ -1,9 +1,7 @@
 package by.weekmenu.api.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -19,10 +17,13 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(exclude = {"id"})
 @Entity
 @Table(name = "INGREDIENT_PRICE")
-public class IngredientPrice {
+public class IngredientPrice implements Serializable{
 
     private static final long serialVersionUID = -2495048957992775103L;
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Embeddable
     public static class Id implements Serializable {
 
@@ -33,49 +34,10 @@ public class IngredientPrice {
 
         @Column(name = "REGION_ID")
         private Long regionId;
-
-        public Id() {
-
-        }
-
-        public Id(Long ingredientId, Long regionId) {
-            this.ingredientId = ingredientId;
-            this.regionId = regionId;
-        }
-
-        public boolean equals(Object o) {
-            if (o != null && o instanceof Id) {
-                Id that = (Id) o;
-                return this.ingredientId.equals(that.ingredientId) && this.regionId.equals(that.regionId);
-            }
-
-            return false;
-        }
-
-        public int hashCode() {
-            return ingredientId.hashCode() + regionId.hashCode();
-        }
-
-        public Long getRegionId() {
-            return regionId;
-        }
-
-        public Long getIngredientId() {
-            return ingredientId;
-        }
     }
 
     @EmbeddedId
     private Id id = new Id();
-
-    @Column(name = "PRICE_VALUE")
-    @Digits(
-            integer = 7,
-            fraction = 2,
-            message = "Ingredient_Price's Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
-    )
-    @Positive(message = "Ingredient_Price's Price_Value '${validatedValue}' must be positive.")
-    private BigDecimal priceValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INGREDIENT_ID",
@@ -83,6 +45,7 @@ public class IngredientPrice {
             insertable = false)
     @Valid
     @NotNull(message = "Ingredient_Price's Ingredient mustn't be null.")
+    @JsonIgnore
     private Ingredient ingredient;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -93,13 +56,37 @@ public class IngredientPrice {
     @NotNull(message = "Ingredient_Price's Region mustn't be null.")
     private Region region;
 
-    public IngredientPrice(BigDecimal priceValue, Ingredient ingredient, Region region) {
-        this.priceValue = priceValue;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "UNIT_OF_MEASURE_ID")
+    @NotNull(message = "IngredientPrice must have UnitOfMeasure")
+    private UnitOfMeasure unitOfMeasure;
+
+    @Column(name = "QUANTITY")
+    @Digits(
+            integer = 7,
+            fraction = 1,
+            message = "Quantity '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
+    @Positive(message = "Quantity '${validatedValue}' must be positive.")
+    @NotNull(message = "IngredientPrice must have quantity.")
+    private BigDecimal quantity;
+
+    @Column(name = "PRICE_VALUE")
+    @Digits(
+            integer = 7,
+            fraction = 2,
+            message = "Price_Value '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
+    @Positive(message = "Price_Value '${validatedValue}' must be positive.")
+    @NotNull(message = "IngredientPrice must have priceValue")
+    private BigDecimal priceValue;
+
+    public IngredientPrice(Ingredient ingredient, Region region, UnitOfMeasure unitOfMeasure,
+                           BigDecimal quantity, BigDecimal priceValue) {
         this.ingredient = ingredient;
         this.region = region;
-    }
-
-    public IngredientPrice(BigDecimal priceValue) {
+        this.unitOfMeasure = unitOfMeasure;
+        this.quantity = quantity;
         this.priceValue = priceValue;
     }
 }

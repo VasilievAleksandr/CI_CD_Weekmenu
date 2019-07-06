@@ -33,7 +33,7 @@ public class DailyMenuStatisticsPriceTest {
     private DailyMenuStatistics getDailyMenuStatistics() {
         DailyMenuStatistics dailyMenuStatistics = new DailyMenuStatistics();
         dailyMenuStatistics.setDayOfWeek(new DayOfWeek(WeekDay.MONDAY));
-        dailyMenuStatistics.setMenu(new Menu("Бюджетное", true, new Ownership("Пользователь")));
+        dailyMenuStatistics.setMenu(new Menu("Бюджетное", true, new Ownership(OwnershipName.USER)));
         return dailyMenuStatistics;
     }
 
@@ -93,7 +93,7 @@ public class DailyMenuStatisticsPriceTest {
     @Test
     public void testDailyMenuStatisticsIsInvalid() {
         DailyMenuStatisticsPrice dailyMenuStatisticsPrice = new DailyMenuStatisticsPrice(
-                new DailyMenuStatistics(null, new Menu("Бюджетное", true, new Ownership("Пользователь"))),
+                new DailyMenuStatistics(null, new Menu("Бюджетное", true, new Ownership(OwnershipName.USER))),
                 getRegion()
         );
         dailyMenuStatisticsPrice.setPriceValue(new BigDecimal("111.12"));
