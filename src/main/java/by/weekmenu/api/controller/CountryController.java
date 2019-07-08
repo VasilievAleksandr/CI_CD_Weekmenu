@@ -2,13 +2,15 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.CountryDto;
 import by.weekmenu.api.service.CountryService;
-import by.weekmenu.api.service.CrudService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/countries")
+@Api(description = "REST API для сущности Country")
 public class CountryController {
     
     private final CountryService countryService;
@@ -18,21 +20,25 @@ public class CountryController {
     }
 
     @GetMapping
+    @ApiOperation("Возвращает список всех Country")
     public List<CountryDto> findAllCountries() {
         return countryService.findAll();
     }
 
     @GetMapping("/{id}")
+    @ApiOperation("Находит Country по его Id")
     public CountryDto findCountryById(@PathVariable("id") Long id) {
         return countryService.findById(id);
     }
 
     @PostMapping
+    @ApiOperation("Сохраняет Country.")
     public CountryDto addCountry(@RequestBody CountryDto countryDto) {
         return countryService.save(countryDto);
     }
 
     @PutMapping("/{id}")
+    @ApiOperation("Обновляет Country по Id.")
     public CountryDto updateCountry(@RequestBody CountryDto updatedCountryDto, @PathVariable("id") Long id) {
         CountryDto countryDto = countryService.findById(id);
         if (countryDto!=null) {
@@ -44,6 +50,7 @@ public class CountryController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation("Удаляет Country по Id.")
     public void deleteCountry(@PathVariable("id") Long id) {
         CountryDto countryDto = countryService.findById(id);
         if (countryDto!=null) {
@@ -52,6 +59,7 @@ public class CountryController {
     }
     
     @GetMapping("/checkUniqueName")
+    @ApiOperation("Проверяет поле name у Country на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
     public Integer checkUniqueName(@RequestParam String name) {
         if (countryService.findByName(name) != null) {
             return -1;
@@ -61,6 +69,7 @@ public class CountryController {
     }
 
     @GetMapping("/checkUniqueAlphaCode2")
+    @ApiOperation("Проверяет поле alphaCode2 у Country на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
     public Integer checkUniqueCode(@RequestParam String alphaCode2) {
         if (countryService.findByAlphaCode2(alphaCode2) != null) {
             return -1;
@@ -70,6 +79,7 @@ public class CountryController {
     }
 
     @GetMapping("/names")
+    @ApiOperation("Возвращает список всех name из Country")
     public List<String> getAllCountryNames() {
         return countryService.getAllCountryNames();
     }

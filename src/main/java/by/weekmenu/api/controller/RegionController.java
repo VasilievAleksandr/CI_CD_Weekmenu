@@ -2,6 +2,8 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.RegionDto;
 import by.weekmenu.api.service.RegionService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/regions")
+@Api(description = "REST API для сущности Region")
 public class RegionController {
 
     private final RegionService regionService;
@@ -21,22 +24,26 @@ public class RegionController {
     }
 
     @GetMapping
+    @ApiOperation("Возвращает список всех Region")
     public List<RegionDto> findAllRegions() {
         return regionService.findAll();
     }
 
     @PostMapping
+    @ApiOperation("Сохраняет Region.")
     public ResponseEntity<RegionDto> addRegion(@RequestBody RegionDto regionDto) {
         HttpStatus status = HttpStatus.CREATED;
         return new ResponseEntity<>(regionService.save(regionDto), status);
     }
 
     @GetMapping("/{id}")
+    @ApiOperation("Находит Region по его Id")
     public RegionDto findRegionById(@PathVariable ("id") Long id) {
         return regionService.findById(id);
     }
 
     @PutMapping("/{id}")
+    @ApiOperation("Обновляет Region по Id.")
     public RegionDto updateRegion(@RequestBody RegionDto updatedRegionDto, @PathVariable("id")Long id) {
         RegionDto  regionDto = regionService.findById(id);
         if (regionDto!=null) {
@@ -47,6 +54,7 @@ public class RegionController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation("Удаляет Region по Id.")
     public void deleteRegion(@PathVariable ("id") Long id) {
         RegionDto regionDto = regionService.findById(id);
         if (regionDto!=null) {
@@ -55,6 +63,7 @@ public class RegionController {
     }
 
     @GetMapping("/checkUniqueName")
+    @ApiOperation("Проверяет поле name у Region на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
     public Integer checkUniqueName(@RequestParam String name) {
         if(regionService.findByName(name)!=null) {
             return -1;
