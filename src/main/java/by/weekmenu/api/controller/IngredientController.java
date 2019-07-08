@@ -31,7 +31,7 @@ public class IngredientController {
         try {
             return new ResponseEntity<>(ingredientService.findById(id), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
         }
     }
 
@@ -47,7 +47,7 @@ public class IngredientController {
             return new ResponseEntity<>(ingredientService.save(modelMapper.map(updatedIngredientDto, IngredientDto.class)),
                     HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
         }
     }
 
@@ -58,7 +58,7 @@ public class IngredientController {
             ingredientService.delete(id);
             return ResponseEntity.noContent().build();
         } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
         }
     }
 
