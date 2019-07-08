@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,11 +50,11 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public RegionDto findByName(String name) {
-        return convertToDto(regionRepository.findByNameIgnoreCase(name).orElse(null));
+        Optional<Region> region = regionRepository.findByNameIgnoreCase(name);
+        return region.map(this::convertToDto).orElse(null);
     }
 
-    private RegionDto convertToDto(Region region) {
-        return modelMapper.map(region, RegionDto.class);
+    private RegionDto convertToDto(Region region) { return modelMapper.map(region, RegionDto.class);
     }
 
     private Region convertToEntity(RegionDto regionDto) {
