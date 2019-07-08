@@ -80,4 +80,22 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer>, Cu
     private CurrencyDto convertToDto(Currency currency) {
         return modelMapper.map(currency, CurrencyDto.class);
     }
+
+    @Override
+    public List<CurrencyDto> findAllByIsActiveTrueOrderByIsActive() {
+        return currencyRepository.findAllByIsActiveTrueOrderByIsActive()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CurrencyDto> findAllByIsActiveFalseOrderByIsActive() {
+        return currencyRepository.findAllByIsActiveFalseOrderByIsActive()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
 }

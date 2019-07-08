@@ -8,6 +8,10 @@ import java.util.Optional;
 
 public interface CurrencyRepository extends CrudRepository<Currency, Integer> {
 
+    List<Currency> findAllByIsActiveTrueOrderByIsActive();
+
+    List<Currency> findAllByIsActiveFalseOrderByIsActive();
+
     List<Currency> findAllByIsActiveTrueOrderByCode();
 
     Optional<Currency> findByNameIgnoreCase(String name);
@@ -15,5 +19,4 @@ public interface CurrencyRepository extends CrudRepository<Currency, Integer> {
     Optional<Currency> findByCodeIgnoreCase(String code);
 
     Optional<Currency> findBySymbolIgnoreCase(String symbol);
-
 }
