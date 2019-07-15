@@ -1,6 +1,7 @@
 package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.CurrencyDto;
+import by.weekmenu.api.entity.Currency;
 import by.weekmenu.api.service.CrudService;
 import by.weekmenu.api.service.CurrencyService;
 import io.swagger.annotations.Api;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Api(description = "REST API для сущности Currency")
@@ -61,11 +63,16 @@ public class CurrencyController {
     @GetMapping("/checkCurrencyUniqueSymbol")
     @ApiOperation("Проверяет поле symbol у Currency на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
     public Integer checkCurrencyUniqueSymbol(@RequestParam String symbol) {
-        if (currencyService.findBySymbol(symbol) != null) {
-            return -1;
-        } else {
+        Currency currency = currencyService.findBySymbol(symbol);
+        if(Objects.nonNull(currency)&&currency.getSymbol().equals("")){
             return 0;
         }
+
+        if (Objects.isNull(currency)) {
+            return 0;
+        }
+
+        return -1;
     }
 
     @PostMapping
