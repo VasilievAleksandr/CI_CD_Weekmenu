@@ -27,9 +27,9 @@ public class Ownership implements Serializable {
 
     @Column (name = "NAME", unique = true)
     @NotNull(message = "Ownership must have name.")
-    private OwnershipName name;
+    private String name;
 
     public Ownership(OwnershipName name) {
-        this.name = name;
+        this.name = name.name();
     }
 }
