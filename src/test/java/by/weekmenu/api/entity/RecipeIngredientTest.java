@@ -19,7 +19,7 @@ public class RecipeIngredientTest {
     private static Validator validator;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
@@ -30,6 +30,7 @@ public class RecipeIngredientTest {
         recipeIngredient.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER)));
         recipeIngredient.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
                 new Ownership(OwnershipName.USER)));
+        recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
         assertEquals(violations.size(), 1);
         assertEquals("RecipeIngredient's qty '111.123' must have up to '5' integer digits and '2' fraction digits.",
@@ -42,6 +43,7 @@ public class RecipeIngredientTest {
         recipeIngredient.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER)));
         recipeIngredient.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
                 new Ownership(OwnershipName.USER)));
+        recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
         assertEquals(violations.size(), 1);
         assertEquals("RecipeIngredient's qty '1111111.12' must have up to '5' integer digits and '2' fraction digits.",
@@ -54,6 +56,7 @@ public class RecipeIngredientTest {
         recipeIngredient.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER)));
         recipeIngredient.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
                 new Ownership(OwnershipName.USER)));
+        recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
         assertEquals(violations.size(), 1);
         assertEquals("RecipeIngredient's qty '-111' must be positive.",
@@ -64,6 +67,7 @@ public class RecipeIngredientTest {
     public void testIngredientIsNull() {
         RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"), null,
                 new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership(OwnershipName.USER)));
+        recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
         assertEquals(violations.size(), 1);
         assertEquals("RecipeIngredient's Ingredient mustn't be null.",
@@ -75,6 +79,7 @@ public class RecipeIngredientTest {
         RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"),
                 new Ingredient(null, new Ownership(OwnershipName.USER)),
                 new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership(OwnershipName.USER)));
+        recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
         assertEquals(violations.size(), 1);
         assertEquals("Ingredient must have name.",
@@ -86,6 +91,7 @@ public class RecipeIngredientTest {
         RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"),
                 new Ingredient("курица", new Ownership(OwnershipName.USER)),
                 null);
+        recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
         assertEquals(violations.size(), 1);
         assertEquals("RecipeIngredient's Recipe mustn't be null.",
@@ -97,9 +103,36 @@ public class RecipeIngredientTest {
         RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"),
                 new Ingredient("курица", new Ownership(OwnershipName.USER)),
                 new Recipe(null, true, new CookingMethod("жарка"), new Ownership(OwnershipName.USER)));
+        recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe must have name.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testUnitOfMeasureIsNull() {
+        RecipeIngredient recipeIngredient = new RecipeIngredient();
+        recipeIngredient.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER)));
+        recipeIngredient.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
+                new Ownership(OwnershipName.USER)));
+        recipeIngredient.setUnitOfMeasure(null);
+        Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
+        assertEquals(violations.size(), 1);
+        assertEquals("RecipeIngredient must have UnitOfMeasure",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testUnitOfMeasureIsInvalid() {
+        RecipeIngredient recipeIngredient = new RecipeIngredient();
+        recipeIngredient.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER)));
+        recipeIngredient.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
+                new Ownership(OwnershipName.USER)));
+        recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", null));
+        Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
+        assertEquals(violations.size(), 1);
+        assertEquals("UnitOfMeasure must have full name.",
                 violations.iterator().next().getMessage());
     }
 
@@ -108,6 +141,7 @@ public class RecipeIngredientTest {
         RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"),
                 new Ingredient("курица", new Ownership(OwnershipName.USER)),
                 new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership(OwnershipName.USER)));
+        recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
         assertEquals(violations.size(), 0);
     }
