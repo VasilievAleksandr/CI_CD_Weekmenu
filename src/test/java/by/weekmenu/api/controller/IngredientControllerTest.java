@@ -3,6 +3,7 @@ package by.weekmenu.api.controller;
 import by.weekmenu.api.dto.IngredientDto;
 import by.weekmenu.api.entity.Ingredient;
 import by.weekmenu.api.repository.OwnershipRepository;
+import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.IngredientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -39,6 +40,9 @@ public class IngredientControllerTest {
 
     @MockBean
     private OwnershipRepository ownershipRepository;
+
+    @MockBean
+    private UnitOfMeasureRepository unitOfMeasureRepository;
 
     @MockBean
     private ModelMapper modelMapper;
