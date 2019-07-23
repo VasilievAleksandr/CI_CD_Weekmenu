@@ -12,7 +12,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-
 @NoArgsConstructor
 @Getter
 @Setter
@@ -47,9 +46,7 @@ public class CookingStep implements Serializable {
     private String imageLink;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "RECIPE_ID",
-            updatable = false,
-            insertable = false)
+    @JoinColumn(name = "RECIPE_ID")
     @Valid
     private Recipe recipe;
 
