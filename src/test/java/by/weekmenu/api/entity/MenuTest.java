@@ -199,15 +199,6 @@ public class MenuTest {
     }
 
     @Test
-    public void testOwnershipIsInvalid() {
-        Menu menu = new Menu("Бюджетное", true, new Ownership(null));
-        Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
-        assertEquals(violations.size(), 1);
-        assertEquals("Ownership must have name.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
     public void testHasInvalidDailyMenuStatistics() {
         Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         menu.getDailyMenuStatistics().add(new DailyMenuStatistics(null, menu));
