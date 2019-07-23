@@ -19,6 +19,9 @@ import java.math.BigDecimal;
 public class RecipePrice {
     private static final long serialVersionUID = 1115642071168789375L;
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Embeddable
     public static class Id implements Serializable {
 
@@ -29,41 +32,10 @@ public class RecipePrice {
 
         @Column(name = "REGION_ID")
         private Long regionId;
-
-        public Id() {
-
-        }
-
-        public Id(Long recipeId, Long regionId) {
-            this.recipeId = recipeId;
-            this.regionId = regionId;
-        }
-
-        public boolean equals(Object o) {
-            if (o != null && o instanceof Id) {
-                Id that = (Id) o;
-                return this.recipeId.equals(that.recipeId) && this.regionId.equals(that.regionId);
-            }
-
-            return false;
-        }
-
-        public int hashCode() {
-            return recipeId.hashCode() + regionId.hashCode();
-        }
-
-        public Long getRegionId() {
-            return regionId;
-        }
-
-        public Long getRecipeId() {
-            return recipeId;
-        }
     }
 
     @EmbeddedId
     private Id id = new Id();
-
 
     @Column(name = "PRICE_VALUE")
     @Digits(
