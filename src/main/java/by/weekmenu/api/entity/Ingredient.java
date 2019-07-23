@@ -72,9 +72,6 @@ public class Ingredient implements Serializable {
     @PositiveOrZero(message = "Ingredient's carbs '${validatedValue}' must be positive or '0'.")
     private BigDecimal carbs;
 
-    @Transient
-    private BaseUOM baseUOM = BaseUOM.GRAMM;
-
     @ManyToOne
     @JoinColumn(name = "OWNERSHIP_ID")
     @Valid
