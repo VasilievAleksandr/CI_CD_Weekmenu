@@ -31,7 +31,8 @@ public class OwnershipTest {
 
     @Test
     public void testNameIsNull() {
-        Ownership ownership = new Ownership(null);
+        Ownership ownership = new Ownership();
+        ownership.setName(null);
         Set<ConstraintViolation<Ownership>> violations = validator.validate(ownership);
         assertEquals(violations.size(), 1);
         assertEquals("Ownership must have name.",
