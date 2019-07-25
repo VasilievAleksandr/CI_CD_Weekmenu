@@ -72,12 +72,12 @@ public class IngredientIntegrationTest {
     private UnitOfMeasureService unitOfMeasureService;
 
     @Before
-    public void createOwnership() {
+    public void createBaseData() {
         if (ownershipRepository.findAll().spliterator().getExactSizeIfKnown()==0) {
             ownershipRepository.save(new Ownership(OwnershipName.ADMIN));
             ownershipRepository.save(new Ownership(OwnershipName.USER));
         }
-        if (unitOfMeasureRepository.findAll().spliterator().getExactSizeIfKnown()==0) {
+        if (unitOfMeasureRepository.findAll().spliterator().getExactSizeIfKnown()==1) {
             createUnitOfMeasureDtos();
         }
         createRegion("Минск");
@@ -141,7 +141,7 @@ public class IngredientIntegrationTest {
         ingredient.setCarbs(new BigDecimal("100"));
         ingredient.setFats(new BigDecimal("100"));
         ingredient.setProteins(new BigDecimal("100"));
-        ingredient.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN).orElse(null));
+        ingredient.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
         return ingredientRepository.save(ingredient);
     }
 
