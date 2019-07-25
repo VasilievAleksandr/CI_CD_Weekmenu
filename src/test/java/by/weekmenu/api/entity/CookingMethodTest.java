@@ -28,10 +28,6 @@ public class CookingMethodTest {
         validatorFactory.close();
     }
 
-    private Recipe getRecipe() {
-        return new Recipe("Жаркое", true, new CookingMethod("Жарка"), new Ownership(OwnershipName.USER));
-    }
-
     @Test
     public void testNameIsNull() {
         CookingMethod cookingMethod = new CookingMethod(null);
@@ -60,19 +56,8 @@ public class CookingMethodTest {
     }
 
     @Test
-    public void testHasInvalidRecipes() {
-        CookingMethod cookingMethod = new CookingMethod("Жарка");
-        cookingMethod.getRecipes().add(null);
-        Set<ConstraintViolation<CookingMethod>> violations = validator.validate(cookingMethod);
-        assertEquals(violations.size(), 1);
-        assertEquals("Cooking Method must have list of recipes without null elements",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
     public void testCookingMethodIsValid() {
         CookingMethod cookingMethod = new CookingMethod("Жарка");
-        cookingMethod.getRecipes().add(getRecipe());
         Set<ConstraintViolation<CookingMethod>> violations = validator.validate(cookingMethod);
         assertEquals(violations.size(), 0);
     }

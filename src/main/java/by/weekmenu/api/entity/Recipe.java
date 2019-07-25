@@ -118,7 +118,7 @@ public class Recipe implements Serializable {
     private void prepareData(){
         this.cookingTime = cookingTime == null ? 0 : cookingTime;
         this.preparingTime = preparingTime == null ? 0 : preparingTime;
-        this.calories = calories == null ? BigDecimal.ZERO : calories;
+        this.calories = calories == null ? BigDecimal.ONE : calories;
         this.carbs = carbs == null ? BigDecimal.ZERO : carbs;
         this.fats = fats == null ? BigDecimal.ZERO : fats;
         this.proteins = proteins == null ? BigDecimal.ZERO : proteins;
