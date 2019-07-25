@@ -1,6 +1,5 @@
 package by.weekmenu.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,12 +15,4 @@ public class RegionDTO {
     private String name;
     private String countryName;
     private String countryCurrencyCode;
-
-    @Override
-    @JsonValue
-    public String toString() {
-        return  name + " / " +
-                countryName + " / " +
-                countryCurrencyCode;
-    }
 }
