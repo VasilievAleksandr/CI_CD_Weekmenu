@@ -7,10 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CategoryDto {
+public class RecipeSubcategoryDto {
 
     private Long id;
     private String name;
-    private String description;
-
 }
