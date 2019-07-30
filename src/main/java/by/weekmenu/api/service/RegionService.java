@@ -1,8 +1,8 @@
 package by.weekmenu.api.service;
 
-import by.weekmenu.api.dto.RegionDto;
+import by.weekmenu.api.dto.RegionDTO;
 
-public interface RegionService extends CrudService<RegionDto, Long> {
+public interface RegionService extends CrudService<RegionDTO, Long> {
 
-    RegionDto findByName(String name);
+    RegionDTO findByName(String name);
 }

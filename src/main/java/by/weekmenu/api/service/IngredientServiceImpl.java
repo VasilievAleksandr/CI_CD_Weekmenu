@@ -25,16 +25,18 @@ public class IngredientServiceImpl implements IngredientService {
     private final IngredientUnitOfMeasureRepository ingredientUnitOfMeasureRepository;
     private final RegionRepository regionRepository;
     private final IngredientPriceRepository ingredientPriceRepository;
+    private final RecipeService recipeService;
     private final ModelMapper modelMapper;
 
     @Override
     @Transactional
     public IngredientDto save(IngredientDto entityDto) {
-        Ingredient ingredient = convertToEntity(entityDto);
         if (entityDto.getId() != null) {
-            ingredientUnitOfMeasureRepository.deleteIngredientUnitOfMeasuresById_IngredientId(ingredient.getId());
+            ingredientUnitOfMeasureRepository.deleteIngredientUnitOfMeasuresById_IngredientId(entityDto.getId());
+            ingredientPriceRepository.deleteIngredientPricesById_IngredientId(entityDto.getId());
         }
-        ownershipRepository.findByName(OwnershipName.ADMIN).ifPresent(ingredient::setOwnership);
+        Ingredient ingredient = convertToEntity(entityDto);
+        ownershipRepository.findByName("ADMIN").ifPresent(ingredient::setOwnership);
         ingredientRepository.save(ingredient);
         if (entityDto.getUnitOfMeasureEquivalent()!=null) {
             saveIngredientUOM(entityDto, ingredient);
@@ -42,6 +44,7 @@ public class IngredientServiceImpl implements IngredientService {
         if (entityDto.getIngredientPrices()!=null) {
             saveIngredientPrice(entityDto, ingredient);
         }
+        recipeService.updateRecipes(ingredient.getId());
         return convertToDto(ingredient);
     }
 
@@ -72,6 +75,13 @@ public class IngredientServiceImpl implements IngredientService {
             ingredientUnitOfMeasure.setEquivalent(v);
             ingredientUnitOfMeasureRepository.save(ingredientUnitOfMeasure);
         });
+        IngredientUnitOfMeasure gramm = new IngredientUnitOfMeasure();
+        UnitOfMeasure unitOfMeasureGramm = unitOfMeasureRepository.findByFullNameIgnoreCase("Грамм").orElse(null);
+        gramm.setId(new IngredientUnitOfMeasure.Id(ingredient.getId(), Objects.requireNonNull(unitOfMeasureGramm.getId())));
+        gramm.setIngredient(ingredient);
+        gramm.setUnitOfMeasure(unitOfMeasureGramm);
+        gramm.setEquivalent(BigDecimal.ONE);
+        ingredientUnitOfMeasureRepository.save(gramm);
     }
 
     @Override
@@ -132,5 +142,19 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public Ingredient findByName(String name) {
         return ingredientRepository.findByNameIgnoreCase(name).orElse(null);
+    }
+
+    @Override
+    public List<String> findAllUnitsOfMeasure(String name) {
+        Optional<Ingredient> ingredient = ingredientRepository.findByNameIgnoreCase(name);
+        List<String> unitOfMeasureShortNames = new ArrayList<>();
+        if (ingredient.isPresent()) {
+            List<IngredientUnitOfMeasure> unitOfMeasureList =
+                    ingredientUnitOfMeasureRepository.findAllById_IngredientId(ingredient.get().getId());
+            for (IngredientUnitOfMeasure ingredientUnitOfMeasure : unitOfMeasureList) {
+                unitOfMeasureShortNames.add(ingredientUnitOfMeasure.getUnitOfMeasure().getShortName());
+            }
+        }
+        return unitOfMeasureShortNames;
     }
 }

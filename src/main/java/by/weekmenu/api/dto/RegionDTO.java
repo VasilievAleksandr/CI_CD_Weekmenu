@@ -9,11 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegionDto {
+public class RegionDTO {
 
     private Long id;
     private String name;
     private String countryName;
     private String countryCurrencyCode;
-
 }

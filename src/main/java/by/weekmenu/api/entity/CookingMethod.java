@@ -7,18 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id", "recipes"})
+@EqualsAndHashCode(exclude = {"id"})
 @Entity
 @Table(name = "COOKING_METHOD")
 public class CookingMethod implements Serializable {
@@ -36,13 +32,6 @@ public class CookingMethod implements Serializable {
             message = "CookingMethod's name '${validatedValue}' mustn't be more than '{max}' characters long."
     )
     private String name;
-
-    @OneToMany(mappedBy = "cookingMethod", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<
-            @Valid
-            @NotNull(message = "Cooking Method must have list of recipes without null elements")
-            Recipe> recipes = new HashSet<Recipe>();
-
 
     public CookingMethod(String name) {
         this.name = name;

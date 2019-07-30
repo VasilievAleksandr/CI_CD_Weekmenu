@@ -1,9 +1,6 @@
 package by.weekmenu.api.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -23,6 +20,9 @@ public class RecipeIngredient implements Serializable {
 
     private static final long serialVersionUID = 1005642071168789374L;
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Embeddable
     public static class Id implements Serializable {
 
@@ -33,41 +33,10 @@ public class RecipeIngredient implements Serializable {
 
         @Column(name = "RECIPE_ID")
         private Long recipeId;
-
-        public Id() {
-
-        }
-
-        public Id(Long ingredientId, Long recipeId) {
-            this.ingredientId = ingredientId;
-            this.recipeId = recipeId;
-        }
-
-        public boolean equals(Object o) {
-            if (o != null && o instanceof Id) {
-                Id that = (Id) o;
-                return this.ingredientId.equals(that.ingredientId) && this.recipeId.equals(that.recipeId);
-            }
-
-            return false;
-        }
-
-        public int hashCode() {
-            return ingredientId.hashCode() + recipeId.hashCode();
-        }
-
-        public Long getRecipeId() {
-            return recipeId;
-        }
-
-        public Long getIngredientId() {
-            return ingredientId;
-        }
     }
 
     @EmbeddedId
     private Id id = new Id();
-
 
     @Column(name = "QTY")
     @Digits(
@@ -93,6 +62,12 @@ public class RecipeIngredient implements Serializable {
     @Valid
     @NotNull(message = "RecipeIngredient's Recipe mustn't be null.")
     private Recipe recipe;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "UNIT_OF_MEASURE_ID")
+    @Valid
+    @NotNull(message = "RecipeIngredient must have UnitOfMeasure")
+    private UnitOfMeasure unitOfMeasure;
 
     public RecipeIngredient(BigDecimal qty, Ingredient ingredient, Recipe recipe) {
         this.qty = qty;

@@ -1,6 +1,6 @@
 package by.weekmenu.api.service;
 
-import by.weekmenu.api.dto.RegionDto;
+import by.weekmenu.api.dto.RegionDTO;
 import by.weekmenu.api.entity.Region;
 import by.weekmenu.api.repository.CountryRepository;
 import by.weekmenu.api.repository.RegionRepository;
@@ -24,12 +24,12 @@ public class RegionServiceImpl implements RegionService {
     private final ModelMapper modelMapper;
 
     @Override
-    public RegionDto save(RegionDto entityDto) {
+    public RegionDTO save(RegionDTO entityDto) {
         return convertToDto(regionRepository.save(convertToEntity(entityDto)));
     }
 
     @Override
-    public RegionDto findById(Long id) {
+    public RegionDTO findById(Long id) {
         return convertToDto(regionRepository.findById(id).orElse(null));
     }
 
@@ -39,7 +39,7 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public List<RegionDto> findAll() {
+    public List<RegionDTO> findAll() {
         List<Region> regions = new ArrayList<>();
         regionRepository.findAll().forEach(regions::add);
         return regions.stream()
@@ -49,15 +49,15 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public RegionDto findByName(String name) {
+    public RegionDTO findByName(String name) {
         Optional<Region> region = regionRepository.findByNameIgnoreCase(name);
         return region.map(this::convertToDto).orElse(null);
     }
 
-    private RegionDto convertToDto(Region region) { return modelMapper.map(region, RegionDto.class);
+    private RegionDTO convertToDto(Region region) { return modelMapper.map(region, RegionDTO.class);
     }
 
-    private Region convertToEntity(RegionDto regionDto) {
+    private Region convertToEntity(RegionDTO regionDto) {
         Region region = modelMapper.map(regionDto, Region.class);
         countryRepository.findByNameIgnoreCase(regionDto.getCountryName()).ifPresent(region::setCountry);
         return region;

@@ -1,6 +1,6 @@
 package by.weekmenu.api.service;
 
-import by.weekmenu.api.dto.RegionDto;
+import by.weekmenu.api.dto.RegionDTO;
 import by.weekmenu.api.entity.Country;
 import by.weekmenu.api.entity.Currency;
 import by.weekmenu.api.entity.Region;
@@ -55,8 +55,8 @@ public class RegionServiceImplTest {
         return region;
     }
 
-    private RegionDto createRegionDto() {
-        RegionDto regionDto = new RegionDto();
+    private RegionDTO createRegionDto() {
+        RegionDTO regionDto = new RegionDTO();
         regionDto.setId(1L);
         regionDto.setName("Минск");
         regionDto.setCountryName("Беларусь");
@@ -70,19 +70,19 @@ public class RegionServiceImplTest {
         regions.add(regionTwo);
         when(regionRepository.findAll()).thenReturn(regions);
 
-        List<RegionDto> result = regionService.findAll();
+        List<RegionDTO> result = regionService.findAll();
 
         assertThat(regions.size()).isEqualTo(result.size());
     }
 
     @Test
     public void saveRegionTest() {
-        RegionDto regionDto = createRegionDto();
+        RegionDTO regionDto = createRegionDto();
         Region region = createRegion();
         when(modelMapper.map(regionDto, Region.class)).thenReturn(region);
         when(regionRepository.save(region)).thenReturn(region);
-        when(modelMapper.map(region, RegionDto.class)).thenReturn(regionDto);
-        RegionDto saved = regionService.save(regionDto);
+        when(modelMapper.map(region, RegionDTO.class)).thenReturn(regionDto);
+        RegionDTO saved = regionService.save(regionDto);
         assertThat(saved).isNotNull();
         assertThat(saved.getName()).isEqualTo("Минск");
         assertThat(saved.getCountryName()).isEqualTo("Беларусь");
@@ -90,11 +90,11 @@ public class RegionServiceImplTest {
 
     @Test
     public void findRegionByIdTest() {
-        RegionDto regionDto = createRegionDto();
+        RegionDTO regionDto = createRegionDto();
         Region region = createRegion();
-        when(modelMapper.map(region, RegionDto.class)).thenReturn(regionDto);
+        when(modelMapper.map(region, RegionDTO.class)).thenReturn(regionDto);
         when(regionRepository.findById(regionDto.getId())).thenReturn(Optional.of(region));
-        RegionDto found = regionService.findById(regionDto.getId());
+        RegionDTO found = regionService.findById(regionDto.getId());
         assertThat(found).isNotNull();
         assertThat(found.getName()).isEqualTo("Минск");
         assertThat(found.getCountryName()).isEqualTo("Беларусь");
@@ -109,7 +109,7 @@ public class RegionServiceImplTest {
     @Test
     public void checkUniqueNameTest() {
         when(regionRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
-        RegionDto regionDto = regionService.findByName("Минск");
+        RegionDTO regionDto = regionService.findByName("Минск");
         assertThat(regionDto).isNull();
     }
 }

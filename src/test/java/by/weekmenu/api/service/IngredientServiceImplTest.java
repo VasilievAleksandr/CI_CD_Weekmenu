@@ -41,6 +41,9 @@ public class IngredientServiceImplTest {
     private IngredientUnitOfMeasureRepository ingredientUnitOfMeasureRepository;
 
     @MockBean
+    private RecipeService recipeService;
+
+    @MockBean
     private ModelMapper modelMapper;
 
     private IngredientService ingredientService;
@@ -49,7 +52,7 @@ public class IngredientServiceImplTest {
     public void setup() {
         ingredientService = new IngredientServiceImpl(ingredientRepository, ownershipRepository,
                 unitOfMeasureRepository, ingredientUnitOfMeasureRepository,
-                regionRepository, ingredientPriceRepository, modelMapper);
+                regionRepository, ingredientPriceRepository, recipeService, modelMapper);
     }
 
     private Ingredient createIngredient(String name) {
@@ -82,6 +85,7 @@ public class IngredientServiceImplTest {
         when(modelMapper.map(ingredientDto, Ingredient.class)).thenReturn(ingredient);
         when(ingredientRepository.save(ingredient)).thenReturn(ingredient);
         when(modelMapper.map(ingredient, IngredientDto.class)).thenReturn(ingredientDto);
+
         IngredientDto saved = ingredientService.save(ingredientDto);
         assertThat(saved).isNotNull();
         assertThat(saved.getName()).isEqualTo("Курица");

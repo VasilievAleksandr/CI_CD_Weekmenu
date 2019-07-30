@@ -1,7 +1,7 @@
 package by.weekmenu.api.integrationTests;
 
 import by.weekmenu.api.ApiApplication;
-import by.weekmenu.api.dto.RegionDto;
+import by.weekmenu.api.dto.RegionDTO;
 import by.weekmenu.api.entity.Country;
 import by.weekmenu.api.entity.Currency;
 import by.weekmenu.api.entity.Region;
@@ -68,7 +68,7 @@ public class RegionIntegrationTest {
 
     @Test
     public void saveRegion() throws Exception {
-        RegionDto regionDto = new RegionDto();
+        RegionDTO regionDto = new RegionDTO();
         regionDto.setName("Гомель");
         regionDto.setCountryName("Беларусь");
 
@@ -98,7 +98,7 @@ public class RegionIntegrationTest {
     @Test
     public void updateRegion() throws Exception {
         Region region = createRegion("Минск");
-        RegionDto regionDto = new RegionDto();
+        RegionDTO regionDto = new RegionDTO();
         regionDto.setName("Гомель");
         regionDto.setCountryName("Беларусь");
         ObjectMapper objectMapper = new ObjectMapper();
