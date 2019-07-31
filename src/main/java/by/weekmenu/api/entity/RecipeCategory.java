@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Setter
 @EqualsAndHashCode(exclude = "id")
 @Entity
-@Table(name = "RECIPECATEGORY")
+@Table(name = "RECIPE_CATEGORY")
 public class RecipeCategory implements Serializable {
 
     private static final long serialVersionUID = 5158608755557090853L;
