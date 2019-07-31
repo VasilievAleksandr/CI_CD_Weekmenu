@@ -1,6 +1,6 @@
 package by.weekmenu.api.controller;
 
-import by.weekmenu.api.dto.RegionDto;
+import by.weekmenu.api.dto.RegionDTO;
 import by.weekmenu.api.service.RegionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,30 +25,30 @@ public class RegionController {
 
     @GetMapping
     @ApiOperation("Возвращает список всех Region")
-    public List<RegionDto> findAllRegions() {
+    public List<RegionDTO> findAllRegions() {
         return regionService.findAll();
     }
 
     @PostMapping
     @ApiOperation("Сохраняет Region.")
-    public ResponseEntity<RegionDto> addRegion(@RequestBody RegionDto regionDto) {
+    public ResponseEntity<RegionDTO> addRegion(@RequestBody RegionDTO regionDto) {
         HttpStatus status = HttpStatus.CREATED;
         return new ResponseEntity<>(regionService.save(regionDto), status);
     }
 
     @GetMapping("/{id}")
     @ApiOperation("Находит Region по его Id")
-    public RegionDto findRegionById(@PathVariable ("id") Long id) {
+    public RegionDTO findRegionById(@PathVariable ("id") Long id) {
         return regionService.findById(id);
     }
 
     @PutMapping("/{id}")
     @ApiOperation("Обновляет Region по Id.")
-    public RegionDto updateRegion(@RequestBody RegionDto updatedRegionDto, @PathVariable("id")Long id) {
-        RegionDto  regionDto = regionService.findById(id);
+    public RegionDTO updateRegion(@RequestBody RegionDTO updatedRegionDTO, @PathVariable("id")Long id) {
+        RegionDTO regionDto = regionService.findById(id);
         if (regionDto!=null) {
-            regionDto.setName(updatedRegionDto.getName());
-            regionDto.setCountryName(updatedRegionDto.getCountryName());
+            regionDto.setName(updatedRegionDTO.getName());
+            regionDto.setCountryName(updatedRegionDTO.getCountryName());
         }
         return regionService.save(regionDto);
     }
@@ -56,7 +56,7 @@ public class RegionController {
     @DeleteMapping("/{id}")
     @ApiOperation("Удаляет Region по Id.")
     public void deleteRegion(@PathVariable ("id") Long id) {
-        RegionDto regionDto = regionService.findById(id);
+        RegionDTO regionDto = regionService.findById(id);
         if (regionDto!=null) {
             regionService.delete(id);
         }
@@ -73,7 +73,7 @@ public class RegionController {
     }
 
     @GetMapping("/name")
-    public RegionDto findRegionByName(@RequestParam String name) {
+    public RegionDTO findRegionByName(@RequestParam String name) {
         return regionService.findByName(name);
     }
 
