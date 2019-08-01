@@ -35,8 +35,7 @@ public class ApiApplication extends SpringBootServletInitializer {
 
     @Bean
     public CommandLineRunner initOwnershipAndBaseUOM (OwnershipRepository ownershipRepository,
-                                                      UnitOfMeasureRepository unitOfMeasureRepository,
-                                                      CookingMethodRepository cookingMethodRepository) {
+                                                      UnitOfMeasureRepository unitOfMeasureRepository) {
         return (args) -> {
             if (ownershipRepository.findAll().spliterator().getExactSizeIfKnown()==0) {
                 ownershipRepository.save(new Ownership(OwnershipName.ADMIN));
@@ -44,10 +43,6 @@ public class ApiApplication extends SpringBootServletInitializer {
             }
             if (!unitOfMeasureRepository.findByFullNameIgnoreCase("Грамм").isPresent()) {
                 unitOfMeasureRepository.save(new UnitOfMeasure("Гр", "Грамм"));
-            }
-            //todo delete after adding cooking method
-            if (!cookingMethodRepository.findByNameIgnoreCase("Варка").isPresent()) {
-                cookingMethodRepository.save(new CookingMethod("Варка"));
             }
         };
     }

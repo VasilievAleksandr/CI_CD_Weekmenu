@@ -148,6 +148,10 @@ public class RecipeServiceImpl implements RecipeService {
     private Recipe convertToEntity(RecipeDTO recipeDto) {
         Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
         ownershipRepository.findByName(recipeDto.getOwnershipName()).ifPresent(recipe::setOwnership);
+        //todo delete after adding cooking method
+        if (!cookingMethodRepository.findByNameIgnoreCase("Варка").isPresent()) {
+            cookingMethodRepository.save(new CookingMethod("Варка"));
+        }
         cookingMethodRepository.findByNameIgnoreCase(recipeDto.getCookingMethodName()).ifPresent(recipe::setCookingMethod);
         if (recipeDto.getRecipeIngredients()!=null) {
             calculateCPFC(recipeDto, recipe);
