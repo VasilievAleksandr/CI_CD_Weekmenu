@@ -12,4 +12,5 @@ public interface IngredientUnitOfMeasureRepository extends CrudRepository<Ingred
     void deleteIngredientUnitOfMeasuresById_IngredientId(Long ingredientId);
 
     Optional<IngredientUnitOfMeasure> findById_IngredientIdAndId_UnitOfMeasureId(Long ingredientId, Long unitOfMeasureId);
+    List<IngredientUnitOfMeasure> findAllById_UnitOfMeasureId(Long unitOfMeasureId);
 }
