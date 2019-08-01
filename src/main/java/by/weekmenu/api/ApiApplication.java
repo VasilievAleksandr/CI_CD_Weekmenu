@@ -1,8 +1,10 @@
 package by.weekmenu.api;
 
+import by.weekmenu.api.entity.CookingMethod;
 import by.weekmenu.api.entity.Ownership;
 import by.weekmenu.api.entity.OwnershipName;
 import by.weekmenu.api.entity.UnitOfMeasure;
+import by.weekmenu.api.repository.CookingMethodRepository;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import com.fasterxml.jackson.databind.Module;
@@ -33,7 +35,8 @@ public class ApiApplication extends SpringBootServletInitializer {
 
     @Bean
     public CommandLineRunner initOwnershipAndBaseUOM (OwnershipRepository ownershipRepository,
-                                                      UnitOfMeasureRepository unitOfMeasureRepository) {
+                                                      UnitOfMeasureRepository unitOfMeasureRepository,
+                                                      CookingMethodRepository cookingMethodRepository) {
         return (args) -> {
             if (ownershipRepository.findAll().spliterator().getExactSizeIfKnown()==0) {
                 ownershipRepository.save(new Ownership(OwnershipName.ADMIN));
@@ -41,6 +44,10 @@ public class ApiApplication extends SpringBootServletInitializer {
             }
             if (!unitOfMeasureRepository.findByFullNameIgnoreCase("Грамм").isPresent()) {
                 unitOfMeasureRepository.save(new UnitOfMeasure("Гр", "Грамм"));
+            }
+            //todo delete after adding cooking method
+            if (!cookingMethodRepository.findByNameIgnoreCase("Варка").isPresent()) {
+                cookingMethodRepository.save(new CookingMethod("Варка"));
             }
         };
     }

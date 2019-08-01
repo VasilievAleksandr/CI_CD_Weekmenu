@@ -40,8 +40,8 @@ public class RecipeServiceImpl implements RecipeService {
         }
         Recipe recipe = convertToEntity(entityDto);
         recipeRepository.save(recipe);
-        calculateRecipePrice(entityDto, recipe);
         if (entityDto.getRecipeIngredients()!=null) {
+            calculateRecipePrice(entityDto, recipe);
             saveRecipeIngredients(entityDto, recipe);
         }
         if (entityDto.getCookingSteps()!=null) {
