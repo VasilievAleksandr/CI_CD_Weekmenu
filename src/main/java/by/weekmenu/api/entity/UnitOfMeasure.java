@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -39,6 +40,10 @@ public class UnitOfMeasure implements Serializable {
             message = "UnitOfMeasure's short name '${validatedValue}' mustn't be more than '{max}' characters long."
     )
     private String shortName;
+
+    @Column(name = "IS_ARCHIVED")
+    @NotNull(message = "UnitOfMeasure must have field 'isArchived' defined.")
+    private boolean isArchived;
 
     public UnitOfMeasure(String shortName, String fullName) {
         this.shortName = shortName;

@@ -1,7 +1,7 @@
 package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.IngredientDto;
-import by.weekmenu.api.dto.UnitOfMeasureDto;
+import by.weekmenu.api.dto.UnitOfMeasureDTO;
 import by.weekmenu.api.entity.Ingredient;
 import by.weekmenu.api.repository.*;
 import org.junit.Before;
@@ -72,7 +72,7 @@ public class IngredientServiceImplTest {
         ingredientDto.setCarbs(new BigDecimal("100"));
         ingredientDto.setFats(new BigDecimal("100"));
         ingredientDto.setProteins(new BigDecimal("100"));
-        UnitOfMeasureDto unitOfMeasureDto = new UnitOfMeasureDto();
+        UnitOfMeasureDTO unitOfMeasureDto = new UnitOfMeasureDTO();
         unitOfMeasureDto.setShortName("Гр");
         unitOfMeasureDto.setFullName("Грамм");
         return ingredientDto;

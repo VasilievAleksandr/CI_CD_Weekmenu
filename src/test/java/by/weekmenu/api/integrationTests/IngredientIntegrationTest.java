@@ -3,7 +3,7 @@ package by.weekmenu.api.integrationTests;
 import by.weekmenu.api.ApiApplication;
 import by.weekmenu.api.dto.IngredientDto;
 import by.weekmenu.api.dto.IngredientPriceDTO;
-import by.weekmenu.api.dto.UnitOfMeasureDto;
+import by.weekmenu.api.dto.UnitOfMeasureDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.entity.Currency;
 import by.weekmenu.api.repository.*;
@@ -124,14 +124,14 @@ public class IngredientIntegrationTest {
     }
 
     private void createUnitOfMeasureDtos() {
-        UnitOfMeasureDto unitOfMeasureDto1 = new UnitOfMeasureDto();
-        unitOfMeasureDto1.setFullName("Стакан");
-        unitOfMeasureDto1.setShortName("Ст");
-        unitOfMeasureService.save(unitOfMeasureDto1);
-        UnitOfMeasureDto unitOfMeasureDto2 = new UnitOfMeasureDto();
-        unitOfMeasureDto2.setFullName("Ложка");
-        unitOfMeasureDto2.setShortName("Лж");
-        unitOfMeasureService.save(unitOfMeasureDto2);
+        UnitOfMeasureDTO unitOfMeasureDTO1 = new UnitOfMeasureDTO();
+        unitOfMeasureDTO1.setFullName("Стакан");
+        unitOfMeasureDTO1.setShortName("Ст");
+        unitOfMeasureService.save(unitOfMeasureDTO1);
+        UnitOfMeasureDTO unitOfMeasureDTO2 = new UnitOfMeasureDTO();
+        unitOfMeasureDTO2.setFullName("Ложка");
+        unitOfMeasureDTO2.setShortName("Лж");
+        unitOfMeasureService.save(unitOfMeasureDTO2);
     }
 
     private Ingredient createIngredient(String name) {
@@ -253,7 +253,7 @@ public class IngredientIntegrationTest {
         ingredientDto.setCarbs(new BigDecimal("100"));
         ingredientDto.setFats(new BigDecimal("50"));
         ingredientDto.setProteins(new BigDecimal("100"));
-        UnitOfMeasureDto unitOfMeasureDto = new UnitOfMeasureDto();
+        UnitOfMeasureDTO unitOfMeasureDto = new UnitOfMeasureDTO();
         unitOfMeasureDto.setShortName("Гр");
         unitOfMeasureDto.setFullName("Грамм");
         ObjectMapper objectMapper = new ObjectMapper();
