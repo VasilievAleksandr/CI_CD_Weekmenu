@@ -40,6 +40,8 @@ public class IngredientServiceImpl implements IngredientService {
         ingredientRepository.save(ingredient);
         if (entityDto.getUnitOfMeasureEquivalent()!=null) {
             saveIngredientUOM(entityDto, ingredient);
+        } else {
+
         }
         if (entityDto.getIngredientPrices()!=null) {
             saveIngredientPrice(entityDto, ingredient);
@@ -75,13 +77,6 @@ public class IngredientServiceImpl implements IngredientService {
             ingredientUnitOfMeasure.setEquivalent(v);
             ingredientUnitOfMeasureRepository.save(ingredientUnitOfMeasure);
         });
-        IngredientUnitOfMeasure gramm = new IngredientUnitOfMeasure();
-        UnitOfMeasure unitOfMeasureGramm = unitOfMeasureRepository.findByFullNameIgnoreCase("Грамм").orElse(null);
-        gramm.setId(new IngredientUnitOfMeasure.Id(ingredient.getId(), Objects.requireNonNull(unitOfMeasureGramm.getId())));
-        gramm.setIngredient(ingredient);
-        gramm.setUnitOfMeasure(unitOfMeasureGramm);
-        gramm.setEquivalent(BigDecimal.ONE);
-        ingredientUnitOfMeasureRepository.save(gramm);
     }
 
     @Override
