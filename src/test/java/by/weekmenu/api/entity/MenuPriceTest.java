@@ -35,7 +35,7 @@ public class MenuPriceTest {
     }
 
     private Currency getCurrency() {
-        return new Currency("руб", "BYN", "$", true);
+        return new Currency("руб", "BYN", false);
     }
 
     private Region getRegion() {

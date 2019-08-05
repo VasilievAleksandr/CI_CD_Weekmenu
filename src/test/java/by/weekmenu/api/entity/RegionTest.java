@@ -83,6 +83,6 @@ public class RegionTest {
     }
 
     private Country getCountry() {
-        return new Country("Беларусь", "BY", new Currency("руб.", "BYN", true));
+        return new Country("Беларусь", "BY", new Currency("руб.", "BYN", false));
     }
 }

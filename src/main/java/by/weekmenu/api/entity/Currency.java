@@ -38,19 +38,11 @@ public class Currency implements Serializable {
     private String code;
 
     @Column(name = "IS_ARCHIVED")
-    @NotNull(message = "Currency must have field 'isArchived' defined.")
     private boolean isArchived;
 
-//    public Currency(String name, String code, String symbol, boolean isArchived) {
-//        this.name = name;
-//        this.code = code;
-//        this.symbol = symbol;
-//        this.isArchived = isArchived;
-//    }
-//
-//    public Currency(String name, String code, boolean isArchived) {
-//        this.name = name;
-//        this.code = code;
-//        this.isArchived = isArchived;
-//    }
+    public Currency(String name, String code, boolean isArchived) {
+        this.name = name;
+        this.code = code;
+        this.isArchived = isArchived;
+    }
 }
