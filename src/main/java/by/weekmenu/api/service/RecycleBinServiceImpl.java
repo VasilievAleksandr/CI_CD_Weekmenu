@@ -2,7 +2,7 @@ package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.RecycleBinDTO;
 import by.weekmenu.api.entity.RecycleBin;
-import by.weekmenu.api.entity.UnitOfMeasure;
+import by.weekmenu.api.repository.CurrencyRepository;
 import by.weekmenu.api.repository.RecycleBinRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.utils.EntityNamesConsts;
@@ -24,6 +24,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
 
     private final RecycleBinRepository recycleBinRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
+    private final CurrencyRepository currencyRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -34,12 +35,17 @@ public class RecycleBinServiceImpl implements RecycleBinService {
              String entityName = recycleBinElement.get().getEntityName();
              switch (entityName) {
                  case EntityNamesConsts.UNIT_OF_MEASURE:
-                     Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureRepository
-                             .findByFullNameIgnoreCase(recycleBinElement.get().getElementName());
-                     unitOfMeasure.ifPresent(uom -> unitOfMeasureRepository.restore(uom.getId()));
-                     recycleBinRepository.delete(recycleBinElement.get());
+                     unitOfMeasureRepository
+                             .findByFullNameIgnoreCase(recycleBinElement.get().getElementName())
+                             .ifPresent(uom -> unitOfMeasureRepository.restore(uom.getId()));
+                     break;
+                 case EntityNamesConsts.CURRENCY:
+                     currencyRepository
+                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                             .ifPresent(cur -> currencyRepository.restore(cur.getId()));
                      break;
              }
+            recycleBinRepository.delete(recycleBinElement.get());
         }
     }
 
@@ -58,12 +64,17 @@ public class RecycleBinServiceImpl implements RecycleBinService {
             String entityName = recycleBinElement.get().getEntityName();
             switch (entityName) {
                 case EntityNamesConsts.UNIT_OF_MEASURE:
-                    Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureRepository
-                            .findByFullNameIgnoreCase(recycleBinElement.get().getElementName());
-                    unitOfMeasure.ifPresent(uom -> unitOfMeasureRepository.deleteById(uom.getId()));
-                    recycleBinRepository.deleteById(id);
+                    unitOfMeasureRepository
+                            .findByFullNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(uom -> unitOfMeasureRepository.deleteById(uom.getId()));
+                    break;
+                case EntityNamesConsts.CURRENCY:
+                    currencyRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(cur -> currencyRepository.deleteById(cur.getId()));
                     break;
             }
+            recycleBinRepository.deleteById(id);
         }
     }
 

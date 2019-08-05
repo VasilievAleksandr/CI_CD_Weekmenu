@@ -7,16 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CurrencyDto {
+public class CurrencyDTO {
 
     private Integer id;
-
     private String name;
-
     private String code;
-
-    private String symbol;
-
-    private Boolean isActive;
-
+    private boolean isArchived;
  }

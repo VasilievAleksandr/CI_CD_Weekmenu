@@ -37,24 +37,20 @@ public class Currency implements Serializable {
             message = "Currency's code '${validatedValue}' must be '{min}' characters long.")
     private String code;
 
-    @Column(name = "SYMBOL")
-    @Pattern(regexp = "\\p{Sc}|\\s*", message = "Currency's symbol '${validatedValue}' must match pattern.")
-    private String symbol;
+    @Column(name = "IS_ARCHIVED")
+    @NotNull(message = "Currency must have field 'isArchived' defined.")
+    private boolean isArchived;
 
-    @Column(name = "IS_ACTIVE")
-    @NotNull(message = "Currency must have field 'isActive' defined.")
-    private Boolean isActive;
-
-    public Currency(String name, String code, String symbol, Boolean isActive) {
-        this.name = name;
-        this.code = code;
-        this.symbol = symbol;
-        this.isActive = isActive;
-    }
-
-    public Currency(String name, String code, Boolean isActive) {
-        this.name = name;
-        this.code = code;
-        this.isActive = isActive;
-    }
+//    public Currency(String name, String code, String symbol, boolean isArchived) {
+//        this.name = name;
+//        this.code = code;
+//        this.symbol = symbol;
+//        this.isArchived = isArchived;
+//    }
+//
+//    public Currency(String name, String code, boolean isArchived) {
+//        this.name = name;
+//        this.code = code;
+//        this.isArchived = isArchived;
+//    }
 }
