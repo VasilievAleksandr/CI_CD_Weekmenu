@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -43,6 +44,9 @@ public class Country implements Serializable {
     )
     private String alphaCode2;
 
+    @Column(name = "IS_ARCHIVED")
+    private boolean isArchived;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "CURRENCY_ID")
     @Valid
@@ -53,5 +57,11 @@ public class Country implements Serializable {
         this.name = name;
         this.alphaCode2 = alphaCode2;
         this.currency = currency;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void countryNameFirstCapitalLetter(){
+        this.name = name == null ? null : StringUtils.capitalize(name);
     }
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CountryDto {
+public class CountryDTO {
 
     private Long id;
     private String name;

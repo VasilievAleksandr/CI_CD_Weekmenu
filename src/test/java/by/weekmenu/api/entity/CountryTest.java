@@ -82,7 +82,7 @@ public class CountryTest {
         Country country = new Country("Беларусь", "", getCurrency());
         Set<ConstraintViolation<Country>> violations = validator.validate(country);
         List<String> messages = violations.stream()
-                .map((ConstraintViolation<Country> violation) -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
         assertTrue(messages.contains("Country must have alphaCode2."));
@@ -130,6 +130,7 @@ public class CountryTest {
     @Test
     public void testIsValid() {
         Country country = new Country("Беларусь", "BY", getCurrency());
+        country.setArchived(false);
         Set<ConstraintViolation<Country>> violations = validator.validate(country);
         assertEquals(violations.size(), 0);
     }
