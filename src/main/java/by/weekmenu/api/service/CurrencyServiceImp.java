@@ -1,14 +1,20 @@
 package by.weekmenu.api.service;
 
-import by.weekmenu.api.dto.CurrencyDto;
+import by.weekmenu.api.dto.CurrencyDTO;
+import by.weekmenu.api.entity.Country;
 import by.weekmenu.api.entity.Currency;
+import by.weekmenu.api.entity.RecycleBin;
+import by.weekmenu.api.repository.CountryRepository;
 import by.weekmenu.api.repository.CurrencyRepository;
+import by.weekmenu.api.repository.RecycleBinRepository;
+import by.weekmenu.api.utils.EntityNamesConsts;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,41 +23,49 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Transactional(readOnly = true)
-public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer>, CurrencyService {
+public class CurrencyServiceImp implements CurrencyService {
 
     private final CurrencyRepository currencyRepository;
+    private final RecycleBinRepository recycleBinRepository;
+    private final CountryRepository countryRepository;
     private final ModelMapper modelMapper;
 
     @Override
     @Transactional
-    public CurrencyDto save(CurrencyDto entityDto) {
+    public CurrencyDTO save(CurrencyDTO entityDto) {
         return convertToDto(currencyRepository.save(convertToEntity(entityDto)));
     }
 
     @Override
-    public CurrencyDto findById(Integer id) {
+    public CurrencyDTO findById(Integer id) {
         return convertToDto(currencyRepository.findById(id).orElse(null));
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
-        currencyRepository.deleteById(id);
+        Currency currency = currencyRepository.findById(id).orElse(null);
+        if (currency!=null) {
+            RecycleBin recycleBin = new RecycleBin();
+            recycleBin.setElementName(currency.getName());
+            recycleBin.setEntityName(EntityNamesConsts.CURRENCY);
+            recycleBin.setDeleteDate(LocalDateTime.now());
+            recycleBinRepository.save(recycleBin);
+            currencyRepository.softDelete(id);
+        }
     }
 
     @Override
-    public List<CurrencyDto> findAll() {
-        List<Currency> list = new ArrayList<>();
-        currencyRepository.findAll().forEach(list::add);
-
-        return list.stream()
+    public List<CurrencyDTO> findAll() {
+        return currencyRepository.findAllByIsArchivedIsFalse()
+                .stream()
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     public List<String> getAllCurrencyCodes() {
-        return currencyRepository.findAllByIsActiveTrueOrderByCode()
+        return currencyRepository.findAllByIsArchivedIsFalse()
                 .stream()
                 .filter(Objects::nonNull)
                 .map(Currency::getCode)
@@ -69,33 +83,20 @@ public class CurrencyServiceImp implements CrudService<CurrencyDto, Integer>, Cu
     }
 
     @Override
-    public Currency findBySymbol(String symbol) {
-        return currencyRepository.findBySymbolIgnoreCase(symbol).orElse(null);
+    public List<String> checkConnectedElements(Integer id) {
+        List<String> list = new ArrayList<>();
+        List<Country> countries = countryRepository.findAllByCurrency_Id(id);
+        if (countries.size()>0) {
+            list.add("страны: " + countries.size());
+        }
+        return list;
     }
 
-    private Currency convertToEntity(CurrencyDto currencyDto) {
+    private Currency convertToEntity(CurrencyDTO currencyDto) {
         return modelMapper.map(currencyDto, Currency.class);
     }
 
-    private CurrencyDto convertToDto(Currency currency) {
-        return modelMapper.map(currency, CurrencyDto.class);
-    }
-
-    @Override
-    public List<CurrencyDto> findAllByIsActiveTrueOrderByIsActive() {
-        return currencyRepository.findAllByIsActiveTrueOrderByIsActive()
-                .stream()
-                .filter(Objects::nonNull)
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<CurrencyDto> findAllByIsActiveFalseOrderByIsActive() {
-        return currencyRepository.findAllByIsActiveFalseOrderByIsActive()
-                .stream()
-                .filter(Objects::nonNull)
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    private CurrencyDTO convertToDto(Currency currency) {
+        return modelMapper.map(currency, CurrencyDTO.class);
     }
 }

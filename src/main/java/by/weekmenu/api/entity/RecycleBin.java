@@ -27,7 +27,7 @@ public class RecycleBin implements Serializable {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "ELEMENT_NAME", unique = true)
+    @Column(name = "ELEMENT_NAME")
     @NotBlank(message = "Recycle Bin must have element name.")
     @Size(max = 255, message = "Element name '${validatedValue}' must be '{max}' characters long")
     private String elementName;

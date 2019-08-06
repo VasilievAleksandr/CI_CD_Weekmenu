@@ -11,4 +11,5 @@ public interface CountryRepository extends CrudRepository<Country, Long> {
     Optional<Country> findByNameIgnoreCase(String name);
     Optional<Country> findByAlphaCode2IgnoreCase(String alphaCode2);
     List<Country> findAll ();
+    List<Country> findAllByCurrency_Id(Integer currencyId);
 }

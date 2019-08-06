@@ -29,7 +29,7 @@ public class CurrencyTest {
 
     @Test
     public void testNameIsNull() {
-        Currency currency = new Currency(null, "BYN", true);
+        Currency currency = new Currency(null, "BYN", false);
         Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
         assertEquals(violations.size(), 1);
         assertEquals("Currency must have name.",
@@ -38,7 +38,7 @@ public class CurrencyTest {
 
     @Test
     public void testNameIsBlank() {
-        Currency currency = new Currency("   ", "BYN", true);
+        Currency currency = new Currency("   ", "BYN", false);
         Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
         assertEquals(violations.size(), 1);
         assertEquals("Currency must have name.",
@@ -105,28 +105,8 @@ public class CurrencyTest {
     }
 
     @Test
-    public void testSymbolIsInvalid() {
-        Currency currency = new Currency("руб.", "BYN", true);
-        currency.setSymbol("%");
-        Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
-        assertEquals(violations.size(), 1);
-        assertEquals("Currency's symbol '%' must match pattern.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testIsActiveIsNull() {
-        Currency currency = new Currency("руб.", "BYN", null);
-        Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
-        assertEquals(violations.size(), 1);
-        assertEquals("Currency must have field 'isActive' defined.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
     public void testIsValid() {
-        Currency currency = new Currency("руб.", "BYN", true);
-        currency.setSymbol("$");
+        Currency currency = new Currency("руб.", "BYN", false);
         Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
         assertEquals(violations.size(), 0);
     }

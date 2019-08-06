@@ -44,7 +44,7 @@ public class RegionIntegrationTest {
 
     @Before
     public void createCountry() {
-        Currency currency = new Currency("Бел. руб.", "BYN", true);
+        Currency currency = new Currency("Бел. руб.", "BYN", false);
         Country country = new Country();
         country.setName("Беларусь");
         country.setAlphaCode2("BY");

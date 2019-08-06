@@ -43,7 +43,7 @@ public class DailyMenuStatisticsPriceTest {
     }
 
     private Currency getCurrency() {
-        return new Currency("руб.", "BYN", true);
+        return new Currency("руб.", "BYN", false);
     }
 
     @Test

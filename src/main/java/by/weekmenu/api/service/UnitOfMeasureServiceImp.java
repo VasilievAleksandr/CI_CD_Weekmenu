@@ -54,9 +54,7 @@ public class UnitOfMeasureServiceImp implements UnitOfMeasureService {
 
     @Override
     public List<UnitOfMeasureDTO> findAll() {
-        List<UnitOfMeasure> list = new ArrayList<>();
-        list.addAll(unitOfMeasureRepository.findAllByIsArchivedIsFalse());
-        return list.stream()
+        return unitOfMeasureRepository.findAllByIsArchivedIsFalse().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -79,9 +77,13 @@ public class UnitOfMeasureServiceImp implements UnitOfMeasureService {
         List<IngredientUnitOfMeasure> ingredientUnitOfMeasures = ingredientUnitOfMeasureRepository.findAllById_UnitOfMeasureId(id);
         List<IngredientPrice> ingredientPrices = ingredientPriceRepository.findAllByUnitOfMeasure_Id(id);
         List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAllByUnitOfMeasure_Id(id);
-        if (ingredientUnitOfMeasures.size() > 0 || ingredientPrices.size() > 0 || recipeIngredients.size() > 0) {
+        if (ingredientUnitOfMeasures.size() > 0) {
             list.add("ингредиенты: " + ingredientUnitOfMeasures.size());
+        }
+        if (ingredientPrices.size() > 0) {
             list.add("цены ингредиентов: " + ingredientPrices.size());
+        }
+         if (recipeIngredients.size() > 0) {
             list.add("рецепты: " + recipeIngredients.size());
         }
         return list;

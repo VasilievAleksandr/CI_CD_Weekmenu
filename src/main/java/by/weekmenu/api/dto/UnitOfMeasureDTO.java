@@ -10,5 +10,4 @@ public class UnitOfMeasureDTO {
     private Long id;
     private String fullName;
     private String shortName;
-    private boolean isArchived;
 }

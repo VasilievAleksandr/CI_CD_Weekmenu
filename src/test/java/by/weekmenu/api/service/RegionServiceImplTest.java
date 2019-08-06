@@ -51,7 +51,7 @@ public class RegionServiceImplTest {
         region.setId(1L);
         region.setName("Минск");
         region.setCountry(new Country("Беларусь", "BY",
-                new Currency("Бел. руб.", "BYN", true)));
+                new Currency("Бел. руб.", "BYN", false)));
         return region;
     }
 
