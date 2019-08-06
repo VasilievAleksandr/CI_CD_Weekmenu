@@ -2,6 +2,7 @@ package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.RecycleBinDTO;
 import by.weekmenu.api.entity.RecycleBin;
+import by.weekmenu.api.repository.CountryRepository;
 import by.weekmenu.api.repository.CurrencyRepository;
 import by.weekmenu.api.repository.RecycleBinRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
@@ -25,6 +26,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
     private final RecycleBinRepository recycleBinRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
     private final CurrencyRepository currencyRepository;
+    private final CountryRepository countryRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -43,6 +45,11 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                      currencyRepository
                              .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                              .ifPresent(cur -> currencyRepository.restore(cur.getId()));
+                     break;
+                 case EntityNamesConsts.COUNTRY:
+                     countryRepository
+                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                             .ifPresent(country -> countryRepository.restore(country.getId()));
                      break;
              }
             recycleBinRepository.delete(recycleBinElement.get());
@@ -72,6 +79,11 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                     currencyRepository
                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                             .ifPresent(cur -> currencyRepository.deleteById(cur.getId()));
+                    break;
+                case EntityNamesConsts.COUNTRY:
+                    countryRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(country -> countryRepository.deleteById(country.getId()));
                     break;
             }
             recycleBinRepository.deleteById(id);

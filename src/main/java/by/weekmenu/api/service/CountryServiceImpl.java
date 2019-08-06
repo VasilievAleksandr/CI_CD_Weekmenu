@@ -1,14 +1,22 @@
 package by.weekmenu.api.service;
 
-import by.weekmenu.api.dto.CountryDto;
+import by.weekmenu.api.dto.CountryDTO;
 import by.weekmenu.api.entity.Country;
+import by.weekmenu.api.entity.RecycleBin;
+import by.weekmenu.api.entity.Region;
 import by.weekmenu.api.repository.CountryRepository;
 import by.weekmenu.api.repository.CurrencyRepository;
+import by.weekmenu.api.repository.RecycleBinRepository;
+import by.weekmenu.api.repository.RegionRepository;
+import by.weekmenu.api.utils.EntityNamesConsts;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -20,26 +28,37 @@ public class CountryServiceImpl implements CountryService {
 
     private final CountryRepository countryRepository;
     private final CurrencyRepository currencyRepository;
+    private final RecycleBinRepository recycleBinRepository;
+    private final RegionRepository regionRepository;
     private final ModelMapper modelMapper;
 
     @Override
-    public CountryDto save(CountryDto entityDto) {
+    public CountryDTO save(CountryDTO entityDto) {
         return convertToDto(countryRepository.save(convertToEntity(entityDto)));
     }
 
     @Override
-    public CountryDto findById(Long id) {
+    public CountryDTO findById(Long id) {
         return convertToDto(countryRepository.findById(id).orElse(null));
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        countryRepository.deleteById(id);
+        Country country = countryRepository.findById(id).orElse(null);
+        if (country!=null) {
+            RecycleBin recycleBin = new RecycleBin();
+            recycleBin.setElementName(country.getName());
+            recycleBin.setEntityName(EntityNamesConsts.COUNTRY);
+            recycleBin.setDeleteDate(LocalDateTime.now());
+            recycleBinRepository.save(recycleBin);
+            countryRepository.softDelete(id);
+        }
     }
 
     @Override
-    public List<CountryDto> findAll() {
-        return StreamSupport.stream(countryRepository.findAll().spliterator(), false)
+    public List<CountryDTO> findAll() {
+        return countryRepository.findAllByIsArchivedIsFalse().stream()
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -57,21 +76,31 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public List<String> getAllCountryNames() {
-        return countryRepository.findAll().
-                stream()
+        return countryRepository.findAllByIsArchivedIsFalse()
+                .stream()
                 .filter(Objects::nonNull)
                 .map(Country::getName)
                 .collect(Collectors.toList());
     }
 
-    private Country convertToEntity(CountryDto countryDto) {
+    @Override
+    public List<String> checkConnectedElements(Long id) {
+        List<String> list = new ArrayList<>();
+        List<Region> regions = regionRepository.findAllByCountry_Id(id);
+        if (regions.size()>0) {
+            list.add("регионы :" + regions.size());
+        }
+        return list;
+    }
+
+    private Country convertToEntity(CountryDTO countryDto) {
         Country country = modelMapper.map(countryDto, Country.class);
         currencyRepository.findByCodeIgnoreCase(countryDto.getCurrencyCode()).ifPresent(country::setCurrency);
         return country;
     }
 
-    private CountryDto convertToDto(Country country) {
-        return modelMapper.map(country, CountryDto.class);
+    private CountryDTO convertToDto(Country country) {
+        return modelMapper.map(country, CountryDTO.class);
     }
 
 

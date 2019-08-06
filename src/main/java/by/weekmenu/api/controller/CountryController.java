@@ -1,6 +1,6 @@
 package by.weekmenu.api.controller;
 
-import by.weekmenu.api.dto.CountryDto;
+import by.weekmenu.api.dto.CountryDTO;
 import by.weekmenu.api.service.CountryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,30 +21,30 @@ public class CountryController {
 
     @GetMapping
     @ApiOperation("Возвращает список всех Country")
-    public List<CountryDto> findAllCountries() {
+    public List<CountryDTO> findAllCountries() {
         return countryService.findAll();
     }
 
     @GetMapping("/{id}")
     @ApiOperation("Находит Country по его Id")
-    public CountryDto findCountryById(@PathVariable("id") Long id) {
+    public CountryDTO findCountryById(@PathVariable("id") Long id) {
         return countryService.findById(id);
     }
 
     @PostMapping
     @ApiOperation("Сохраняет Country.")
-    public CountryDto addCountry(@RequestBody CountryDto countryDto) {
+    public CountryDTO addCountry(@RequestBody CountryDTO countryDto) {
         return countryService.save(countryDto);
     }
 
     @PutMapping("/{id}")
     @ApiOperation("Обновляет Country по Id.")
-    public CountryDto updateCountry(@RequestBody CountryDto updatedCountryDto, @PathVariable("id") Long id) {
-        CountryDto countryDto = countryService.findById(id);
+    public CountryDTO updateCountry(@RequestBody CountryDTO updatedCountryDTO, @PathVariable("id") Long id) {
+        CountryDTO countryDto = countryService.findById(id);
         if (countryDto!=null) {
-            countryDto.setName(updatedCountryDto.getName());
-            countryDto.setAlphaCode2(updatedCountryDto.getAlphaCode2());
-            countryDto.setCurrencyCode(updatedCountryDto.getCurrencyCode());
+            countryDto.setName(updatedCountryDTO.getName());
+            countryDto.setAlphaCode2(updatedCountryDTO.getAlphaCode2());
+            countryDto.setCurrencyCode(updatedCountryDTO.getCurrencyCode());
         }
         return countryService.save(countryDto);
     }
@@ -52,10 +52,7 @@ public class CountryController {
     @DeleteMapping("/{id}")
     @ApiOperation("Удаляет Country по Id.")
     public void deleteCountry(@PathVariable("id") Long id) {
-        CountryDto countryDto = countryService.findById(id);
-        if (countryDto!=null) {
-            countryService.delete(id);
-        }
+         countryService.delete(id);
     }
     
     @GetMapping("/checkUniqueName")
@@ -82,5 +79,11 @@ public class CountryController {
     @ApiOperation("Возвращает список всех name из Country")
     public List<String> getAllCountryNames() {
         return countryService.getAllCountryNames();
+    }
+
+    @GetMapping("/checkConnectedElements/{id}")
+    @ApiOperation("Проверяет наличие связанных элементов по Id")
+    public List<String> checkConnectedElements(@PathVariable("id") Long id) {
+        return countryService.checkConnectedElements(id);
     }
 }
