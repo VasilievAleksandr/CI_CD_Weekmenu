@@ -50,7 +50,7 @@ public class CountryController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("Удаляет Country по Id.")
+    @ApiOperation("Перемещает в корзину Country по Id.")
     public void deleteCountry(@PathVariable("id") Long id) {
          countryService.delete(id);
     }

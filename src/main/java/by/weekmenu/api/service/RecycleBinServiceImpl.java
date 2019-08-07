@@ -2,10 +2,7 @@ package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.RecycleBinDTO;
 import by.weekmenu.api.entity.RecycleBin;
-import by.weekmenu.api.repository.CountryRepository;
-import by.weekmenu.api.repository.CurrencyRepository;
-import by.weekmenu.api.repository.RecycleBinRepository;
-import by.weekmenu.api.repository.UnitOfMeasureRepository;
+import by.weekmenu.api.repository.*;
 import by.weekmenu.api.utils.EntityNamesConsts;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,6 +24,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
     private final UnitOfMeasureRepository unitOfMeasureRepository;
     private final CurrencyRepository currencyRepository;
     private final CountryRepository countryRepository;
+    private final RegionRepository regionRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -50,6 +48,11 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                      countryRepository
                              .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                              .ifPresent(country -> countryRepository.restore(country.getId()));
+                     break;
+                 case EntityNamesConsts.REGION:
+                     regionRepository
+                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                             .ifPresent(region -> regionRepository.restore(region.getId()));
                      break;
              }
             recycleBinRepository.delete(recycleBinElement.get());
@@ -84,6 +87,11 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                     countryRepository
                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                             .ifPresent(country -> countryRepository.deleteById(country.getId()));
+                    break;
+                case EntityNamesConsts.REGION:
+                    regionRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(region -> regionRepository.deleteById(region.getId()));
                     break;
             }
             recycleBinRepository.deleteById(id);
