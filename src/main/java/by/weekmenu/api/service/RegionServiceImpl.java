@@ -1,14 +1,19 @@
 package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.RegionDTO;
+import by.weekmenu.api.entity.IngredientPrice;
+import by.weekmenu.api.entity.RecipePrice;
+import by.weekmenu.api.entity.RecycleBin;
 import by.weekmenu.api.entity.Region;
-import by.weekmenu.api.repository.CountryRepository;
-import by.weekmenu.api.repository.RegionRepository;
+import by.weekmenu.api.repository.*;
+import by.weekmenu.api.utils.EntityNamesConsts;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +26,9 @@ public class RegionServiceImpl implements RegionService {
 
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
+    private final RecycleBinRepository recycleBinRepository;
+    private final IngredientPriceRepository ingredientPriceRepository;
+    private final RecipePriceRepository recipePriceRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -34,15 +42,22 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        regionRepository.deleteById(id);
+        Region region = regionRepository.findById(id).orElse(null);
+        if (region!=null) {
+            RecycleBin recycleBin = new RecycleBin();
+            recycleBin.setElementName(region.getName());
+            recycleBin.setEntityName(EntityNamesConsts.REGION);
+            recycleBin.setDeleteDate(LocalDateTime.now());
+            recycleBinRepository.save(recycleBin);
+            regionRepository.softDelete(id);
+        }
     }
 
     @Override
     public List<RegionDTO> findAll() {
-        List<Region> regions = new ArrayList<>();
-        regionRepository.findAll().forEach(regions::add);
-        return regions.stream()
+        return regionRepository.findAllByIsArchivedIsFalse().stream()
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -52,6 +67,20 @@ public class RegionServiceImpl implements RegionService {
     public RegionDTO findByName(String name) {
         Optional<Region> region = regionRepository.findByNameIgnoreCase(name);
         return region.map(this::convertToDto).orElse(null);
+    }
+
+    @Override
+    public List<String> checkConnectedElements(Long id) {
+        List<String> list = new ArrayList<>();
+        List<IngredientPrice> ingredientPrices = ingredientPriceRepository.findAllById_RegionId(id);
+        List<RecipePrice> recipePrices = recipePriceRepository.findAllById_RegionId(id);
+        if (ingredientPrices.size() > 0) {
+            list.add("цены ингредиентов: " + ingredientPrices.size());
+        }
+        if (recipePrices.size() > 0) {
+            list.add("цены рецептов: " + recipePrices.size());
+        }
+        return list;
     }
 
     private RegionDTO convertToDto(Region region) { return modelMapper.map(region, RegionDTO.class);

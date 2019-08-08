@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -110,20 +111,28 @@ public class RegionControllerTest {
 
     @Test
     public void deleteRegionTest() throws Exception {
-        RegionDTO regionDto = new RegionDTO(1L, "Минск", "Беларусь", "BYN");
-        when(regionService.findById(regionDto.getId())).thenReturn(regionDto);
         mockMvc.perform(delete("/regions/1")
         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void checkUniqueName() throws Exception {
+    public void checkUniqueNameTest() throws Exception {
         String name = "Минск";
         when(regionService.findByName(name)).thenReturn(null);
         mockMvc.perform(get("/regions/checkUniqueName?name=" + name)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(0)));
+    }
+
+    @Test
+    public void checkConnectedElementsTest() throws Exception {
+        List<String> result = Arrays.asList("цены ингредиентов: 1", "цены рецептов: 2");
+        when(regionService.checkConnectedElements(1L)).thenReturn(result);
+        mockMvc.perform(get("/regions/checkConnectedElements/1")
+        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 }

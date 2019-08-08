@@ -1,11 +1,9 @@
 package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.RegionDTO;
-import by.weekmenu.api.entity.Country;
-import by.weekmenu.api.entity.Currency;
-import by.weekmenu.api.entity.Region;
-import by.weekmenu.api.repository.CountryRepository;
-import by.weekmenu.api.repository.RegionRepository;
+import by.weekmenu.api.entity.*;
+import by.weekmenu.api.repository.*;
+import by.weekmenu.api.utils.EntityNamesConsts;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +12,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +31,15 @@ public class RegionServiceImplTest {
     private CountryRepository countryRepository;
 
     @MockBean
+    private RecycleBinRepository recycleBinRepository;
+
+    @MockBean
+    private IngredientPriceRepository ingredientPriceRepository;
+
+    @MockBean
+    private RecipePriceRepository recipePriceRepository;
+
+    @MockBean
     private ModelMapper modelMapper;
 
     private RegionService regionService;
@@ -43,7 +52,8 @@ public class RegionServiceImplTest {
 
     @Before
     public void setup() {
-        regionService = new RegionServiceImpl(regionRepository, countryRepository, modelMapper);
+        regionService = new RegionServiceImpl(regionRepository, countryRepository, recycleBinRepository,
+                ingredientPriceRepository, recipePriceRepository, modelMapper);
     }
 
     private Region createRegion() {
@@ -52,6 +62,7 @@ public class RegionServiceImplTest {
         region.setName("Минск");
         region.setCountry(new Country("Беларусь", "BY",
                 new Currency("Бел. руб.", "BYN", false)));
+        region.setArchived(false);
         return region;
     }
 
@@ -68,10 +79,8 @@ public class RegionServiceImplTest {
         List<Region> regions = new ArrayList<>();
         regions.add(regionOne);
         regions.add(regionTwo);
-        when(regionRepository.findAll()).thenReturn(regions);
-
+        when(regionRepository.findAllByIsArchivedIsFalse()).thenReturn(regions);
         List<RegionDTO> result = regionService.findAll();
-
         assertThat(regions.size()).isEqualTo(result.size());
     }
 
@@ -102,8 +111,18 @@ public class RegionServiceImplTest {
 
     @Test
     public void deleteRegionTest() {
+        Region region = createRegion();
+        when(regionRepository.findById(region.getId())).thenReturn(Optional.of(region));
+        RecycleBin recycleBin = new RecycleBin();
+        recycleBin.setElementName(region.getName());
+        recycleBin.setEntityName(EntityNamesConsts.REGION);
+        recycleBin.setDeleteDate(LocalDateTime.now());
+        when(recycleBinRepository.save(recycleBin)).thenReturn(recycleBin);
         regionService.delete(1L);
-        verify(regionRepository, times(1)).deleteById(1L);
+        verify(regionRepository, times(1)).softDelete(1L);
+        assertThat(recycleBin.getElementName()).isEqualTo("Минск");
+        assertThat(recycleBin.getEntityName()).isEqualTo("Регион");
+        assertThat(recycleBin.getDeleteDate()).isNotNull();
     }
 
     @Test
@@ -111,5 +130,22 @@ public class RegionServiceImplTest {
         when(regionRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
         RegionDTO regionDto = regionService.findByName("Минск");
         assertThat(regionDto).isNull();
+    }
+
+    @Test
+    public void checkConnectedElementsTest() {
+        Region region = createRegion();
+        List<IngredientPrice> ingredientPrices = new ArrayList<>();
+        ingredientPrices.add(new IngredientPrice(new Ingredient("Курица", new Ownership(OwnershipName.USER)),
+                region, new UnitOfMeasure("Кг", "Килограмм"),
+                new BigDecimal("1"), new BigDecimal("123.12")));
+        List<RecipePrice> recipePrices = new ArrayList<>();
+        recipePrices.add(new RecipePrice(new BigDecimal("111"),
+                new Recipe("рецепт", true, new CookingMethod("жарка"),
+                        new Ownership(OwnershipName.USER)), region));
+        when(ingredientPriceRepository.findAllById_RegionId(region.getId())).thenReturn(ingredientPrices);
+        when(recipePriceRepository.findAllById_RegionId(region.getId())).thenReturn(recipePrices);
+        List<String> list = regionService.checkConnectedElements(region.getId());
+        assertThat(list.size()).isEqualTo(2);
     }
 }

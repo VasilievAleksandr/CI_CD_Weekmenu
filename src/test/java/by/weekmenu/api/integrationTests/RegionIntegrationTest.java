@@ -2,12 +2,8 @@ package by.weekmenu.api.integrationTests;
 
 import by.weekmenu.api.ApiApplication;
 import by.weekmenu.api.dto.RegionDTO;
-import by.weekmenu.api.entity.Country;
-import by.weekmenu.api.entity.Currency;
-import by.weekmenu.api.entity.Region;
-import by.weekmenu.api.repository.CountryRepository;
-import by.weekmenu.api.repository.CurrencyRepository;
-import by.weekmenu.api.repository.RegionRepository;
+import by.weekmenu.api.entity.*;
+import by.weekmenu.api.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -19,6 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
@@ -41,6 +41,27 @@ public class RegionIntegrationTest {
 
     @Autowired
     private CurrencyRepository currencyRepository;
+
+    @Autowired
+    private IngredientPriceRepository ingredientPriceRepository;
+
+    @Autowired
+    private RecipePriceRepository recipePriceRepository;
+
+    @Autowired
+    private IngredientRepository ingredientRepository;
+
+    @Autowired
+    private UnitOfMeasureRepository unitOfMeasureRepository;
+
+    @Autowired
+    private OwnershipRepository ownershipRepository;
+
+    @Autowired
+    private RecipeRepository recipeRepository;
+
+    @Autowired
+    private CookingMethodRepository cookingMethodRepository;
 
     @Before
     public void createCountry() {
@@ -67,6 +88,7 @@ public class RegionIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void saveRegion() throws Exception {
         RegionDTO regionDto = new RegionDTO();
         regionDto.setName("Гомель");
@@ -79,6 +101,8 @@ public class RegionIntegrationTest {
 
         Iterable<Region> regions = regionRepository.findAll();
         assertThat(regions).extracting(Region::getName).containsOnly("Гомель");
+        assertThat(regions).extracting(region -> region.getCountry().getName()).containsOnly("Беларусь");
+        assertThat(regions).extracting(Region::isArchived).contains(false);
     }
 
     @Test
@@ -126,7 +150,6 @@ public class RegionIntegrationTest {
     @Test
     public void deleteRegionTest() throws Exception {
         Region region = createRegion("Минск");
-
         mockMvc.perform(delete("/regions/" + region.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -139,5 +162,34 @@ public class RegionIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
+    }
+
+    @Test
+    @Transactional
+    public void checkConnectedElementsTest() throws Exception {
+        Region region = createRegion("Минск");
+        UnitOfMeasure unitOfMeasure = unitOfMeasureRepository.save(new UnitOfMeasure("Кг", "Килограмм"));
+        Ownership ownership = ownershipRepository.findByName("USER").orElse(null);
+        Ingredient ingredient = ingredientRepository.save(new Ingredient("Курица", ownership));
+        IngredientPrice ingredientPrice = new IngredientPrice();
+        ingredientPrice.setId(new IngredientPrice.Id(ingredient.getId(), Objects.requireNonNull(region).getId()));
+        ingredientPrice.setUnitOfMeasure(unitOfMeasure);
+        ingredientPrice.setIngredient(ingredient);
+        ingredientPrice.setRegion(region);
+        ingredientPrice.setQuantity(new BigDecimal("1"));
+        ingredientPrice.setPriceValue(new BigDecimal("123.12"));
+        ingredientPriceRepository.save(ingredientPrice);
+        CookingMethod cookingMethod = cookingMethodRepository.save(new CookingMethod("жарка"));
+        Recipe recipe = recipeRepository.save(new Recipe("рецепт", true, cookingMethod, ownership));
+        RecipePrice recipePrice = new RecipePrice();
+        recipePrice.setId(new RecipePrice.Id(recipe.getId(), region.getId()));
+        recipePrice.setRegion(region);
+        recipePrice.setRecipe(recipe);
+        recipePrice.setPriceValue(new BigDecimal("111"));
+        recipePriceRepository.save(recipePrice);
+        mockMvc.perform(get("/regions/checkConnectedElements/" + region.getId().toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 }

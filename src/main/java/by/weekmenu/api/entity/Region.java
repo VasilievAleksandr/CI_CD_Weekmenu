@@ -35,6 +35,9 @@ public class Region implements Serializable {
     )
     private String name;
 
+    @Column(name = "IS_ARCHIVED")
+    private boolean isArchived;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COUNTRY_ID")
     @Valid

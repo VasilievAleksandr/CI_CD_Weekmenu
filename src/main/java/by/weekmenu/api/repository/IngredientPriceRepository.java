@@ -11,4 +11,5 @@ public interface IngredientPriceRepository extends CrudRepository<IngredientPric
     Set<IngredientPrice> findAllById_IngredientId(Long ingredientId);
     void deleteIngredientPricesById_IngredientId(Long ingredientId);
     List<IngredientPrice> findAllByUnitOfMeasure_Id(Long unitOfMeasureId);
+    List<IngredientPrice> findAllById_RegionId(Long regionId);
 }

@@ -45,4 +45,10 @@ public class Currency implements Serializable {
         this.code = code;
         this.isArchived = isArchived;
     }
+
+    @PrePersist
+    @PreUpdate
+    private void capitalizeCode() {
+        this.code = code == null ? null : code.toUpperCase();
+    }
 }

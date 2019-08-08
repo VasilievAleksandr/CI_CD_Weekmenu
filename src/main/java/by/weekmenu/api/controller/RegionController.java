@@ -54,12 +54,9 @@ public class RegionController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("Удаляет Region по Id.")
+    @ApiOperation("Перемещает в корзину Region по Id.")
     public void deleteRegion(@PathVariable ("id") Long id) {
-        RegionDTO regionDto = regionService.findById(id);
-        if (regionDto!=null) {
-            regionService.delete(id);
-        }
+        regionService.delete(id);
     }
 
     @GetMapping("/checkUniqueName")
@@ -77,4 +74,9 @@ public class RegionController {
         return regionService.findByName(name);
     }
 
+    @GetMapping("/checkConnectedElements/{id}")
+    @ApiOperation("Проверяет наличие связанных элементов по Id")
+    public List<String> checkConnectedElements(@PathVariable("id") Long id) {
+        return regionService.checkConnectedElements(id);
+    }
 }

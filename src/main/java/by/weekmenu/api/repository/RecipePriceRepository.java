@@ -9,4 +9,5 @@ public interface RecipePriceRepository extends CrudRepository<RecipePrice, Recip
 
     void deleteById_RecipeId(Long recipeId);
     List<RecipePrice> findAllById_RecipeId(Long recipeId);
+    List<RecipePrice> findAllById_RegionId(Long regionId);
 }
