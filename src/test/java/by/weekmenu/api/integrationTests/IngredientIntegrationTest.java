@@ -1,7 +1,7 @@
 package by.weekmenu.api.integrationTests;
 
 import by.weekmenu.api.ApiApplication;
-import by.weekmenu.api.dto.IngredientDto;
+import by.weekmenu.api.dto.IngredientDTO;
 import by.weekmenu.api.dto.IngredientPriceDTO;
 import by.weekmenu.api.dto.UnitOfMeasureDTO;
 import by.weekmenu.api.entity.*;
@@ -106,8 +106,8 @@ public class IngredientIntegrationTest {
         recycleBinRepository.deleteAll();
     }
 
-    private IngredientDto createIngredientDto(String name) {
-        IngredientDto ingredientDto = new IngredientDto();
+    private IngredientDTO createIngredientDto(String name) {
+        IngredientDTO ingredientDto = new IngredientDTO();
         ingredientDto.setName(name);
         ingredientDto.setCalories(new BigDecimal("100"));
         ingredientDto.setCarbs(new BigDecimal("100"));
@@ -174,7 +174,7 @@ public class IngredientIntegrationTest {
     @Test
     @Transactional
     public void saveIngredient() throws Exception {
-        IngredientDto ingredientDto = new IngredientDto();
+        IngredientDTO ingredientDto = new IngredientDTO();
         ingredientDto.setName("Курица");
         ingredientDto.setCalories(new BigDecimal("100"));
         ingredientDto.setCarbs(new BigDecimal("100"));
@@ -235,7 +235,7 @@ public class IngredientIntegrationTest {
 
     @Test
     public void findIngredientByIdTest() throws Exception {
-        IngredientDto ingredientDto = createIngredientDto("Курица");
+        IngredientDTO ingredientDto = createIngredientDto("Курица");
 
         mockMvc.perform(get("/ingredients/" + ingredientDto.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -250,7 +250,7 @@ public class IngredientIntegrationTest {
 
     @Test
     public void deleteIngredientTest() throws Exception {
-        IngredientDto ingredientDto = createIngredientDto("Курица");
+        IngredientDTO ingredientDto = createIngredientDto("Курица");
         mockMvc.perform(delete("/ingredients/" + ingredientDto.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -261,13 +261,13 @@ public class IngredientIntegrationTest {
         assertThat(recycleBins).extracting(RecycleBin::getDeleteDate).isNotNull();
 
         Optional<Ingredient> ingredient = ingredientRepository.findById(ingredientDto.getId());
-        assertThat(ingredient.get().isArchived()).isEqualTo(true);
+        assertThat(ingredient.get().isArchived()).isTrue();
     }
 
     @Test
     public void updateIngredient() throws Exception {
         Ingredient ingredient = createIngredient("Курица");
-        IngredientDto ingredientDto = new IngredientDto();
+        IngredientDTO ingredientDto = new IngredientDTO();
         ingredientDto.setName("Ананас");
         ingredientDto.setCalories(new BigDecimal("100"));
         ingredientDto.setCarbs(new BigDecimal("100"));

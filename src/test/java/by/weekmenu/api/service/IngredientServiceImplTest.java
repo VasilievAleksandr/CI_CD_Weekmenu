@@ -1,6 +1,6 @@
 package by.weekmenu.api.service;
 
-import by.weekmenu.api.dto.IngredientDto;
+import by.weekmenu.api.dto.IngredientDTO;
 import by.weekmenu.api.dto.UnitOfMeasureDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
@@ -70,8 +70,8 @@ public class IngredientServiceImplTest {
         return ingredient;
     }
 
-    private IngredientDto createIngredientDto(String name) {
-        IngredientDto ingredientDto = new IngredientDto();
+    private IngredientDTO createIngredientDto(String name) {
+        IngredientDTO ingredientDto = new IngredientDTO();
         ingredientDto.setName(name);
         ingredientDto.setCalories(new BigDecimal("100"));
         ingredientDto.setCarbs(new BigDecimal("100"));
@@ -86,12 +86,12 @@ public class IngredientServiceImplTest {
     @Test
     public void saveIngredientTest() {
         Ingredient ingredient = createIngredient("Курица");
-        IngredientDto ingredientDto = createIngredientDto("Курица");
+        IngredientDTO ingredientDto = createIngredientDto("Курица");
         when(modelMapper.map(ingredientDto, Ingredient.class)).thenReturn(ingredient);
         when(ingredientRepository.save(ingredient)).thenReturn(ingredient);
-        when(modelMapper.map(ingredient, IngredientDto.class)).thenReturn(ingredientDto);
+        when(modelMapper.map(ingredient, IngredientDTO.class)).thenReturn(ingredientDto);
 
-        IngredientDto saved = ingredientService.save(ingredientDto);
+        IngredientDTO saved = ingredientService.save(ingredientDto);
         assertThat(saved).isNotNull();
         assertThat(saved.getName()).isEqualTo("Курица");
         assertThat(saved.getCalories()).isEqualTo(new BigDecimal("100"));
@@ -102,11 +102,11 @@ public class IngredientServiceImplTest {
 
     @Test
     public void findByIdTest() {
-        IngredientDto ingredientDto = createIngredientDto("Курица");
+        IngredientDTO ingredientDto = createIngredientDto("Курица");
         Ingredient ingredient = createIngredient("Курица");
-        when(modelMapper.map(ingredient, IngredientDto.class)).thenReturn(ingredientDto);
+        when(modelMapper.map(ingredient, IngredientDTO.class)).thenReturn(ingredientDto);
         when(ingredientRepository.findById(ingredientDto.getId())).thenReturn(Optional.of(ingredient));
-        IngredientDto found = ingredientService.findById(ingredientDto.getId());
+        IngredientDTO found = ingredientService.findById(ingredientDto.getId());
         assertThat(found).isNotNull();
         assertThat(found.getName()).isEqualTo("Курица");
         assertThat(found.getCalories()).isEqualTo(new BigDecimal("100"));
@@ -128,12 +128,12 @@ public class IngredientServiceImplTest {
         Ingredient ingredient1 = createIngredient("Курица");
         Ingredient ingredient2 = createIngredient("Ананас");
         List<Ingredient> ingredients = Arrays.asList(ingredient1, ingredient2);
-        IngredientDto ingredientDto1 = createIngredientDto("Курица");
-        IngredientDto ingredientDto2 = createIngredientDto("Ананас");
+        IngredientDTO ingredientDTO1 = createIngredientDto("Курица");
+        IngredientDTO ingredientDTO2 = createIngredientDto("Ананас");
         when(ingredientRepository.findAllByIsArchivedIsFalse()).thenReturn(ingredients);
-        when(modelMapper.map(ingredient1, IngredientDto.class)).thenReturn(ingredientDto1);
-        when(modelMapper.map(ingredient2, IngredientDto.class)).thenReturn(ingredientDto2);
-        List<IngredientDto> result = ingredientService.findAll();
+        when(modelMapper.map(ingredient1, IngredientDTO.class)).thenReturn(ingredientDTO1);
+        when(modelMapper.map(ingredient2, IngredientDTO.class)).thenReturn(ingredientDTO2);
+        List<IngredientDTO> result = ingredientService.findAll();
         assertThat(result.size()).isEqualTo(ingredients.size());
     }
 
@@ -148,7 +148,7 @@ public class IngredientServiceImplTest {
 
     @Test
     public void moveToRecycleBinTest() {
-        IngredientDto ingredientDto = createIngredientDto("Курица");
+        IngredientDTO ingredientDto = createIngredientDto("Курица");
         when(recycleBinRepository.save(any(RecycleBin.class))).thenReturn(new RecycleBin());
         ingredientService.moveToRecycleBin(ingredientDto);
         verify(ingredientRepository, times(1)).softDelete(ingredientDto.getId());

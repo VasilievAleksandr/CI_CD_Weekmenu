@@ -85,6 +85,21 @@ public class RecipeIntegrationTest {
     private IngredientService ingredientService;
 
     @Autowired
+    private RecycleBinRepository recycleBinRepository;
+
+    @Autowired
+    private MenuRecipeRepository menuRecipeRepository;
+
+    @Autowired
+    private DishTypeRepository dishTypeRepository;
+
+    @Autowired
+    private MenuRepository menuRepository;
+
+    @Autowired
+    private DayOfWeekRepository dayOfWeekRepository;
+
+    @Autowired
     private RecipeService recipeService;
 
     @Before
@@ -146,7 +161,7 @@ public class RecipeIntegrationTest {
     }
 
     private void createIngredient(String name) {
-        IngredientDto ingredientDto = new IngredientDto();
+        IngredientDTO ingredientDto = new IngredientDTO();
         ingredientDto.setName(name);
         ingredientDto.setCalories(new BigDecimal("100"));
         ingredientDto.setCarbs(new BigDecimal("100"));
@@ -192,6 +207,19 @@ public class RecipeIntegrationTest {
         Set<CookingStepDTO> cookingSteps = getCookingSteps();
         recipeDto.setCookingSteps(cookingSteps);
         return recipeDto;
+    }
+
+    private Recipe createRecipe(String name) {
+        Recipe recipe = new Recipe();
+        recipe.setName(name);
+        recipe.setCookingTime(new Short("30"));
+        recipe.setPreparingTime(new Short("15"));
+        recipe.setPortions((short)2);
+        recipe.setImageLink("images/image.png");
+        recipe.setSource("http://bestrecipes.com/best-recipe");
+        recipe.setCookingMethod(cookingMethodRepository.findByNameIgnoreCase("Варка").orElse(null));
+        recipe.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
+        return recipeRepository.save(recipe);
     }
 
     private Set<CookingStepDTO> getCookingSteps() {
@@ -325,6 +353,31 @@ public class RecipeIntegrationTest {
         mockMvc.perform(delete("/recipes/" + recipeDto.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+
+        Iterable<RecycleBin> recycleBins = recycleBinRepository.findAll();
+        assertThat(recycleBins).extracting(RecycleBin::getElementName).containsOnly("Гречневая каша");
+        assertThat(recycleBins).extracting(RecycleBin::getEntityName).containsOnly("Рецепт");
+        assertThat(recycleBins).extracting(RecycleBin::getDeleteDate).isNotNull();
+
+        Optional<Recipe> recipe = recipeRepository.findById(recipeDto.getId());
+        assertThat(recipe.get().isArchived()).isTrue();
+    }
+
+    @Test
+    @Transactional
+    public void checkConnectedElementsTest() throws Exception {
+        Recipe recipe = createRecipe("Гречневая каша");
+        DishType dishType = dishTypeRepository.save(new DishType("Обед", true));
+        Menu menu = menuRepository.save(new Menu("Бюджетное", true,
+                ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null)));
+        DayOfWeek dayOfWeek = dayOfWeekRepository.save(new DayOfWeek("Понедельник", "ПН"));
+        MenuRecipe menuRecipe = new MenuRecipe(menu, recipe, dishType, dayOfWeek);
+        menuRecipe.setId(new MenuRecipe.Id(menu.getId(), recipe.getId()));
+        menuRecipeRepository.save(menuRecipe);
+        mockMvc.perform(get("/recipes/checkConnectedElements/" + recipe.getId().toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
