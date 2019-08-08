@@ -36,12 +36,6 @@ public class RecipeSubcategoryController {
         return new ResponseEntity<>(recipeSubcategoryService.save(recipeSubcategoryDTO), status);
     }
 
-    @GetMapping("/{id}")
-    @ApiOperation("Находит RecipeSubcategory по его Id")
-    public RecipeSubcategoryDTO findRecipeSubcategoryById(@PathVariable("id") Long id) {
-        return recipeSubcategoryService.findById(id);
-    }
-
     @PutMapping("/{id}")
     @ApiOperation("Обновляет RecipeSubcategory по Id.")
     public ResponseEntity<RecipeSubcategoryDTO> updateRecipeSubcategory(@RequestBody RecipeSubcategoryDTO updatedRecipeSubcategoryDTO, @PathVariable("id") Long id) {

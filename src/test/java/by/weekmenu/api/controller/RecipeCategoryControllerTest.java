@@ -69,7 +69,6 @@ public class RecipeCategoryControllerTest {
         recipeCategoryDTOs.add(createRecipeCategoryDTO(2L, "Ужин"));
         when(recipeCategorySevice.findAll()).thenReturn(recipeCategoryDTOs);
         mockMvc.perform(get("/recipecategories")
-                .contentType(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -96,7 +95,7 @@ public class RecipeCategoryControllerTest {
     }
 
     @Test
-    public void deleteRecipeCategoryTest() throws Exception{
+    public void deleteRecipeCategoryTest() throws Exception {
         RecipeCategoryDTO recipeCategoryDTO = createRecipeCategoryDTO(1L, "Обед");
         when(recipeCategorySevice.findById(recipeCategoryDTO.getId())).thenReturn(recipeCategoryDTO);
         mockMvc.perform(delete("/recipecategories/1")
@@ -105,8 +104,8 @@ public class RecipeCategoryControllerTest {
     }
 
     @Test
-    public void checkUniqueNameRecipeCategoryTest() throws Exception{
-        RecipeCategory recipeCategory = new RecipeCategory ( 1L, "Ужин");
+    public void checkUniqueNameRecipeCategoryTest() throws Exception {
+        RecipeCategory recipeCategory = new RecipeCategory(1L, "Ужин");
         String name = "Ужин";
         when(recipeCategorySevice.findByName(name)).thenReturn(recipeCategory);
         mockMvc.perform(get("/recipecategories/checkRecipeCategoryUniqueName?name=" + name)
