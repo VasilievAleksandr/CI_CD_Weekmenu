@@ -2,7 +2,7 @@ package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.IngredientDto;
 import by.weekmenu.api.dto.UnitOfMeasureDTO;
-import by.weekmenu.api.entity.Ingredient;
+import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,9 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -44,6 +42,12 @@ public class IngredientServiceImplTest {
     private RecipeService recipeService;
 
     @MockBean
+    private RecycleBinRepository recycleBinRepository;
+
+    @MockBean
+    private RecipeIngredientRepository recipeIngredientRepository;
+
+    @MockBean
     private ModelMapper modelMapper;
 
     private IngredientService ingredientService;
@@ -52,7 +56,8 @@ public class IngredientServiceImplTest {
     public void setup() {
         ingredientService = new IngredientServiceImpl(ingredientRepository, ownershipRepository,
                 unitOfMeasureRepository, ingredientUnitOfMeasureRepository,
-                regionRepository, ingredientPriceRepository, recipeService, modelMapper);
+                regionRepository, ingredientPriceRepository, recipeService,
+                recycleBinRepository, recipeIngredientRepository, modelMapper);
     }
 
     private Ingredient createIngredient(String name) {
@@ -96,7 +101,7 @@ public class IngredientServiceImplTest {
     }
 
     @Test
-    public void findById() {
+    public void findByIdTest() {
         IngredientDto ingredientDto = createIngredientDto("Курица");
         Ingredient ingredient = createIngredient("Курица");
         when(modelMapper.map(ingredient, IngredientDto.class)).thenReturn(ingredientDto);
@@ -111,19 +116,21 @@ public class IngredientServiceImplTest {
     }
 
     @Test
-    public void delete() {
+    public void deleteTest() {
         ingredientService.delete(1L);
         verify(ingredientRepository, times(1)).deleteById(1L);
+        verify(ingredientUnitOfMeasureRepository, times(1)).deleteIngredientUnitOfMeasuresById_IngredientId(1L);
+        verify(ingredientPriceRepository, times(1)).deleteIngredientPricesById_IngredientId(1L);
     }
 
     @Test
-    public void findAll() {
+    public void findAllIngredientsTest() {
         Ingredient ingredient1 = createIngredient("Курица");
         Ingredient ingredient2 = createIngredient("Ананас");
         List<Ingredient> ingredients = Arrays.asList(ingredient1, ingredient2);
         IngredientDto ingredientDto1 = createIngredientDto("Курица");
         IngredientDto ingredientDto2 = createIngredientDto("Ананас");
-        when(ingredientRepository.findAll()).thenReturn(ingredients);
+        when(ingredientRepository.findAllByIsArchivedIsFalse()).thenReturn(ingredients);
         when(modelMapper.map(ingredient1, IngredientDto.class)).thenReturn(ingredientDto1);
         when(modelMapper.map(ingredient2, IngredientDto.class)).thenReturn(ingredientDto2);
         List<IngredientDto> result = ingredientService.findAll();
@@ -131,11 +138,34 @@ public class IngredientServiceImplTest {
     }
 
     @Test
-    public void findByName() {
+    public void findByNameTest() {
         Ingredient ingredient = createIngredient("Курица");
         when(ingredientRepository.findByNameIgnoreCase("Курица")).thenReturn(Optional.of(ingredient));
         Ingredient ingredient1 = ingredientService.findByName("Курица");
         assertThat(ingredient1).isNotNull();
         assertThat(ingredient1.getName()).isEqualTo("Курица");
     }
+
+    @Test
+    public void moveToRecycleBinTest() {
+        IngredientDto ingredientDto = createIngredientDto("Курица");
+        when(recycleBinRepository.save(any(RecycleBin.class))).thenReturn(new RecycleBin());
+        ingredientService.moveToRecycleBin(ingredientDto);
+        verify(ingredientRepository, times(1)).softDelete(ingredientDto.getId());
+    }
+
+    @Test
+    public void checkConnectedElementsTest() {
+        Ingredient ingredient = createIngredient("Курица");
+        Set<RecipeIngredient> recipeIngredients = new HashSet<>();
+        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"),
+                ingredient, new Recipe("рецепт", true,
+                new CookingMethod("жарка"), new Ownership(OwnershipName.USER)));
+        recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
+        recipeIngredients.add(recipeIngredient);
+        when(recipeIngredientRepository.findAllById_IngredientId(ingredient.getId())).thenReturn(recipeIngredients);
+        List<String> list = ingredientService.checkConnectedElements(ingredient.getId());
+        assertThat(list.size()).isEqualTo(1);
+    }
+
 }

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
@@ -61,6 +62,9 @@ public class RegionIntegrationTest {
     private RecipeRepository recipeRepository;
 
     @Autowired
+    private RecycleBinRepository recycleBinRepository;
+
+    @Autowired
     private CookingMethodRepository cookingMethodRepository;
 
     @Before
@@ -78,6 +82,7 @@ public class RegionIntegrationTest {
         regionRepository.deleteAll();
         countryRepository.deleteAll();
         currencyRepository.deleteAll();
+        recycleBinRepository.deleteAll();
     }
 
     private Region createRegion(String name) {
@@ -153,6 +158,14 @@ public class RegionIntegrationTest {
         mockMvc.perform(delete("/regions/" + region.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
+        Iterable<RecycleBin> recycleBins = recycleBinRepository.findAll();
+        assertThat(recycleBins).extracting(RecycleBin::getElementName).containsOnly("Минск");
+        assertThat(recycleBins).extracting(RecycleBin::getEntityName).containsOnly("Регион");
+        assertThat(recycleBins).extracting(RecycleBin::getDeleteDate).isNotNull();
+
+        Optional<Region> regionAfterDelete = regionRepository.findById(region.getId());
+        assertThat(regionAfterDelete.get().isArchived()).isTrue();
     }
 
     @Test

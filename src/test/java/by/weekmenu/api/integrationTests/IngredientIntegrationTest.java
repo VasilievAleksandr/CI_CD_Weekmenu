@@ -71,6 +71,18 @@ public class IngredientIntegrationTest {
     @Autowired
     private UnitOfMeasureService unitOfMeasureService;
 
+    @Autowired
+    private RecycleBinRepository recycleBinRepository;
+
+    @Autowired
+    private CookingMethodRepository cookingMethodRepository;
+
+    @Autowired
+    private RecipeRepository recipeRepository;
+
+    @Autowired
+    private RecipeIngredientRepository recipeIngredientRepository;
+
     @Before
     public void createBaseData() {
         if (ownershipRepository.findAll().spliterator().getExactSizeIfKnown()==0) {
@@ -91,6 +103,7 @@ public class IngredientIntegrationTest {
         currencyRepository.deleteAll();
         ingredientUnitOfMeasureRepository.deleteAll();
         ingredientRepository.deleteAll();
+        recycleBinRepository.deleteAll();
     }
 
     private IngredientDto createIngredientDto(String name) {
@@ -238,10 +251,17 @@ public class IngredientIntegrationTest {
     @Test
     public void deleteIngredientTest() throws Exception {
         IngredientDto ingredientDto = createIngredientDto("Курица");
-
         mockMvc.perform(delete("/ingredients/" + ingredientDto.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+
+        Iterable<RecycleBin> recycleBins = recycleBinRepository.findAll();
+        assertThat(recycleBins).extracting(RecycleBin::getElementName).containsOnly("Курица");
+        assertThat(recycleBins).extracting(RecycleBin::getEntityName).containsOnly("Ингредиент");
+        assertThat(recycleBins).extracting(RecycleBin::getDeleteDate).isNotNull();
+
+        Optional<Ingredient> ingredient = ingredientRepository.findById(ingredientDto.getId());
+        assertThat(ingredient.get().isArchived()).isEqualTo(true);
     }
 
     @Test
@@ -276,5 +296,24 @@ public class IngredientIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
+    }
+
+    @Test
+    @Transactional
+    public void checkConnectedElementsTest() throws Exception {
+        Ingredient ingredient = createIngredient("Курица");
+        CookingMethod cookingMethod = cookingMethodRepository.save(new CookingMethod("жарка"));
+        Ownership ownership = ownershipRepository.findByName("USER").orElse(null);
+        UnitOfMeasure unitOfMeasure = unitOfMeasureRepository.save(new UnitOfMeasure("Кг", "Килограмм"));
+        Recipe recipe = recipeRepository.save(new Recipe("рецепт", true, cookingMethod, ownership));
+        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"),
+                ingredient, recipe);
+        recipeIngredient.setId(new RecipeIngredient.Id(ingredient.getId(), recipe.getId()));
+        recipeIngredient.setUnitOfMeasure(unitOfMeasure);
+        recipeIngredientRepository.save(recipeIngredient);
+        mockMvc.perform(get("/ingredients/checkConnectedElements/" + ingredient.getId().toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }
