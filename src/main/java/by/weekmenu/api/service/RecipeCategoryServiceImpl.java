@@ -1,6 +1,6 @@
 package by.weekmenu.api.service;
 
-import by.weekmenu.api.dto.RecipeCategoryDto;
+import by.weekmenu.api.dto.RecipeCategoryDTO;
 import by.weekmenu.api.entity.RecipeCategory;
 import by.weekmenu.api.repository.RecipeCategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +21,13 @@ public class RecipeCategoryServiceImpl implements RecipeCategoryService{
     private final ModelMapper modelMapper;
 
     @Override
-    public RecipeCategoryDto save(RecipeCategoryDto entityDto) {
-        return convertToDto(recipecategoryRepository.save(convertToEntity(entityDto)));
+    public RecipeCategoryDTO save(RecipeCategoryDTO entityDTO) {
+        return convertToDTO(recipecategoryRepository.save(convertToEntity(entityDTO)));
     }
 
     @Override
-    public RecipeCategoryDto findById(Long id) {
-        return convertToDto(recipecategoryRepository.findById(id).orElse(null));
+    public RecipeCategoryDTO findById(Long id) {
+        return convertToDTO(recipecategoryRepository.findById(id).orElse(null));
     }
 
     @Override
@@ -35,10 +35,10 @@ public class RecipeCategoryServiceImpl implements RecipeCategoryService{
     }
 
     @Override
-    public List<RecipeCategoryDto> findAll() {
+    public List<RecipeCategoryDTO> findAll() {
         return StreamSupport.stream(recipecategoryRepository.findAll().spliterator(), false)
                 .filter(Objects::nonNull)
-                .map(this::convertToDto)
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -56,12 +56,12 @@ public class RecipeCategoryServiceImpl implements RecipeCategoryService{
                 .collect(Collectors.toList());
     }
 
-    private RecipeCategory convertToEntity(RecipeCategoryDto recipecategoryDto) {
-        return modelMapper.map(recipecategoryDto, RecipeCategory.class);
+    private RecipeCategory convertToEntity(RecipeCategoryDTO recipecategoryDTO) {
+        return modelMapper.map(recipecategoryDTO, RecipeCategory.class);
     }
 
-    private RecipeCategoryDto convertToDto(RecipeCategory recipecategory) {
-        return modelMapper.map(recipecategory, RecipeCategoryDto.class);
+    private RecipeCategoryDTO convertToDTO(RecipeCategory recipecategory) {
+        return modelMapper.map(recipecategory, RecipeCategoryDTO.class);
     }
 
 

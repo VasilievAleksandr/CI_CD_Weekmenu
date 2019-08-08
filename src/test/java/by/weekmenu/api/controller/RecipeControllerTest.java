@@ -70,7 +70,7 @@ public class RecipeControllerTest {
     }
 
     @Test
-    public void findAllRecipes() throws Exception {
+    public void findAllRecipesTest() throws Exception {
         List<RecipeDTO> list = new ArrayList<>();
         list.add(createRecipeDto(1L, "Жареная курица"));
         list.add(createRecipeDto(2L, "Батон"));
@@ -134,7 +134,7 @@ public class RecipeControllerTest {
     }
 
     @Test
-    public void deleteRecipe() throws Exception{
+    public void deleteRecipeTest() throws Exception{
         RecipeDTO recipeDto = createRecipeDto(1L, "Шашлык");
         when(recipeService.findById(recipeDto.getId())).thenReturn(recipeDto);
         mockMvc.perform(delete("/recipes/1")
@@ -143,7 +143,7 @@ public class RecipeControllerTest {
     }
 
     @Test
-    public void checkUniqueName() throws Exception{
+    public void checkUniqueNameTest() throws Exception{
         Recipe recipe = createRecipe(1L, "Шашлык");
         String name = "Шашлык";
         when(recipeService.findByName(name)).thenReturn(recipe);

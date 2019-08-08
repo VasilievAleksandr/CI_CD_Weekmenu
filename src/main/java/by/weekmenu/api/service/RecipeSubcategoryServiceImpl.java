@@ -1,6 +1,6 @@
 package by.weekmenu.api.service;
 
-import by.weekmenu.api.dto.RecipeSubcategoryDto;
+import by.weekmenu.api.dto.RecipeSubcategoryDTO;
 import by.weekmenu.api.entity.RecipeSubcategory;
 import by.weekmenu.api.repository.RecipeSubcategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +21,13 @@ public class RecipeSubcategoryServiceImpl implements RecipeSubcategoryService {
     private final ModelMapper modelMapper;
 
     @Override
-    public RecipeSubcategoryDto save(RecipeSubcategoryDto entityDto) {
-        return convertToDto(recipeSubcategoryRepository.save(convertToEntity(entityDto)));
+    public RecipeSubcategoryDTO save(RecipeSubcategoryDTO entityDTO) {
+        return convertToDTO(recipeSubcategoryRepository.save(convertToEntity(entityDTO)));
     }
 
     @Override
-    public RecipeSubcategoryDto findById(Long id) {
-        return convertToDto(recipeSubcategoryRepository.findById(id).orElse(null));
+    public RecipeSubcategoryDTO findById(Long id) {
+        return convertToDTO(recipeSubcategoryRepository.findById(id).orElse(null));
     }
 
     @Override
@@ -36,10 +36,10 @@ public class RecipeSubcategoryServiceImpl implements RecipeSubcategoryService {
     }
 
     @Override
-    public List<RecipeSubcategoryDto> findAll() {
+    public List<RecipeSubcategoryDTO> findAll() {
         return StreamSupport.stream(recipeSubcategoryRepository.findAll().spliterator(), false)
                 .filter(Objects::nonNull)
-                .map(this::convertToDto)
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -57,12 +57,12 @@ public class RecipeSubcategoryServiceImpl implements RecipeSubcategoryService {
                 .collect(Collectors.toList());
     }
 
-    private RecipeSubcategory convertToEntity(RecipeSubcategoryDto recipeSubcategoryDto) {
-        return modelMapper.map(recipeSubcategoryDto, RecipeSubcategory.class);
+    private RecipeSubcategory convertToEntity(RecipeSubcategoryDTO recipeSubcategoryDTO) {
+        return modelMapper.map(recipeSubcategoryDTO, RecipeSubcategory.class);
     }
 
-    private RecipeSubcategoryDto convertToDto(RecipeSubcategory recipeSubcategory) {
-        return modelMapper.map(recipeSubcategory, RecipeSubcategoryDto.class);
+    private RecipeSubcategoryDTO convertToDTO(RecipeSubcategory recipeSubcategory) {
+        return modelMapper.map(recipeSubcategory, RecipeSubcategoryDTO.class);
     }
 
 

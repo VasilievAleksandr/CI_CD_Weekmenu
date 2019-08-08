@@ -35,4 +35,8 @@ public class RecipeSubcategory implements Serializable {
     public RecipeSubcategory(String name) {
         this.name = name;
     }
+    public RecipeSubcategory(Long id , String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
