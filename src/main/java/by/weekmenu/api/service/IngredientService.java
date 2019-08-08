@@ -8,6 +8,7 @@ import java.util.List;
 public interface IngredientService extends CrudService<IngredientDto, Long> {
 
     Ingredient findByName(String name);
-
     List<String> findAllUnitsOfMeasure(String name);
+    List<String> checkConnectedElements(Long id);
+    void moveToRecycleBin(IngredientDto ingredientDto);
 }

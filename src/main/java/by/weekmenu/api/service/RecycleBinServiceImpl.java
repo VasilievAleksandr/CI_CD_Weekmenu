@@ -25,6 +25,8 @@ public class RecycleBinServiceImpl implements RecycleBinService {
     private final CurrencyRepository currencyRepository;
     private final CountryRepository countryRepository;
     private final RegionRepository regionRepository;
+    private final IngredientRepository ingredientRepository;
+    private final IngredientService ingredientService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -53,6 +55,11 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                      regionRepository
                              .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                              .ifPresent(region -> regionRepository.restore(region.getId()));
+                     break;
+                 case EntityNamesConsts.INGREDIENT:
+                     ingredientRepository
+                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                             .ifPresent(ingredient -> ingredientRepository.restore(ingredient.getId()));
                      break;
              }
             recycleBinRepository.delete(recycleBinElement.get());
@@ -92,6 +99,11 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                     regionRepository
                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                             .ifPresent(region -> regionRepository.deleteById(region.getId()));
+                    break;
+                case EntityNamesConsts.INGREDIENT:
+                    ingredientRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(ingredient -> ingredientService.delete(ingredient.getId()));
                     break;
             }
             recycleBinRepository.deleteById(id);

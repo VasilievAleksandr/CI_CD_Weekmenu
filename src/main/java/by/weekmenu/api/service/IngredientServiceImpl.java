@@ -4,6 +4,7 @@ import by.weekmenu.api.dto.IngredientDto;
 import by.weekmenu.api.dto.IngredientPriceDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
+import by.weekmenu.api.utils.EntityNamesConsts;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -26,6 +27,8 @@ public class IngredientServiceImpl implements IngredientService {
     private final RegionRepository regionRepository;
     private final IngredientPriceRepository ingredientPriceRepository;
     private final RecipeService recipeService;
+    private final RecycleBinRepository recycleBinRepository;
+    private final RecipeIngredientRepository recipeIngredientRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -40,8 +43,6 @@ public class IngredientServiceImpl implements IngredientService {
         ingredientRepository.save(ingredient);
         if (entityDto.getUnitOfMeasureEquivalent()!=null) {
             saveIngredientUOM(entityDto, ingredient);
-        } else {
-
         }
         if (entityDto.getIngredientPrices()!=null) {
             saveIngredientPrice(entityDto, ingredient);
@@ -94,7 +95,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public List<IngredientDto> findAll() {
-        return StreamSupport.stream(ingredientRepository.findAll().spliterator(), false)
+        return ingredientRepository.findAllByIsArchivedIsFalse().stream()
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -151,5 +152,26 @@ public class IngredientServiceImpl implements IngredientService {
             }
         }
         return unitOfMeasureShortNames;
+    }
+
+    @Override
+    public List<String> checkConnectedElements(Long id) {
+        List<String> list = new ArrayList<>();
+        Set<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAllById_IngredientId(id);
+        if (recipeIngredients.size() > 0) {
+            list.add("Рецепты: " + recipeIngredients.size());
+        }
+        return list;
+    }
+
+    @Override
+    @Transactional
+    public void moveToRecycleBin(IngredientDto ingredientDto) {
+        RecycleBin recycleBin = new RecycleBin();
+        recycleBin.setElementName(ingredientDto.getName());
+        recycleBin.setEntityName(EntityNamesConsts.INGREDIENT);
+        recycleBin.setDeleteDate(LocalDateTime.now());
+        recycleBinRepository.save(recycleBin);
+        ingredientRepository.softDelete(ingredientDto.getId());
     }
 }
