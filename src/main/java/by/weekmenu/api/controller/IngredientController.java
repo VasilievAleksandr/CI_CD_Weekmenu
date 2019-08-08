@@ -59,11 +59,11 @@ public class IngredientController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("Удаляет ингредиент по Id")
+    @ApiOperation("Перемещает в корзину ингредиент по Id")
     public ResponseEntity<Void> deleteIngredient(@PathVariable("id") Long id) {
         IngredientDto ingredientDto = ingredientService.findById(id);
         if (ingredientDto!=null) {
-            ingredientService.delete(id);
+            ingredientService.moveToRecycleBin(ingredientDto);
             return ResponseEntity.noContent().build();
         } else {
             return new ResponseEntity<>( HttpStatus.NOT_FOUND);
@@ -84,5 +84,11 @@ public class IngredientController {
     @ApiOperation("Возвращает список всех единиц измерения для данного названия ингредиента")
     public ResponseEntity<List<String>> getAllUnitsOfMeasure(@RequestParam String name) {
         return new ResponseEntity<>(ingredientService.findAllUnitsOfMeasure(name), HttpStatus.OK);
+    }
+
+    @GetMapping("/checkConnectedElements/{id}")
+    @ApiOperation("Проверяет наличие связанных элементов по Id")
+    public List<String> checkConnectedElements(@PathVariable("id") Long id) {
+        return ingredientService.checkConnectedElements(id);
     }
 }

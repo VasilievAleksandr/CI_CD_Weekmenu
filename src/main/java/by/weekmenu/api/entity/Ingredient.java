@@ -72,6 +72,9 @@ public class Ingredient implements Serializable {
     @PositiveOrZero(message = "Ingredient's carbs '${validatedValue}' must be positive or '0'.")
     private BigDecimal carbs;
 
+    @Column(name = "IS_ARCHIVED")
+    private boolean isArchived;
+
     @ManyToOne
     @JoinColumn(name = "OWNERSHIP_ID")
     @Valid
