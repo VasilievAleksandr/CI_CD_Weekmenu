@@ -82,9 +82,8 @@ public class Recipe implements Serializable {
     )
     private String imageLink = "";
 
-    @Column(name = "IS_ACTIVE")
-    @NotNull(message = "Recipe must have field 'isActive' defined.")
-    private Boolean isActive;
+    @Column(name = "IS_ARCHIVED")
+    private boolean isArchived;
 
     @Column(name = "PORTIONS")
     @Positive(message = "Recipe's portions '${validatedValue}' must be positive.")
@@ -106,9 +105,9 @@ public class Recipe implements Serializable {
     @NotNull(message = "Recipe's ownership mustn't be null.")
     private Ownership ownership;
 
-    public Recipe(String name, Boolean isActive, CookingMethod cookingMethod, Ownership ownership) {
+    public Recipe(String name, boolean isArchived, CookingMethod cookingMethod, Ownership ownership) {
         this.name = name;
-        this.isActive = isActive;
+        this.isArchived = isArchived;
         this.cookingMethod = cookingMethod;
         this.ownership = ownership;
     }
@@ -122,7 +121,6 @@ public class Recipe implements Serializable {
         this.carbs = carbs == null ? BigDecimal.ZERO : carbs;
         this.fats = fats == null ? BigDecimal.ZERO : fats;
         this.proteins = proteins == null ? BigDecimal.ZERO : proteins;
-        this.isActive = isActive == null ? true : isActive;
         this.portions = portions == null ? 1 : portions;
     }
 }

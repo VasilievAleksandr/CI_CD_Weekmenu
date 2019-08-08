@@ -46,11 +46,11 @@ public class RecipeController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("Удаляет рецепт по Id")
+    @ApiOperation("Перемещает в корзиину рецепт по Id")
     public ResponseEntity<Void> deleteRecipe(@PathVariable("id") Long id) {
         RecipeDTO recipeDto = recipeService.findById(id);
         if (recipeDto!=null) {
-            recipeService.delete(id);
+            recipeService.moveToRecycleBin(recipeDto);
             return ResponseEntity.noContent().build();
         } else {
             return new ResponseEntity<>( HttpStatus.NOT_FOUND);
@@ -65,5 +65,11 @@ public class RecipeController {
         } else {
             return 0;
         }
+    }
+
+    @GetMapping("/checkConnectedElements/{id}")
+    @ApiOperation("Проверяет наличие связанных элементов по Id")
+    public List<String> checkConnectedElements(@PathVariable("id") Long id) {
+        return recipeService.checkConnectedElements(id);
     }
 }

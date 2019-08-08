@@ -1,6 +1,6 @@
 package by.weekmenu.api.service;
 
-import by.weekmenu.api.dto.IngredientDto;
+import by.weekmenu.api.dto.IngredientDTO;
 import by.weekmenu.api.dto.IngredientPriceDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
@@ -33,7 +33,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     @Transactional
-    public IngredientDto save(IngredientDto entityDto) {
+    public IngredientDTO save(IngredientDTO entityDto) {
         if (entityDto.getId() != null) {
             ingredientUnitOfMeasureRepository.deleteIngredientUnitOfMeasuresById_IngredientId(entityDto.getId());
             ingredientPriceRepository.deleteIngredientPricesById_IngredientId(entityDto.getId());
@@ -51,7 +51,7 @@ public class IngredientServiceImpl implements IngredientService {
         return convertToDto(ingredient);
     }
 
-    private void saveIngredientPrice(IngredientDto entityDto, Ingredient ingredient) {
+    private void saveIngredientPrice(IngredientDTO entityDto, Ingredient ingredient) {
         Set<IngredientPriceDTO> ingredientPricesDTO = entityDto.getIngredientPrices();
         ingredientPricesDTO.forEach(ingredientPriceDTO -> {
             IngredientPrice ingredientPrice = new IngredientPrice();
@@ -67,7 +67,7 @@ public class IngredientServiceImpl implements IngredientService {
         });
     }
 
-    private void saveIngredientUOM(IngredientDto entityDto, Ingredient ingredient) {
+    private void saveIngredientUOM(IngredientDTO entityDto, Ingredient ingredient) {
         Map<String, BigDecimal> map = entityDto.getUnitOfMeasureEquivalent();
         map.forEach((k, v) -> {
             UnitOfMeasure unitOfMeasure = unitOfMeasureRepository.findByFullNameIgnoreCase(k).orElse(null);
@@ -81,7 +81,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientDto findById(Long id) {
+    public IngredientDTO findById(Long id) {
         return convertToDto(ingredientRepository.findById(id).orElse(null));
     }
 
@@ -94,20 +94,20 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public List<IngredientDto> findAll() {
+    public List<IngredientDTO> findAll() {
         return ingredientRepository.findAllByIsArchivedIsFalse().stream()
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    private Ingredient convertToEntity(IngredientDto ingredientDto) {
+    private Ingredient convertToEntity(IngredientDTO ingredientDto) {
         return modelMapper.map(ingredientDto, Ingredient.class);
     }
 
-    private IngredientDto convertToDto(Ingredient ingredient) {
+    private IngredientDTO convertToDto(Ingredient ingredient) {
         if (ingredient!=null) {
-            IngredientDto ingredientDto = modelMapper.map(ingredient, IngredientDto.class);
+            IngredientDTO ingredientDto = modelMapper.map(ingredient, IngredientDTO.class);
             List<IngredientUnitOfMeasure> ingredientUOMlist = ingredientUnitOfMeasureRepository.findAllById_IngredientId(ingredient.getId());
             Map<String, BigDecimal> map = new HashMap<>();
             ingredientUOMlist.forEach(ingredientUnitOfMeasure ->
@@ -166,7 +166,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     @Transactional
-    public void moveToRecycleBin(IngredientDto ingredientDto) {
+    public void moveToRecycleBin(IngredientDTO ingredientDto) {
         RecycleBin recycleBin = new RecycleBin();
         recycleBin.setElementName(ingredientDto.getName());
         recycleBin.setEntityName(EntityNamesConsts.INGREDIENT);

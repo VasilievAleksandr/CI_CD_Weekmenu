@@ -7,4 +7,5 @@ public class EntityNamesConsts {
     public static final String COUNTRY = "Страна";
     public static final String REGION = "Регион";
     public static final String INGREDIENT = "Ингредиент";
+    public static final String RECIPE = "Рецепт";
 }

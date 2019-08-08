@@ -6,11 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -25,7 +22,7 @@ public class DayOfWeek implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Byte id;
+    private Short id;
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "DayOfWeek must have name.")

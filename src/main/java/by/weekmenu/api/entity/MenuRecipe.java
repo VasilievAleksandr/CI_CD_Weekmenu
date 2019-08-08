@@ -1,9 +1,6 @@
 package by.weekmenu.api.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -20,19 +17,36 @@ public class MenuRecipe implements Serializable {
 
     private static final long serialVersionUID = -785102211168469155L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Long id;
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Embeddable
+    public static class Id implements Serializable {
+
+        private static final long serialVersionUID = 1015642071168789374L;
+
+        @Column(name = "MENU_ID")
+        private Long menuId;
+
+        @Column(name = "RECIPE_ID")
+        private Long recipeId;
+    }
+
+    @EmbeddedId
+    private Id id = new Id();
 
     @ManyToOne
-    @JoinColumn(name = "MENU_ID")
+    @JoinColumn(name = "MENU_ID",
+            insertable = false,
+            updatable = false)
     @Valid
     @NotNull(message = "MenuRecipe must have menu.")
     private Menu menu;
 
     @ManyToOne
-    @JoinColumn(name = "RECIPE_ID")
+    @JoinColumn(name = "RECIPE_ID",
+            insertable = false,
+            updatable = false)
     @Valid
     @NotNull(message = "MenuRecipe must have recipe.")
     private Recipe recipe;

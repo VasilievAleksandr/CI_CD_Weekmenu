@@ -25,7 +25,7 @@ public class DishType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Byte id;
+    private Short id;
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "DishType must have name.")

@@ -11,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class IngredientDto {
+public class IngredientDTO {
 
     private Long id;
     private String name;
