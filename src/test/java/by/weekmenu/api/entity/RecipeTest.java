@@ -226,15 +226,6 @@ public class RecipeTest {
     }
 
     @Test
-    public void testIsActiveIsNull() {
-        Recipe recipe = new Recipe("Курица с ананасами", null, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
-        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
-        assertEquals(violations.size(), 1);
-        assertEquals("Recipe must have field 'isActive' defined.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
     public void testPortionsAreNegative() {
         Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.setPortions((short)-1);
@@ -294,7 +285,7 @@ public class RecipeTest {
 
     @Test
     public void testRecipeIsValid() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        Recipe recipe = new Recipe("Курица с ананасами", false, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.setCarbs(new BigDecimal("100"));
         recipe.setProteins(new BigDecimal("100"));
         recipe.setCalories(new BigDecimal("300"));

@@ -3,6 +3,7 @@ package by.weekmenu.api.service;
 import by.weekmenu.api.dto.*;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
+import by.weekmenu.api.utils.EntityNamesConsts;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -28,6 +29,8 @@ public class RecipeServiceImpl implements RecipeService {
     private final CookingStepRepository cookingStepRepository;
     private final IngredientPriceRepository ingredientPriceRepository;
     private final RecipePriceRepository recipePriceRepository;
+    private final RecycleBinRepository recycleBinRepository;
+    private final MenuRecipeRepository menuRecipeRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -92,7 +95,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeDTO> findAll() {
-        return StreamSupport.stream(recipeRepository.findAll().spliterator(), false)
+        return recipeRepository.findAllByIsArchivedIsFalse().stream()
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -255,5 +258,26 @@ public class RecipeServiceImpl implements RecipeService {
             Recipe recipe = recipeIngredient.getRecipe();
             recipeRepository.save(convertToEntity(convertToDto(recipe)));
         }
+    }
+
+    @Override
+    public List<String> checkConnectedElements(Long id) {
+        List<String> list = new ArrayList<>();
+        List<MenuRecipe> menuRecipes = menuRecipeRepository.findAllById_RecipeId(id);
+        if (menuRecipes.size() > 0) {
+            list.add("меню: " + menuRecipes.size());
+        }
+        return list;
+    }
+
+    @Override
+    @Transactional
+    public void moveToRecycleBin(RecipeDTO recipeDTO) {
+        RecycleBin recycleBin = new RecycleBin();
+        recycleBin.setElementName(recipeDTO.getName());
+        recycleBin.setEntityName(EntityNamesConsts.RECIPE);
+        recycleBin.setDeleteDate(LocalDateTime.now());
+        recycleBinRepository.save(recycleBin);
+        recipeRepository.softDelete(recipeDTO.getId());
     }
 }

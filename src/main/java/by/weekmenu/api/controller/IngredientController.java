@@ -1,6 +1,6 @@
 package by.weekmenu.api.controller;
 
-import by.weekmenu.api.dto.IngredientDto;
+import by.weekmenu.api.dto.IngredientDTO;
 import by.weekmenu.api.service.IngredientService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,13 +26,13 @@ public class IngredientController {
 
     @GetMapping
     @ApiOperation("Возвращает список всех ингредиентов")
-    public ResponseEntity<List<IngredientDto>> findAllIngredients() {
+    public ResponseEntity<List<IngredientDTO>> findAllIngredients() {
         return new ResponseEntity<>(ingredientService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ApiOperation("Находит ингредиент по его Id")
-    public ResponseEntity<IngredientDto> findIngredientById(@PathVariable("id") Long id) {
+    public ResponseEntity<IngredientDTO> findIngredientById(@PathVariable("id") Long id) {
         try {
             return new ResponseEntity<>(ingredientService.findById(id), HttpStatus.OK);
         } catch (Exception e) {
@@ -42,16 +42,16 @@ public class IngredientController {
 
     @PostMapping
     @ApiOperation("Сохраняет ингредиент")
-    public ResponseEntity<IngredientDto> addIngredient(@RequestBody IngredientDto ingredientDto) {
+    public ResponseEntity<IngredientDTO> addIngredient(@RequestBody IngredientDTO ingredientDto) {
         return new ResponseEntity<>(ingredientService.save(ingredientDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @ApiOperation("Обновляет ингредиент по Id")
-    public ResponseEntity<IngredientDto> updateIngredient(@RequestBody IngredientDto updatedIngredientDto, @PathVariable ("id") Long id) {
-        IngredientDto ingredientDto = ingredientService.findById(id);
+    public ResponseEntity<IngredientDTO> updateIngredient(@RequestBody IngredientDTO updatedIngredientDTO, @PathVariable ("id") Long id) {
+        IngredientDTO ingredientDto = ingredientService.findById(id);
         if (ingredientDto!=null) {
-            return new ResponseEntity<>(ingredientService.save(modelMapper.map(updatedIngredientDto, IngredientDto.class)),
+            return new ResponseEntity<>(ingredientService.save(modelMapper.map(updatedIngredientDTO, IngredientDTO.class)),
                     HttpStatus.OK);
         } else {
             return new ResponseEntity<>( HttpStatus.NOT_FOUND);
@@ -61,7 +61,7 @@ public class IngredientController {
     @DeleteMapping("/{id}")
     @ApiOperation("Перемещает в корзину ингредиент по Id")
     public ResponseEntity<Void> deleteIngredient(@PathVariable("id") Long id) {
-        IngredientDto ingredientDto = ingredientService.findById(id);
+        IngredientDTO ingredientDto = ingredientService.findById(id);
         if (ingredientDto!=null) {
             ingredientService.moveToRecycleBin(ingredientDto);
             return ResponseEntity.noContent().build();

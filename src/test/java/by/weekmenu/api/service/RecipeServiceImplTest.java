@@ -42,15 +42,20 @@ public class RecipeServiceImplTest {
     @MockBean
     private RecipePriceRepository recipePriceRepository;
     @MockBean
+    private RecycleBinRepository recycleBinRepository;
+    @MockBean
+    private MenuRecipeRepository menuRecipeRepository;
+    @MockBean
     private ModelMapper modelMapper;
 
     private RecipeService recipeService;
 
     @Before
     public void setup(){
-        recipeService = new RecipeServiceImpl(recipeRepository, ownershipRepository, cookingMethodRepository, ingredientRepository,
+        recipeService = new RecipeServiceImpl(recipeRepository, ownershipRepository,
+                cookingMethodRepository, ingredientRepository,
                 unitOfMeasureRepository, recipeIngredientRepository, ingredientUnitOfMeasureRepository, cookingStepRepository, ingredientPriceRepository,
-                recipePriceRepository, modelMapper);
+                recipePriceRepository, recycleBinRepository, menuRecipeRepository, modelMapper);
     }
 
     private RecipeDTO createRecipeDto(String name) {
@@ -157,6 +162,9 @@ public class RecipeServiceImplTest {
     public void deleteRecipeTest() {
         recipeService.delete(1L);
         verify(recipeRepository, times(1)).deleteById(1L);
+        verify(cookingStepRepository, times(1)).deleteAllByRecipe_Id(1L);
+        verify(recipeIngredientRepository, times(1)).deleteById_RecipeId(1L);
+        verify(recipePriceRepository, times(1)).deleteById_RecipeId(1L);
     }
 
     @Test
@@ -166,7 +174,7 @@ public class RecipeServiceImplTest {
         List<Recipe> recipes = Arrays.asList(recipe1, recipe2);
         RecipeDTO recipeDTO1 = createRecipeDto("Гречневая каша");
         RecipeDTO recipeDTO2 = createRecipeDto("Гречка с овощами");
-        when(recipeRepository.findAll()).thenReturn(recipes);
+        when(recipeRepository.findAllByIsArchivedIsFalse()).thenReturn(recipes);
         when(modelMapper.map(recipe1, RecipeDTO.class)).thenReturn(recipeDTO1);
         when(modelMapper.map(recipe2, RecipeDTO.class)).thenReturn(recipeDTO2);
         List<RecipeDTO> result = recipeService.findAll();
@@ -180,5 +188,25 @@ public class RecipeServiceImplTest {
         Recipe found = recipeService.findByName("Гречневая каша");
         assertThat(found).isNotNull();
         assertThat(found.getName()).isEqualTo("Гречневая каша");
+    }
+
+    @Test
+    public void moveToRecycleBinTest() {
+        RecipeDTO recipeDto = createRecipeDto("Гречневая каша");
+        when(recycleBinRepository.save(any(RecycleBin.class))).thenReturn(new RecycleBin());
+        recipeService.moveToRecycleBin(recipeDto);
+        verify(recipeRepository, times(1)).softDelete(recipeDto.getId());
+    }
+
+    @Test
+    public void checkConnectedElementsTest() {
+        Recipe recipe = createRecipe("Гречневая каша");
+        List<MenuRecipe> menuRecipes = new ArrayList<>();
+        menuRecipes.add(new MenuRecipe(new Menu("Бюджетное", true, new Ownership(OwnershipName.USER)),
+                recipe, new DishType("Обед", true),
+                new DayOfWeek("Понедельник", "ПН")));
+        when(menuRecipeRepository.findAllById_RecipeId(recipe.getId())).thenReturn(menuRecipes);
+        List<String> list = recipeService.checkConnectedElements(recipe.getId());
+        assertThat(list.size()).isEqualTo(1);
     }
 }

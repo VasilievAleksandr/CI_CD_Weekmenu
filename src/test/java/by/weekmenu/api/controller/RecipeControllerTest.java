@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -151,5 +152,15 @@ public class RecipeControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
+    }
+
+    @Test
+    public void checkConnectedElementsTest() throws Exception {
+        List<String> result = Collections.singletonList("меню: 1");
+        when(recipeService.checkConnectedElements(1L)).thenReturn(result);
+        mockMvc.perform(get("/recipes/checkConnectedElements/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }

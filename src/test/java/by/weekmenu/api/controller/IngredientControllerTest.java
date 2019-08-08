@@ -1,6 +1,6 @@
 package by.weekmenu.api.controller;
 
-import by.weekmenu.api.dto.IngredientDto;
+import by.weekmenu.api.dto.IngredientDTO;
 import by.weekmenu.api.entity.Ingredient;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -49,8 +48,8 @@ public class IngredientControllerTest {
     @MockBean
     private ModelMapper modelMapper;
 
-    private IngredientDto createIngredientDto(Long id, String name) {
-        IngredientDto ingredientDto = new IngredientDto();
+    private IngredientDTO createIngredientDto(Long id, String name) {
+        IngredientDTO ingredientDto = new IngredientDTO();
         ingredientDto.setId(id);
         ingredientDto.setName(name);
         ingredientDto.setCalories(new BigDecimal("100"));
@@ -73,7 +72,7 @@ public class IngredientControllerTest {
 
     @Test
     public void findAllIngredients() throws Exception {
-        List<IngredientDto> list = new ArrayList<>();
+        List<IngredientDTO> list = new ArrayList<>();
         list.add(createIngredientDto(1L, "Курица"));
         list.add(createIngredientDto(2L, "Ананас"));
         when(ingredientService.findAll()).thenReturn(list);
@@ -99,7 +98,7 @@ public class IngredientControllerTest {
 
     @Test
     public void findIngredientById() throws Exception{
-        IngredientDto ingredientDto = createIngredientDto(1L, "Курица");
+        IngredientDTO ingredientDto = createIngredientDto(1L, "Курица");
         when(ingredientService.findById(ingredientDto.getId())).thenReturn(ingredientDto);
         mockMvc.perform(get("/ingredients/1")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -114,8 +113,8 @@ public class IngredientControllerTest {
 
     @Test
     public void addIngredientTest() throws Exception {
-        IngredientDto ingredientDto = createIngredientDto(1L, "Курица");
-        when(ingredientService.save(any(IngredientDto.class))).thenReturn(ingredientDto);
+        IngredientDTO ingredientDto = createIngredientDto(1L, "Курица");
+        when(ingredientService.save(any(IngredientDTO.class))).thenReturn(ingredientDto);
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(post("/ingredients").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(ingredientDto)))
@@ -130,12 +129,12 @@ public class IngredientControllerTest {
 
     @Test
     public void updateIngredient() throws Exception{
-        IngredientDto ingredientDto = createIngredientDto(1L, "Курица");
+        IngredientDTO ingredientDto = createIngredientDto(1L, "Курица");
         when(ingredientService.findById(ingredientDto.getId())).thenReturn(ingredientDto);
         ingredientDto.setName("Ананас");
         ingredientDto.setFats(new BigDecimal("50"));
         when(modelMapper.map(any(), any())).thenReturn(ingredientDto);
-        when(ingredientService.save(any(IngredientDto.class))).thenReturn(ingredientDto);
+        when(ingredientService.save(any(IngredientDTO.class))).thenReturn(ingredientDto);
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(put("/ingredients/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -151,7 +150,7 @@ public class IngredientControllerTest {
 
     @Test
     public void deleteIngredient() throws Exception{
-        IngredientDto ingredientDto = createIngredientDto(1L, "Курица");
+        IngredientDTO ingredientDto = createIngredientDto(1L, "Курица");
         when(ingredientService.findById(ingredientDto.getId())).thenReturn(ingredientDto);
         mockMvc.perform(delete("/ingredients/1")
                 .contentType(MediaType.APPLICATION_JSON))
