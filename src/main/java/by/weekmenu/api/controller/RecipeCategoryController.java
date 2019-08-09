@@ -27,12 +27,6 @@ public class RecipeCategoryController {
         return new ResponseEntity<>(recipeCategoryService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    @ApiOperation("Находит RecipeCategory по его Id")
-    public ResponseEntity<RecipeCategoryDTO> findRecipeCategoryById(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(recipeCategoryService.findById(id), HttpStatus.OK);
-    }
-
     @PostMapping
     @ApiOperation("Сохраняет RecipeCategory.")
     public ResponseEntity<RecipeCategoryDTO> addRecipeCategory(@RequestBody RecipeCategoryDTO recipeCategoryDTO) {

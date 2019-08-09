@@ -25,7 +25,7 @@ public class RecipeSubcategoryController {
 
     @GetMapping
     @ApiOperation("Возвращает список всех RecipeSubcategory")
-    public ResponseEntity<List<RecipeSubcategoryDTO>> findAllReecipeSubcategories() {
+    public ResponseEntity<List<RecipeSubcategoryDTO>> findAllRecipeSubcategories() {
         return new ResponseEntity<>(recipeSubcategoryService.findAll(), HttpStatus.OK);
     }
 
@@ -71,7 +71,7 @@ public class RecipeSubcategoryController {
 
     @GetMapping("/names")
     @ApiOperation("Возвращает список всех name из RecipeSubcategory")
-    public List<String> getAllRecipeCategoryNames() {
+    public List<String> getAllRecipeSubcategoryNames() {
         return recipeSubcategoryService.getAllRecipeSubcategoryNames();
     }
 }
