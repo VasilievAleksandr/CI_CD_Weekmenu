@@ -1,6 +1,6 @@
 package by.weekmenu.api.controller;
 
-import by.weekmenu.api.dto.RecipeSubcategoryDto;
+import by.weekmenu.api.dto.RecipeSubcategoryDTO;
 import by.weekmenu.api.service.RecipeSubcategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,39 +25,37 @@ public class RecipeSubcategoryController {
 
     @GetMapping
     @ApiOperation("Возвращает список всех RecipeSubcategory")
-    public List<RecipeSubcategoryDto> findAllReecipeSubcategories() {
-        return recipeSubcategoryService.findAll();
+    public ResponseEntity<List<RecipeSubcategoryDTO>> findAllRecipeSubcategories() {
+        return new ResponseEntity<>(recipeSubcategoryService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping
     @ApiOperation("Сохраняет RecipeSubcategory.")
-    public ResponseEntity<RecipeSubcategoryDto> addRecipeSubcategory(@RequestBody RecipeSubcategoryDto recipeSubcategoryDto) {
+    public ResponseEntity<RecipeSubcategoryDTO> addRecipeSubcategory(@RequestBody RecipeSubcategoryDTO recipeSubcategoryDTO) {
         HttpStatus status = HttpStatus.CREATED;
-        return new ResponseEntity<>(recipeSubcategoryService.save(recipeSubcategoryDto), status);
-    }
-
-    @GetMapping("/{id}")
-    @ApiOperation("Находит RecipeSubcategory по его Id")
-    public RecipeSubcategoryDto findRecipeSubcategoryById(@PathVariable("id") Long id) {
-        return recipeSubcategoryService.findById(id);
+        return new ResponseEntity<>(recipeSubcategoryService.save(recipeSubcategoryDTO), status);
     }
 
     @PutMapping("/{id}")
     @ApiOperation("Обновляет RecipeSubcategory по Id.")
-    public RecipeSubcategoryDto updateRecipeSubcategory(@RequestBody RecipeSubcategoryDto updatedRecipeSubcategoryDto, @PathVariable("id") Long id) {
-        RecipeSubcategoryDto recipeSubcategoryDto = recipeSubcategoryService.findById(id);
-        if (recipeSubcategoryDto != null) {
-            recipeSubcategoryDto.setName(updatedRecipeSubcategoryDto.getName());
+    public ResponseEntity<RecipeSubcategoryDTO> updateRecipeSubcategory(@RequestBody RecipeSubcategoryDTO updatedRecipeSubcategoryDTO, @PathVariable("id") Long id) {
+        RecipeSubcategoryDTO recipeSubcategoryDTO = recipeSubcategoryService.findById(id);
+        if (recipeSubcategoryDTO != null) {
+            recipeSubcategoryDTO.setName(updatedRecipeSubcategoryDTO.getName());
+            return new ResponseEntity<>(recipeSubcategoryDTO, HttpStatus.OK);
         }
-        return recipeSubcategoryService.save(recipeSubcategoryDto);
+        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation("Удаляет RecipeSubcategory по Id.")
-    public void deleteRecipeSubcategory(@PathVariable("id") Long id) {
-        RecipeSubcategoryDto recipeSubcategoryDto = recipeSubcategoryService.findById(id);
-        if (recipeSubcategoryDto != null) {
+    public ResponseEntity<Void> deleteRecipeSubcategory(@PathVariable("id") Long id) {
+        RecipeSubcategoryDTO recipeSubcategoryDTO = recipeSubcategoryService.findById(id);
+        if (recipeSubcategoryDTO != null) {
             recipeSubcategoryService.delete(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -73,7 +71,7 @@ public class RecipeSubcategoryController {
 
     @GetMapping("/names")
     @ApiOperation("Возвращает список всех name из RecipeSubcategory")
-    public List<String> getAllRecipeCategoryNames() {
+    public List<String> getAllRecipeSubcategoryNames() {
         return recipeSubcategoryService.getAllRecipeSubcategoryNames();
     }
 }

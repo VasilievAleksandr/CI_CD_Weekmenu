@@ -35,4 +35,8 @@ public class RecipeCategory implements Serializable {
     public RecipeCategory(String name) {
         this.name = name;
     }
+    public RecipeCategory(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

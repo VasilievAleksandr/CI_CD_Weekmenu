@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RecipeSubcategoryDto {
+public class RecipeSubcategoryDTO {
 
     private Long id;
     private String name;

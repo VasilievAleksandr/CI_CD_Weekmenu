@@ -1,9 +1,11 @@
 package by.weekmenu.api.controller;
 
-import by.weekmenu.api.dto.RecipeCategoryDto;
+import by.weekmenu.api.dto.RecipeCategoryDTO;
 import by.weekmenu.api.service.RecipeCategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,38 +23,37 @@ public class RecipeCategoryController {
 
     @GetMapping
     @ApiOperation("Возвращает список всех RecipeCategory")
-    public List<RecipeCategoryDto> findAllRecipeCategories() {
-        return recipeCategoryService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    @ApiOperation("Находит RecipeCategory по его Id")
-    public RecipeCategoryDto findRecipeCategoryById(@PathVariable("id") Long id) {
-        return recipeCategoryService.findById(id);
+    public ResponseEntity<List<RecipeCategoryDTO>> findAllRecipeCategories() {
+        return new ResponseEntity<>(recipeCategoryService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping
     @ApiOperation("Сохраняет RecipeCategory.")
-    public RecipeCategoryDto addRecipeCategory(@RequestBody RecipeCategoryDto recipeCategoryDto) {
-        return recipeCategoryService.save(recipeCategoryDto);
+    public ResponseEntity<RecipeCategoryDTO> addRecipeCategory(@RequestBody RecipeCategoryDTO recipeCategoryDTO) {
+        return new ResponseEntity<>(recipeCategoryService.save(recipeCategoryDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @ApiOperation("Обновляет RecipeCategory по Id.")
-    public RecipeCategoryDto updateRecipeCategory(@RequestBody RecipeCategoryDto updatedRecipeCategoryDto, @PathVariable("id") Long id) {
-        RecipeCategoryDto recipeCategoryDto = recipeCategoryService.findById(id);
-        if (recipeCategoryDto != null) {
-            recipeCategoryDto.setName(updatedRecipeCategoryDto.getName());
+    public ResponseEntity<RecipeCategoryDTO> updateRecipeCategory(@RequestBody RecipeCategoryDTO updatedRecipeCategoryDTO, @PathVariable("id") Long id) {
+        RecipeCategoryDTO recipeCategoryDTO = recipeCategoryService.findById(id);
+        if (recipeCategoryDTO != null) {
+            recipeCategoryDTO.setName(updatedRecipeCategoryDTO.getName());
+            return new ResponseEntity<>(recipeCategoryService.save(recipeCategoryDTO), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return recipeCategoryService.save(recipeCategoryDto);
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation("Удаляет RecipeCategory по Id.")
-    public void deleteRecipeCategory(@PathVariable("id") Long id) {
-        RecipeCategoryDto recipeCategoryDto = recipeCategoryService.findById(id);
-        if (recipeCategoryDto != null) {
+    public ResponseEntity<Void> deleteRecipeCategory(@PathVariable("id") Long id) {
+        RecipeCategoryDTO recipeCategoryDTO = recipeCategoryService.findById(id);
+        if (recipeCategoryDTO != null) {
             recipeCategoryService.delete(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -68,7 +69,7 @@ public class RecipeCategoryController {
 
     @GetMapping("/names")
     @ApiOperation("Возвращает список всех name из RecipeCategory")
-    public List<String> getAllRecipeCategoryNames() {
-        return recipeCategoryService.getAllRecipeCategoryNames();
+    public ResponseEntity <List<String>> getAllRecipeCategoryNames() {
+        return new ResponseEntity<>(recipeCategoryService.getAllRecipeCategoryNames(), HttpStatus.OK);
     }
 }
