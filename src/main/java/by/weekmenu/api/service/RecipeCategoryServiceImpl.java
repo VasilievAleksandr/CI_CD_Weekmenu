@@ -2,22 +2,28 @@ package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.RecipeCategoryDTO;
 import by.weekmenu.api.entity.RecipeCategory;
+import by.weekmenu.api.entity.RecycleBin;
 import by.weekmenu.api.repository.RecipeCategoryRepository;
+import by.weekmenu.api.repository.RecycleBinRepository;
+import by.weekmenu.api.utils.EntityNamesConsts;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RecipeCategoryServiceImpl implements RecipeCategoryService{
 
     private final RecipeCategoryRepository recipecategoryRepository;
+    private final RecycleBinRepository recycleBinRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -31,12 +37,14 @@ public class RecipeCategoryServiceImpl implements RecipeCategoryService{
     }
 
     @Override
-    public void delete(Long id) {recipecategoryRepository.deleteById(id);
+    public void delete(Long id) {
+        recipecategoryRepository.deleteById(id);
     }
 
     @Override
     public List<RecipeCategoryDTO> findAll() {
-        return StreamSupport.stream(recipecategoryRepository.findAll().spliterator(), false)
+        return recipecategoryRepository.findAllByIsArchivedIsFalse()
+                .stream()
                 .filter(Objects::nonNull)
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -49,11 +57,29 @@ public class RecipeCategoryServiceImpl implements RecipeCategoryService{
 
     @Override
     public List<String> getAllRecipeCategoryNames() {
-        return recipecategoryRepository.findAll().
-                stream()
+        return recipecategoryRepository.findAllByIsArchivedIsFalse()
+                .stream()
                 .filter(Objects::nonNull)
                 .map(RecipeCategory::getName)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> checkConnectedElements(Long id) {
+        List<String> list = new ArrayList<>();
+        //TODO check connected recipes
+        return list;
+    }
+
+    @Override
+    @Transactional
+    public void moveToRecycleBin(RecipeCategoryDTO recipeCategoryDTO) {
+        RecycleBin recycleBin = new RecycleBin();
+        recycleBin.setElementName(recipeCategoryDTO.getName());
+        recycleBin.setEntityName(EntityNamesConsts.RECIPE_CATEGORY);
+        recycleBin.setDeleteDate(LocalDateTime.now());
+        recycleBinRepository.save(recycleBin);
+        recipecategoryRepository.softDelete(recipeCategoryDTO.getId());
     }
 
     private RecipeCategory convertToEntity(RecipeCategoryDTO recipecategoryDTO) {

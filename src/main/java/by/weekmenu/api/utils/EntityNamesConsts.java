@@ -8,4 +8,6 @@ public class EntityNamesConsts {
     public static final String REGION = "Регион";
     public static final String INGREDIENT = "Ингредиент";
     public static final String RECIPE = "Рецепт";
+    public static final String RECIPE_CATEGORY = "Категория рецепта";
+    public static final String RECIPE_SUBCATEGORY = "Подкатегория рецепта";
 }
