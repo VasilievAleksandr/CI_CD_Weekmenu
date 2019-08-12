@@ -46,11 +46,11 @@ public class RecipeCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("Удаляет RecipeCategory по Id.")
+    @ApiOperation("Перемещает в корзину RecipeCategory по Id.")
     public ResponseEntity<Void> deleteRecipeCategory(@PathVariable("id") Long id) {
         RecipeCategoryDTO recipeCategoryDTO = recipeCategoryService.findById(id);
         if (recipeCategoryDTO != null) {
-            recipeCategoryService.delete(id);
+            recipeCategoryService.moveToRecycleBin(recipeCategoryDTO);
             return ResponseEntity.noContent().build();
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -71,5 +71,11 @@ public class RecipeCategoryController {
     @ApiOperation("Возвращает список всех name из RecipeCategory")
     public ResponseEntity <List<String>> getAllRecipeCategoryNames() {
         return new ResponseEntity<>(recipeCategoryService.getAllRecipeCategoryNames(), HttpStatus.OK);
+    }
+
+    @GetMapping("/checkConnectedElements/{id}")
+    @ApiOperation("Проверяет наличие связанных элементов по Id")
+    public List<String> checkConnectedElements(@PathVariable("id") Long id) {
+        return recipeCategoryService.checkConnectedElements(id);
     }
 }
