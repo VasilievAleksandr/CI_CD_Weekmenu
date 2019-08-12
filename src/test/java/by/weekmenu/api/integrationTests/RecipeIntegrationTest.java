@@ -129,6 +129,7 @@ public class RecipeIntegrationTest {
         cookingStepRepository.deleteAll();
         recipeRepository.deleteAll();
         cookingMethodRepository.deleteAll();
+        recycleBinRepository.deleteAll();
     }
 
     private void createUnitOfMeasureDtos() {

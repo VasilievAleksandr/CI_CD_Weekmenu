@@ -1,18 +1,12 @@
 package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.RecipeCategoryDTO;
-import by.weekmenu.api.dto.RegionDTO;
-import by.weekmenu.api.entity.Country;
-import by.weekmenu.api.entity.Currency;
-import by.weekmenu.api.entity.RecipeCategory;
-import by.weekmenu.api.entity.Region;
-import by.weekmenu.api.repository.CountryRepository;
+import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.RecipeCategoryRepository;
-import by.weekmenu.api.repository.RegionRepository;
+import by.weekmenu.api.repository.RecycleBinRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,13 +25,16 @@ public class RecipeCategoryServiceImplTest {
     private RecipeCategoryRepository recipeCategoryRepository;
 
     @MockBean
+    private RecycleBinRepository recycleBinRepository;
+
+    @MockBean
     private ModelMapper modelMapper;
 
     private RecipeCategoryService recipeCategoryService;
 
     @Before
     public void setup() {
-        recipeCategoryService = new RecipeCategoryServiceImpl(recipeCategoryRepository, modelMapper);
+        recipeCategoryService = new RecipeCategoryServiceImpl(recipeCategoryRepository, recycleBinRepository, modelMapper);
     }
 
     @Test
@@ -45,7 +42,7 @@ public class RecipeCategoryServiceImplTest {
         List<RecipeCategory> recipeCategories = new ArrayList<>();
         recipeCategories.add(new RecipeCategory(1L, "Обед"));
         recipeCategories.add(new RecipeCategory(2L, "Ужин"));
-        when(recipeCategoryRepository.findAll()).thenReturn(recipeCategories);
+        when(recipeCategoryRepository.findAllByIsArchivedIsFalse()).thenReturn(recipeCategories);
         List<RecipeCategoryDTO> result = recipeCategoryService.findAll();
         assertThat(recipeCategories.size()).isEqualTo(result.size());
     }
@@ -88,5 +85,23 @@ public class RecipeCategoryServiceImplTest {
         when(recipeCategoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
         RecipeCategory recipeCategory = recipeCategoryService.findByName("Обед");
         assertThat(recipeCategory).isNull();
+    }
+
+    @Test
+    public void moveToRecycleBinTest() {
+        RecipeCategoryDTO recipeCategoryDTO = new RecipeCategoryDTO();
+        recipeCategoryDTO.setId(1L);
+        recipeCategoryDTO.setName("Обед");
+        when(recycleBinRepository.save(any(RecycleBin.class))).thenReturn(new RecycleBin());
+        recipeCategoryService.moveToRecycleBin(recipeCategoryDTO);
+        verify(recipeCategoryRepository, times(1)).softDelete(recipeCategoryDTO.getId());
+    }
+
+    @Test
+    public void checkConnectedElementsTest() {
+        RecipeCategory recipeCategory = new RecipeCategory(1L, "Обед");
+//        TODO check connected recipes
+        List<String> list = recipeCategoryService.checkConnectedElements(recipeCategory.getId());
+        assertThat(list.size()).isEqualTo(0);
     }
 }

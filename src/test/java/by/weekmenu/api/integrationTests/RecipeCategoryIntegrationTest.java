@@ -2,8 +2,8 @@ package by.weekmenu.api.integrationTests;
 
 import by.weekmenu.api.ApiApplication;
 import by.weekmenu.api.dto.RecipeCategoryDTO;
-import by.weekmenu.api.entity.RecipeCategory;
-import by.weekmenu.api.repository.RecipeCategoryRepository;
+import by.weekmenu.api.entity.*;
+import by.weekmenu.api.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -33,9 +35,22 @@ public class RecipeCategoryIntegrationTest {
     @Autowired
     private RecipeCategoryRepository recipeCategoryRepository;
 
+    @Autowired
+    private RecycleBinRepository recycleBinRepository;
+
+    @Autowired
+    private RecipeRepository recipeRepository;
+
+    @Autowired
+    private CookingMethodRepository cookingMethodRepository;
+
+    @Autowired
+    private OwnershipRepository ownershipRepository;
+
     @After
     public void cleanDB() {
         recipeCategoryRepository.deleteAll();
+        recycleBinRepository.deleteAll();
     }
 
     @Test
@@ -80,13 +95,19 @@ public class RecipeCategoryIntegrationTest {
     }
 
     @Test
-    @Transactional
     public void deleteRecipeCategoryIntegrationTest() throws Exception {
-        RecipeCategory recipeCategory = new RecipeCategory("Обед");
-        recipeCategoryRepository.save(recipeCategory);
+        RecipeCategory recipeCategory = recipeCategoryRepository.save(new RecipeCategory("Обед"));
         mockMvc.perform(delete("/recipecategories/" + recipeCategory.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+
+        Iterable<RecycleBin> recycleBins = recycleBinRepository.findAll();
+        assertThat(recycleBins).extracting(RecycleBin::getElementName).containsOnly("Обед");
+        assertThat(recycleBins).extracting(RecycleBin::getEntityName).containsOnly("Категория рецепта");
+        assertThat(recycleBins).extracting(RecycleBin::getDeleteDate).isNotNull();
+
+        Optional<RecipeCategory> recipeCategoryAfterSoftDelete = recipeCategoryRepository.findById(recipeCategory.getId());
+        assertThat(recipeCategoryAfterSoftDelete.get().isArchived()).isTrue();
     }
 
     @Test
@@ -97,5 +118,28 @@ public class RecipeCategoryIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
+    }
+
+    @Test
+    @Transactional
+    public void checkConnectedElementsTest() throws Exception {
+        RecipeCategory recipeCategory = new RecipeCategory("Обед");
+        recipeCategoryRepository.save(recipeCategory);
+        Recipe recipe = new Recipe();
+        recipe.setName("Гречневая каша");
+        recipe.setCookingTime(new Short("30"));
+        recipe.setPreparingTime(new Short("15"));
+        recipe.setPortions((short)2);
+        recipe.setImageLink("images/image.png");
+        recipe.setSource("http://bestrecipes.com/best-recipe");
+        recipe.setCookingMethod(cookingMethodRepository.save(new CookingMethod("Варка")));
+        recipe.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
+        //TODO recipe set recipeCategory
+        recipeRepository.save(recipe);
+
+        mockMvc.perform(get("/recipecategories/checkConnectedElements/" + recipeCategory.getId().toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 }
