@@ -32,9 +32,13 @@ public class RecipeSubcategory implements Serializable {
     )
     private String name;
 
+    @Column(name = "IS_ARCHIVED")
+    private boolean isArchived;
+
     public RecipeSubcategory(String name) {
         this.name = name;
     }
+
     public RecipeSubcategory(Long id , String name) {
         this.id = id;
         this.name = name;
