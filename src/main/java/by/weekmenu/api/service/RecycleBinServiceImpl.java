@@ -30,6 +30,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
     private final RecipeRepository recipeRepository;
     private final RecipeService recipeService;
     private final RecipeCategoryRepository recipeCategoryRepository;
+    private final CookingMethodRepository cookingMethodRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -73,6 +74,11 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                      recipeCategoryRepository
                              .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                              .ifPresent(recipeCategory -> recipeCategoryRepository.restore(recipeCategory.getId()));
+                     break;
+                 case EntityNamesConsts.COOKING_METHOD:
+                     cookingMethodRepository
+                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                             .ifPresent(cookingMethod -> cookingMethodRepository.restore(cookingMethod.getId()));
                      break;
              }
             recycleBinRepository.delete(recycleBinElement.get());
