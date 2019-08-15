@@ -10,11 +10,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id", "imageLink"})
+@EqualsAndHashCode(exclude = {"id", "imageLink", "recipeCategories", "recipeSubcategories"})
 @Entity
 @Table(name = "RECIPE")
 public class Recipe implements Serializable {
@@ -45,7 +47,7 @@ public class Recipe implements Serializable {
             fraction = 1,
             message = "Calories '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
-    @Positive(message = "Recipe's calories '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "Recipe's calories '${validatedValue}' must be positive or '0'.")
     private BigDecimal calories;
 
     @Column(name = "PROTEINS")
@@ -105,6 +107,18 @@ public class Recipe implements Serializable {
     @NotNull(message = "Recipe's ownership mustn't be null.")
     private Ownership ownership;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "RECIPE_RECIPECATEGORY",
+        joinColumns = @JoinColumn(name = "RECIPE_ID"),
+        inverseJoinColumns = @JoinColumn(name = "RECIPECATEGORY_ID"))
+    private Set<RecipeCategory> recipeCategories = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "RECIPE_RECIPESUBCATEGORY",
+            joinColumns = @JoinColumn(name = "RECIPE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "RECIPESUBCATEGORY_ID"))
+    private Set<RecipeSubcategory> recipeSubcategories = new HashSet<>();
+
     public Recipe(String name, boolean isArchived, CookingMethod cookingMethod, Ownership ownership) {
         this.name = name;
         this.isArchived = isArchived;
@@ -117,10 +131,20 @@ public class Recipe implements Serializable {
     private void prepareData(){
         this.cookingTime = cookingTime == null ? 0 : cookingTime;
         this.preparingTime = preparingTime == null ? 0 : preparingTime;
-        this.calories = calories == null ? BigDecimal.ONE : calories;
+        this.calories = calories == null ? BigDecimal.ZERO : calories;
         this.carbs = carbs == null ? BigDecimal.ZERO : carbs;
         this.fats = fats == null ? BigDecimal.ZERO : fats;
         this.proteins = proteins == null ? BigDecimal.ZERO : proteins;
         this.portions = portions == null ? 1 : portions;
+    }
+
+    public void addRecipeCategory(RecipeCategory recipeCategory) {
+        recipeCategories.add(recipeCategory);
+        recipeCategory.getRecipes().add(this);
+    }
+
+    public void addRecipeSubcategory (RecipeSubcategory recipeSubcategory) {
+        recipeSubcategories.add(recipeSubcategory);
+        recipeSubcategory.getRecipes().add(this);
     }
 }

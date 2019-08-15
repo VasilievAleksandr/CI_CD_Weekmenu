@@ -69,12 +69,6 @@ public class RecipeSubcategoryController {
         }
     }
 
-    @GetMapping("/names")
-    @ApiOperation("Возвращает список всех name из RecipeSubcategory")
-    public List<String> getAllRecipeSubcategoryNames() {
-        return recipeSubcategoryService.getAllRecipeSubcategoryNames();
-    }
-
     @GetMapping("/checkConnectedElements/{id}")
     @ApiOperation("Проверяет наличие связанных элементов по Id")
     public List<String> checkConnectedElements(@PathVariable("id") Long id) {

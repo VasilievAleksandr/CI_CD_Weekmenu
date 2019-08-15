@@ -28,4 +28,6 @@ public class RecipeDTO {
     private Set<RecipeIngredientDTO> recipeIngredients;
     private Set<CookingStepDTO> cookingSteps;
     private Set<RecipePriceDTO> recipePrices;
+    private Set<String> categoryNames;
+    private Set<String> subcategoryNames;
 }

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,18 +57,12 @@ public class RecipeCategoryServiceImpl implements RecipeCategoryService{
     }
 
     @Override
-    public List<String> getAllRecipeCategoryNames() {
-        return recipecategoryRepository.findAllByIsArchivedIsFalse()
-                .stream()
-                .filter(Objects::nonNull)
-                .map(RecipeCategory::getName)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<String> checkConnectedElements(Long id) {
         List<String> list = new ArrayList<>();
-        //TODO check connected recipes
+        Optional<RecipeCategory> recipeCategory = recipecategoryRepository.findById(id);
+        if (recipeCategory.isPresent() && recipeCategory.get().getRecipes().size()>0) {
+            list.add("рецепты: " + recipeCategory.get().getRecipes().size());
+        }
         return list;
     }
 
