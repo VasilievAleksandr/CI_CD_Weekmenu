@@ -9,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -34,6 +36,9 @@ public class RecipeCategory implements Serializable {
 
     @Column(name = "IS_ARCHIVED")
     private boolean isArchived;
+
+    @ManyToMany(mappedBy = "recipeCategories")
+    private Set<Recipe> recipes = new HashSet<>();
 
     public RecipeCategory(String name) {
         this.name = name;

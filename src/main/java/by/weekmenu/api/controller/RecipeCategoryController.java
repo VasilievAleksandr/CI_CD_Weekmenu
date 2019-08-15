@@ -67,12 +67,6 @@ public class RecipeCategoryController {
         }
     }
 
-    @GetMapping("/names")
-    @ApiOperation("Возвращает список всех name из RecipeCategory")
-    public ResponseEntity <List<String>> getAllRecipeCategoryNames() {
-        return new ResponseEntity<>(recipeCategoryService.getAllRecipeCategoryNames(), HttpStatus.OK);
-    }
-
     @GetMapping("/checkConnectedElements/{id}")
     @ApiOperation("Проверяет наличие связанных элементов по Id")
     public List<String> checkConnectedElements(@PathVariable("id") Long id) {

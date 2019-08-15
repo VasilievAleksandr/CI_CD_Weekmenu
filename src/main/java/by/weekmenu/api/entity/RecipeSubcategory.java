@@ -9,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -31,6 +33,9 @@ public class RecipeSubcategory implements Serializable {
             message = "RecipeCategory's name '${validatedValue}' mustn't be more than '{max}' characters long."
     )
     private String name;
+
+    @ManyToMany(mappedBy = "recipeSubcategories")
+    private Set<Recipe> recipes = new HashSet<>();
 
     @Column(name = "IS_ARCHIVED")
     private boolean isArchived;

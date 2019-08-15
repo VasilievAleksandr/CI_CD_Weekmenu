@@ -31,6 +31,8 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipePriceRepository recipePriceRepository;
     private final RecycleBinRepository recycleBinRepository;
     private final MenuRecipeRepository menuRecipeRepository;
+    private final RecipeCategoryRepository recipeCategoryRepository;
+    private final RecipeSubcategoryRepository recipeSubcategoryRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -107,6 +109,10 @@ public class RecipeServiceImpl implements RecipeService {
             recipeDto.setCookingTime(recipe.getCookingTime().toString());
             recipeDto.setPreparingTime(recipe.getPreparingTime().toString());
             recipeDto.setCookingMethodName(recipe.getCookingMethod().getName());
+            recipeDto.setCategoryNames(recipe.getRecipeCategories()
+                    .stream().map(RecipeCategory::getName).collect(Collectors.toSet()));
+            recipeDto.setSubcategoryNames(recipe.getRecipeSubcategories()
+                    .stream().map(RecipeSubcategory::getName).collect(Collectors.toSet()));
 
             Set<RecipeIngredientDTO> recipeIngredientsDTOS = new HashSet<>();
             Set<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAllById_RecipeId(recipe.getId());
@@ -158,6 +164,18 @@ public class RecipeServiceImpl implements RecipeService {
         cookingMethodRepository.findByNameIgnoreCase(recipeDto.getCookingMethodName()).ifPresent(recipe::setCookingMethod);
         if (recipeDto.getRecipeIngredients()!=null) {
             calculateCPFC(recipeDto, recipe);
+        }
+        if (recipeDto.getCategoryNames()!=null) {
+            for (String categoryName : recipeDto.getCategoryNames()) {
+                recipeCategoryRepository.findByNameIgnoreCase(categoryName)
+                        .ifPresent(recipe::addRecipeCategory);
+            }
+        }
+        if (recipeDto.getSubcategoryNames()!=null) {
+            for (String subcategoryName : recipeDto.getSubcategoryNames()) {
+                recipeSubcategoryRepository.findByNameIgnoreCase(subcategoryName)
+                        .ifPresent(recipe::addRecipeSubcategory);
+            }
         }
         return recipe;
     }

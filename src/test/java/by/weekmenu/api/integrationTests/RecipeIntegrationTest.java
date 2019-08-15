@@ -23,10 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -97,6 +98,12 @@ public class RecipeIntegrationTest {
     private MenuRepository menuRepository;
 
     @Autowired
+    private RecipeCategoryRepository recipeCategoryRepository;
+
+    @Autowired
+    private RecipeSubcategoryRepository recipeSubcategoryRepository;
+
+    @Autowired
     private DayOfWeekRepository dayOfWeekRepository;
 
     @Autowired
@@ -111,6 +118,10 @@ public class RecipeIntegrationTest {
         if (unitOfMeasureRepository.findAll().spliterator().getExactSizeIfKnown()==1) {
             createUnitOfMeasureDtos();
         }
+        recipeCategoryRepository.save(new RecipeCategory("Обед"));
+        recipeCategoryRepository.save(new RecipeCategory("Ужин"));
+        recipeSubcategoryRepository.save(new RecipeSubcategory("Курица"));
+        recipeSubcategoryRepository.save(new RecipeSubcategory("Мясо"));
         createRegion("Минск");
         createCookingMethod("Варка");
         createIngredient("Гречка");
@@ -128,6 +139,8 @@ public class RecipeIntegrationTest {
         ingredientRepository.deleteAll();
         cookingStepRepository.deleteAll();
         recipeRepository.deleteAll();
+        recipeCategoryRepository.deleteAll();
+        recipeSubcategoryRepository.deleteAll();
         cookingMethodRepository.deleteAll();
         recycleBinRepository.deleteAll();
     }
@@ -201,6 +214,8 @@ public class RecipeIntegrationTest {
         recipeDto.setSource("http://bestrecipes.com/best-recipe");
         recipeDto.setCookingMethodName("Варка");
         recipeDto.setOwnershipName("ADMIN");
+        recipeDto.setCategoryNames(new HashSet<>(Arrays.asList("Обед", "Ужин")));
+        recipeDto.setSubcategoryNames(new HashSet<>(Arrays.asList("Курица", "Мясо")));
 
         Set<RecipeIngredientDTO> recipeIngredients = getRecipeIngredients();
         recipeDto.setRecipeIngredients(recipeIngredients);
@@ -220,6 +235,8 @@ public class RecipeIntegrationTest {
         recipe.setSource("http://bestrecipes.com/best-recipe");
         recipe.setCookingMethod(cookingMethodRepository.findByNameIgnoreCase("Варка").orElse(null));
         recipe.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
+        recipe.setRecipeCategories(new HashSet<>(recipeCategoryRepository.findAllByIsArchivedIsFalse()));
+        recipe.setRecipeSubcategories(new HashSet<>(recipeSubcategoryRepository.findAllByIsArchivedIsFalse()));
         return recipeRepository.save(recipe);
     }
 
@@ -259,6 +276,14 @@ public class RecipeIntegrationTest {
         assertThat(recipes).extracting(Recipe::getPreparingTime).containsOnly((short)15);
         assertThat(recipes).extracting(Recipe::getSource).containsOnly("http://bestrecipes.com/best-recipe");
         assertThat(recipes).extracting(Recipe::getImageLink).containsOnly("images/image.png");
+        assertThat(recipes).extracting(Recipe::getRecipeCategories)
+                .containsAnyOf(Stream.of(recipeCategoryRepository.findByNameIgnoreCase("Обед").get(),
+                        recipeCategoryRepository.findByNameIgnoreCase("Ужин").get())
+                        .collect(Collectors.toSet()));
+        assertThat(recipes).extracting(Recipe::getRecipeSubcategories)
+                .containsAnyOf(Stream.of(recipeSubcategoryRepository.findByNameIgnoreCase("Курица").get(),
+                        recipeSubcategoryRepository.findByNameIgnoreCase("Мясо").get())
+                .collect(Collectors.toSet()));
         //check calculations
         assertThat(recipes).extracting(Recipe::getCalories).containsOnly(new BigDecimal("50.0"));
         assertThat(recipes).extracting(Recipe::getProteins).containsOnly(new BigDecimal("50.0"));
@@ -307,6 +332,11 @@ public class RecipeIntegrationTest {
                 .andExpect(jsonPath("$[0].fats", is(50.0)))
                 .andExpect(jsonPath("$[0].cookingMethodName", is("Варка")))
                 .andExpect(jsonPath("$[0].ownershipName", is("ADMIN")))
+                .andExpect(jsonPath("$[0].categoryNames[0]", is("Ужин")))
+                .andExpect(jsonPath("$[0].categoryNames[1]", is("Обед")))
+                .andExpect(jsonPath("$[0].subcategoryNames[0]", is("Курица")))
+                .andExpect(jsonPath("$[0].subcategoryNames[1]", is("Мясо")))
+
                 .andExpect(jsonPath("$[1].name", is("Гречка с овощами")))
                 .andExpect(jsonPath("$[1].cookingTime", is("30")))
                 .andExpect(jsonPath("$[1].preparingTime", is("15")))
@@ -319,6 +349,10 @@ public class RecipeIntegrationTest {
                 .andExpect(jsonPath("$[1].fats", is(50.0)))
                 .andExpect(jsonPath("$[1].cookingMethodName", is("Варка")))
                 .andExpect(jsonPath("$[1].ownershipName", is("ADMIN")))
+                .andExpect(jsonPath("$[1].categoryNames[0]", is("Ужин")))
+                .andExpect(jsonPath("$[1].categoryNames[1]", is("Обед")))
+                .andExpect(jsonPath("$[1].subcategoryNames[0]", is("Курица")))
+                .andExpect(jsonPath("$[1].subcategoryNames[1]", is("Мясо")))
                 .andDo(print());
     }
 
@@ -345,6 +379,10 @@ public class RecipeIntegrationTest {
                 .andExpect(jsonPath("$.fats", is(25.0)))
                 .andExpect(jsonPath("$.cookingMethodName", is("Варка")))
                 .andExpect(jsonPath("$.ownershipName", is("ADMIN")))
+                .andExpect(jsonPath("$.categoryNames[0]", is("Ужин")))
+                .andExpect(jsonPath("$.categoryNames[1]", is("Обед")))
+                .andExpect(jsonPath("$.subcategoryNames[0]", is("Курица")))
+                .andExpect(jsonPath("$.subcategoryNames[1]", is("Мясо")))
                 .andDo(print());
     }
 

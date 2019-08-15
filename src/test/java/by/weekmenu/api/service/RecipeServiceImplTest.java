@@ -46,6 +46,10 @@ public class RecipeServiceImplTest {
     @MockBean
     private MenuRecipeRepository menuRecipeRepository;
     @MockBean
+    private RecipeCategoryRepository recipeCategoryRepository;
+    @MockBean
+    private RecipeSubcategoryRepository recipeSubcategoryRepository;
+    @MockBean
     private ModelMapper modelMapper;
 
     private RecipeService recipeService;
@@ -55,7 +59,8 @@ public class RecipeServiceImplTest {
         recipeService = new RecipeServiceImpl(recipeRepository, ownershipRepository,
                 cookingMethodRepository, ingredientRepository,
                 unitOfMeasureRepository, recipeIngredientRepository, ingredientUnitOfMeasureRepository, cookingStepRepository, ingredientPriceRepository,
-                recipePriceRepository, recycleBinRepository, menuRecipeRepository, modelMapper);
+                recipePriceRepository, recycleBinRepository, menuRecipeRepository,
+                recipeCategoryRepository, recipeSubcategoryRepository, modelMapper);
     }
 
     private RecipeDTO createRecipeDto(String name) {
@@ -68,6 +73,8 @@ public class RecipeServiceImplTest {
         recipeDto.setSource("http://bestrecipes.com/best-recipe");
         recipeDto.setCookingMethodName("Варка");
         recipeDto.setOwnershipName("ADMIN");
+        recipeDto.setCategoryNames(new HashSet<>(Arrays.asList("Обед", "Ужин")));
+        recipeDto.setSubcategoryNames(new HashSet<>(Arrays.asList("Курица", "Мясо")));
 
         Set<RecipeIngredientDTO> recipeIngredients = getRecipeIngredients();
         recipeDto.setRecipeIngredients(recipeIngredients);
@@ -106,6 +113,14 @@ public class RecipeServiceImplTest {
         recipe.setSource("http://bestrecipes.com/best-recipe");
         recipe.setOwnership(new Ownership(OwnershipName.ADMIN));
         recipe.setCookingMethod(new CookingMethod("Варка"));
+        Set<RecipeCategory> recipeCategories = new HashSet<>();
+        recipeCategories.add(new RecipeCategory("Обед"));
+        recipeCategories.add(new RecipeCategory("Ужин"));
+        recipe.setRecipeCategories(recipeCategories);
+        Set<RecipeSubcategory> recipeSubcategories = new HashSet<>();
+        recipeSubcategories.add(new RecipeSubcategory("Курица"));
+        recipeSubcategories.add(new RecipeSubcategory("Мясо"));
+        recipe.setRecipeSubcategories(recipeSubcategories);
         return recipe;
     }
 
@@ -138,6 +153,8 @@ public class RecipeServiceImplTest {
         assertThat(saved.getCookingTime()).isEqualTo("30");
         assertThat(saved.getPreparingTime()).isEqualTo("15");
         assertThat(saved.getPortions()).isEqualTo((short)2);
+        assertThat(saved.getCategoryNames().size()).isEqualTo(2);
+        assertThat(saved.getSubcategoryNames().size()).isEqualTo(2);
     }
 
     @Test
@@ -156,6 +173,8 @@ public class RecipeServiceImplTest {
         assertThat(found.getCookingTime()).isEqualTo("30");
         assertThat(found.getPreparingTime()).isEqualTo("15");
         assertThat(found.getPortions()).isEqualTo((short)2);
+        assertThat(found.getCategoryNames().size()).isEqualTo(2);
+        assertThat(found.getSubcategoryNames().size()).isEqualTo(2);
     }
 
     @Test
