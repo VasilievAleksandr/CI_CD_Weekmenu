@@ -133,12 +133,12 @@ public class RecipeSubcategoryIntegrationTest {
         recipe.setSource("http://bestrecipes.com/best-recipe");
         recipe.setCookingMethod(cookingMethodRepository.save(new CookingMethod("Варка")));
         recipe.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
-        //TODO recipe set recipeCategory
+        recipe.addRecipeSubcategory(recipeSubcategory);
         recipeRepository.save(recipe);
 
         mockMvc.perform(get("/recipesubcategories/checkConnectedElements/" + recipeSubcategory.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }

@@ -11,9 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -100,8 +98,10 @@ public class RecipeCategoryServiceImplTest {
     @Test
     public void checkConnectedElementsTest() {
         RecipeCategory recipeCategory = new RecipeCategory(1L, "Обед");
-//        TODO check connected recipes
+        Recipe recipe = new Recipe();
+        recipe.addRecipeCategory(recipeCategory);
+        when(recipeCategoryRepository.findById(recipeCategory.getId())).thenReturn(Optional.of(recipeCategory));
         List<String> list = recipeCategoryService.checkConnectedElements(recipeCategory.getId());
-        assertThat(list.size()).isEqualTo(0);
+        assertThat(list.size()).isEqualTo(1);
     }
 }

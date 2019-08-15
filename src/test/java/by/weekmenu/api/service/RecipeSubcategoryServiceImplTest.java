@@ -1,6 +1,7 @@
 package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.RecipeSubcategoryDTO;
+import by.weekmenu.api.entity.Recipe;
 import by.weekmenu.api.entity.RecipeSubcategory;
 import by.weekmenu.api.entity.RecycleBin;
 import by.weekmenu.api.repository.RecipeSubcategoryRepository;
@@ -102,8 +103,10 @@ public class RecipeSubcategoryServiceImplTest {
     @Test
     public void checkConnectedElementsTest() {
         RecipeSubcategory recipeSubcategory = new RecipeSubcategory(1L, "Курица");
-//        TODO check connected recipes
+        Recipe recipe = new Recipe();
+        recipe.addRecipeSubcategory(recipeSubcategory);
+        when(recipeSubcategoryRepository.findById(recipeSubcategory.getId())).thenReturn(Optional.of(recipeSubcategory));
         List<String> list = recipeSubcategoryService.checkConnectedElements(recipeSubcategory.getId());
-        assertThat(list.size()).isEqualTo(0);
+        assertThat(list.size()).isEqualTo(1);
     }
 }

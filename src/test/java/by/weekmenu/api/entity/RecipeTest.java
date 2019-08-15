@@ -90,17 +90,7 @@ public class RecipeTest {
         recipe.setCalories(new BigDecimal(-100));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("Recipe's calories '-100' must be positive.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testCaloriesAreZero() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
-        recipe.setCalories(new BigDecimal(0));
-        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
-        assertEquals(violations.size(), 1);
-        assertEquals("Recipe's calories '0' must be positive.",
+        assertEquals("Recipe's calories '-100' must be positive or '0'.",
                 violations.iterator().next().getMessage());
     }
 
