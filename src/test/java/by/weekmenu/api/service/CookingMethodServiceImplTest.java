@@ -1,9 +1,9 @@
 package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.CookingMethodDTO;
-import by.weekmenu.api.entity.CookingMethod;
-import by.weekmenu.api.entity.RecycleBin;
+import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.CookingMethodRepository;
+import by.weekmenu.api.repository.RecipeRepository;
 import by.weekmenu.api.repository.RecycleBinRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +26,9 @@ public class CookingMethodServiceImplTest {
     private CookingMethodRepository cookingMethodRepository;
 
     @MockBean
+    private RecipeRepository recipeRepository;
+
+    @MockBean
     private RecycleBinRepository recycleBinRepository;
 
     @MockBean
@@ -35,7 +38,7 @@ public class CookingMethodServiceImplTest {
 
     @Before
     public void setup() {
-        cookingMethodService = new CookingMethodServiceImpl(cookingMethodRepository, recycleBinRepository, modelMapper);
+        cookingMethodService = new CookingMethodServiceImpl(cookingMethodRepository, recipeRepository, recycleBinRepository, modelMapper);
     }
 
     @Test
@@ -100,9 +103,23 @@ public class CookingMethodServiceImplTest {
 
     @Test
     public void checkConnectedElementsTest() {
-        CookingMethod cookingMethod = new CookingMethod(1, "Жарка");
-//        TODO check connected recipes
+        CookingMethod cookingMethod = new CookingMethod(1,"Жарка");
+        Recipe recipe = new Recipe();
+        recipe.setName("Рецепт");
+        recipe.setCookingTime((short) 30);
+        recipe.setPreparingTime((short) 15);
+        recipe.setPortions((short) 2);
+        recipe.setImageLink("images/image.png");
+        recipe.setSource("http://bestrecipes.com/best-recipe");
+        recipe.setOwnership(new Ownership(OwnershipName.ADMIN));
+        recipe.setCookingMethod(cookingMethod);
+        cookingMethodRepository.save(cookingMethod);
+        recipeRepository.save(recipe);
+        List<Recipe> recipes = new ArrayList<>();
+        recipes.add(recipe);
+        when(recipeRepository.findAllByCookingMethod(cookingMethod)).thenReturn(recipes);
+        when(cookingMethodRepository.findById(cookingMethod.getId())).thenReturn(Optional.of(cookingMethod));
         List<String> list = cookingMethodService.checkConnectedElements(cookingMethod.getId());
-        assertThat(list.size()).isEqualTo(0);
+        assertThat(list.size()).isEqualTo(1);
     }
 }

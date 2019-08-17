@@ -38,49 +38,49 @@ public class RecycleBinServiceImpl implements RecycleBinService {
     public void restoreElement(Long id) {
         Optional<RecycleBin> recycleBinElement = recycleBinRepository.findById(id);
         if (recycleBinElement.isPresent()) {
-             String entityName = recycleBinElement.get().getEntityName();
-             switch (entityName) {
-                 case EntityNamesConsts.UNIT_OF_MEASURE:
-                     unitOfMeasureRepository
-                             .findByFullNameIgnoreCase(recycleBinElement.get().getElementName())
-                             .ifPresent(uom -> unitOfMeasureRepository.restore(uom.getId()));
-                     break;
-                 case EntityNamesConsts.CURRENCY:
-                     currencyRepository
-                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
-                             .ifPresent(cur -> currencyRepository.restore(cur.getId()));
-                     break;
-                 case EntityNamesConsts.COUNTRY:
-                     countryRepository
-                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
-                             .ifPresent(country -> countryRepository.restore(country.getId()));
-                     break;
-                 case EntityNamesConsts.REGION:
-                     regionRepository
-                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
-                             .ifPresent(region -> regionRepository.restore(region.getId()));
-                     break;
-                 case EntityNamesConsts.INGREDIENT:
-                     ingredientRepository
-                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
-                             .ifPresent(ingredient -> ingredientRepository.restore(ingredient.getId()));
-                     break;
-                 case EntityNamesConsts.RECIPE:
-                     recipeRepository
-                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
-                             .ifPresent(recipe -> recipeRepository.restore(recipe.getId()));
-                     break;
-                 case EntityNamesConsts.RECIPE_CATEGORY:
-                     recipeCategoryRepository
-                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
-                             .ifPresent(recipeCategory -> recipeCategoryRepository.restore(recipeCategory.getId()));
-                     break;
-                 case EntityNamesConsts.COOKING_METHOD:
-                     cookingMethodRepository
-                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
-                             .ifPresent(cookingMethod -> cookingMethodRepository.restore(cookingMethod.getId()));
-                     break;
-             }
+            String entityName = recycleBinElement.get().getEntityName();
+            switch (entityName) {
+                case EntityNamesConsts.UNIT_OF_MEASURE:
+                    unitOfMeasureRepository
+                            .findByFullNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(uom -> unitOfMeasureRepository.restore(uom.getId()));
+                    break;
+                case EntityNamesConsts.CURRENCY:
+                    currencyRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(cur -> currencyRepository.restore(cur.getId()));
+                    break;
+                case EntityNamesConsts.COUNTRY:
+                    countryRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(country -> countryRepository.restore(country.getId()));
+                    break;
+                case EntityNamesConsts.REGION:
+                    regionRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(region -> regionRepository.restore(region.getId()));
+                    break;
+                case EntityNamesConsts.INGREDIENT:
+                    ingredientRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(ingredient -> ingredientRepository.restore(ingredient.getId()));
+                    break;
+                case EntityNamesConsts.RECIPE:
+                    recipeRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(recipe -> recipeRepository.restore(recipe.getId()));
+                    break;
+                case EntityNamesConsts.RECIPE_CATEGORY:
+                    recipeCategoryRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(recipeCategory -> recipeCategoryRepository.restore(recipeCategory.getId()));
+                    break;
+                case EntityNamesConsts.COOKING_METHOD:
+                    cookingMethodRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(cookingMethod -> cookingMethodRepository.restore(cookingMethod.getId()));
+                    break;
+            }
             recycleBinRepository.delete(recycleBinElement.get());
         }
     }
@@ -133,6 +133,10 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                     recipeCategoryRepository
                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                             .ifPresent(recipeCategory -> recipeCategoryRepository.deleteById(recipeCategory.getId()));
+                case EntityNamesConsts.COOKING_METHOD:
+                    cookingMethodRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(cookingMethod -> cookingMethodRepository.deleteById(cookingMethod.getId()));
             }
             recycleBinRepository.deleteById(id);
         }

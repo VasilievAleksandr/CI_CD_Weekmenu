@@ -2,8 +2,10 @@ package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.CookingMethodDTO;
 import by.weekmenu.api.entity.CookingMethod;
+import by.weekmenu.api.entity.Recipe;
 import by.weekmenu.api.entity.RecycleBin;
 import by.weekmenu.api.repository.CookingMethodRepository;
+import by.weekmenu.api.repository.RecipeRepository;
 import by.weekmenu.api.repository.RecycleBinRepository;
 import by.weekmenu.api.utils.EntityNamesConsts;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class CookingMethodServiceImpl implements CookingMethodService{
 
     private final CookingMethodRepository cookingMethodRepository;
+    private final RecipeRepository recipeRepository;
     private final RecycleBinRepository recycleBinRepository;
     private final ModelMapper modelMapper;
 
@@ -67,7 +70,9 @@ public class CookingMethodServiceImpl implements CookingMethodService{
     @Override
     public List<String> checkConnectedElements(Integer id) {
         List<String> list = new ArrayList<>();
-        //TODO check connected recipes
+        System.out.println(cookingMethodRepository.findById(id).orElse(null));
+        List<Recipe> recipes = recipeRepository.findAllByCookingMethod(cookingMethodRepository.findById(id).orElse(null));
+        if (recipes.size()>0) list.add("количество рецептов: "+ recipes.size());
         return list;
     }
 

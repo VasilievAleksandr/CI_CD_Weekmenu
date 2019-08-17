@@ -135,13 +135,11 @@ public class CookingMethodIntegrationTest {
         recipe.setSource("http://bestrecipes.com/best-recipe");
         recipe.setCookingMethod(cookingMethod);
         recipe.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
-        //TODO recipe set recipeCategory
         cookingMethodRepository.save(cookingMethod);
         recipeRepository.save(recipe);
-
         mockMvc.perform(get("/cookingmethods/checkConnectedElements/" + cookingMethod.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }

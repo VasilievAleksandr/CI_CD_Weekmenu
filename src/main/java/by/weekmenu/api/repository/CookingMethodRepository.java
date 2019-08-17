@@ -13,6 +13,8 @@ public interface CookingMethodRepository extends CrudRepository<CookingMethod, I
 
     Optional<CookingMethod> findByNameIgnoreCase(String name);
     List<CookingMethod> findAllByIsArchivedIsFalse();
+    Optional<CookingMethod> findById(Integer id);
+
 
     @Modifying
     @Query("update CookingMethod e set e.isArchived = true where e.id = :cookingMethodId")
