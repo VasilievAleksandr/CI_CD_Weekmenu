@@ -164,6 +164,7 @@ public class RecipeServiceImpl implements RecipeService {
         cookingMethodRepository.findByNameIgnoreCase(recipeDto.getCookingMethodName()).ifPresent(recipe::setCookingMethod);
         if (recipeDto.getRecipeIngredients()!=null) {
             calculateCPFC(recipeDto, recipe);
+            calculateRecipePrice(recipeDto, recipe);
         }
         if (recipeDto.getCategoryNames()!=null) {
             for (String categoryName : recipeDto.getCategoryNames()) {
