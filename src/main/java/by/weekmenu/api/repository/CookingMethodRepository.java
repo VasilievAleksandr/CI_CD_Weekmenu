@@ -15,7 +15,6 @@ public interface CookingMethodRepository extends CrudRepository<CookingMethod, I
     List<CookingMethod> findAllByIsArchivedIsFalse();
     Optional<CookingMethod> findById(Integer id);
 
-
     @Modifying
     @Query("update CookingMethod e set e.isArchived = true where e.id = :cookingMethodId")
     void softDelete(@Param("cookingMethodId") Integer cookingMethodId);

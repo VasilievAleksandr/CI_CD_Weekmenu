@@ -70,7 +70,6 @@ public class CookingMethodServiceImpl implements CookingMethodService{
     @Override
     public List<String> checkConnectedElements(Integer id) {
         List<String> list = new ArrayList<>();
-        System.out.println(cookingMethodRepository.findById(id).orElse(null));
         List<Recipe> recipes = recipeRepository.findAllByCookingMethod(cookingMethodRepository.findById(id).orElse(null));
         if (recipes.size()>0) list.add("количество рецептов: "+ recipes.size());
         return list;

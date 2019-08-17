@@ -14,7 +14,6 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     Optional<Recipe> findByNameIgnoreCase(String name);
     List<Recipe> findAllByIsArchivedIsFalse();
-//    List<Recipe> findAllById_CookingMethodId(Integer cookingMehtodId);
     List<Recipe> findAllByCookingMethod(CookingMethod cookingMehtod);
 
     @Modifying
