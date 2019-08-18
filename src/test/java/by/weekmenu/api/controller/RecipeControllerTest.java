@@ -2,6 +2,8 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.RecipeDTO;
 import by.weekmenu.api.entity.Recipe;
+import by.weekmenu.api.entity.RecipeCategory;
+import by.weekmenu.api.entity.RecipeSubcategory;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.RecipeService;
@@ -16,12 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -55,6 +54,9 @@ public class RecipeControllerTest {
         recipeDto.setPreparingTime("15");
         recipeDto.setPortions((short)2);
         recipeDto.setImageLink("images/image.png");
+        recipeDto.setSource("http://bestrecipes.com/best-recipe");
+        recipeDto.setCategoryNames(new HashSet<>(Arrays.asList("Обед", "Ужин")));
+        recipeDto.setSubcategoryNames(new HashSet<>(Arrays.asList("Курица", "Мясо")));
         return recipeDto;
     }
 
@@ -67,6 +69,15 @@ public class RecipeControllerTest {
         recipe.setPreparingTime((short)15);
         recipe.setPortions((short)2);
         recipe.setImageLink("images/image.png");
+        recipe.setSource("http://bestrecipes.com/best-recipe");
+        Set<RecipeCategory> recipeCategories = new HashSet<>();
+        recipeCategories.add(new RecipeCategory("Обед"));
+        recipeCategories.add(new RecipeCategory("Ужин"));
+        recipe.setRecipeCategories(recipeCategories);
+        Set<RecipeSubcategory> recipeSubcategories = new HashSet<>();
+        recipeSubcategories.add(new RecipeSubcategory("Курица"));
+        recipeSubcategories.add(new RecipeSubcategory("Мясо"));
+        recipe.setRecipeSubcategories(recipeSubcategories);
         return recipe;
     }
 
@@ -87,12 +98,18 @@ public class RecipeControllerTest {
                 .andExpect(jsonPath("$[0].preparingTime", is("15")))
                 .andExpect(jsonPath("$[0].portions", is(2)))
                 .andExpect(jsonPath("$[0].imageLink", is("images/image.png")))
+                .andExpect(jsonPath("$[0].source", is("http://bestrecipes.com/best-recipe")))
+                .andExpect(jsonPath("$[0].categoryNames", iterableWithSize(2)))
+                .andExpect(jsonPath("$[0].subcategoryNames", iterableWithSize(2)))
                 .andExpect(jsonPath("$[1].id", is(2)))
                 .andExpect(jsonPath("$[1].name", is("Батон")))
                 .andExpect(jsonPath("$[1].cookingTime", is("30")))
                 .andExpect(jsonPath("$[1].preparingTime", is("15")))
                 .andExpect(jsonPath("$[1].portions", is(2)))
                 .andExpect(jsonPath("$[1].imageLink", is("images/image.png")))
+                .andExpect(jsonPath("$[1].source", is("http://bestrecipes.com/best-recipe")))
+                .andExpect(jsonPath("$[1].categoryNames", iterableWithSize(2)))
+                .andExpect(jsonPath("$[1].subcategoryNames", iterableWithSize(2)))
                 .andDo(print());
     }
 
@@ -110,7 +127,10 @@ public class RecipeControllerTest {
                 .andExpect(jsonPath("$.cookingTime", is("30")))
                 .andExpect(jsonPath("$.preparingTime", is("15")))
                 .andExpect(jsonPath("$.portions", is(2)))
-                .andExpect(jsonPath("$.imageLink", is("images/image.png")));
+                .andExpect(jsonPath("$.imageLink", is("images/image.png")))
+                .andExpect(jsonPath("$.source", is("http://bestrecipes.com/best-recipe")))
+                .andExpect(jsonPath("$.categoryNames", iterableWithSize(2)))
+                .andExpect(jsonPath("$.subcategoryNames", iterableWithSize(2)));
     }
 
     @Test
@@ -131,7 +151,10 @@ public class RecipeControllerTest {
                 .andExpect(jsonPath("$.cookingTime", is("30")))
                 .andExpect(jsonPath("$.preparingTime", is("15")))
                 .andExpect(jsonPath("$.portions", is(3)))
-                .andExpect(jsonPath("$.imageLink", is("images/image.png")));
+                .andExpect(jsonPath("$.imageLink", is("images/image.png")))
+                .andExpect(jsonPath("$.source", is("http://bestrecipes.com/best-recipe")))
+                .andExpect(jsonPath("$.categoryNames", iterableWithSize(2)))
+                .andExpect(jsonPath("$.subcategoryNames", iterableWithSize(2)));
     }
 
     @Test

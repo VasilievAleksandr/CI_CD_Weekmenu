@@ -2,8 +2,8 @@ package by.weekmenu.api.integrationTests;
 
 import by.weekmenu.api.ApiApplication;
 import by.weekmenu.api.dto.RecipeSubcategoryDTO;
-import by.weekmenu.api.entity.RecipeSubcategory;
-import by.weekmenu.api.repository.RecipeSubcategoryRepository;
+import by.weekmenu.api.entity.*;
+import by.weekmenu.api.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -33,9 +35,22 @@ public class RecipeSubcategoryIntegrationTest {
     @Autowired
     private RecipeSubcategoryRepository recipeSubcategoryRepository;
 
+    @Autowired
+    private RecycleBinRepository recycleBinRepository;
+
+    @Autowired
+    private CookingMethodRepository cookingMethodRepository;
+
+    @Autowired
+    private OwnershipRepository ownershipRepository;
+
+    @Autowired
+    private RecipeRepository recipeRepository;
+
     @After
     public void cleanDB() {
         recipeSubcategoryRepository.deleteAll();
+        recycleBinRepository.deleteAll();
     }
 
     @Test
@@ -80,22 +95,50 @@ public class RecipeSubcategoryIntegrationTest {
     }
 
     @Test
-    @Transactional
     public void deleteRecipeSubcategoryIntegrationTest() throws Exception {
-        RecipeSubcategory recipeSubcategory = new RecipeSubcategory("Рыба");
-        recipeSubcategoryRepository.save(recipeSubcategory);
+        RecipeSubcategory recipeSubcategory = recipeSubcategoryRepository.save(new RecipeSubcategory("Рыба"));
         mockMvc.perform(delete("/recipesubcategories/" + recipeSubcategory.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+
+        Iterable<RecycleBin> recycleBins = recycleBinRepository.findAll();
+        assertThat(recycleBins).extracting(RecycleBin::getElementName).containsOnly("Рыба");
+        assertThat(recycleBins).extracting(RecycleBin::getEntityName).containsOnly("Подкатегория рецепта");
+        assertThat(recycleBins).extracting(RecycleBin::getDeleteDate).isNotNull();
+
+        Optional<RecipeSubcategory> recipeSubcategoryAfterSoftDelete = recipeSubcategoryRepository.findById(recipeSubcategory.getId());
+        assertThat(recipeSubcategoryAfterSoftDelete.get().isArchived()).isTrue();
     }
 
     @Test
     public void checkUniqueNameRecipeSubcategoryIntegrationTest() throws Exception {
-        RecipeSubcategory recipeSubcategory = new RecipeSubcategory("Обед");
+        RecipeSubcategory recipeSubcategory = new RecipeSubcategory("Рыба");
         recipeSubcategoryRepository.save(recipeSubcategory);
         mockMvc.perform(get("/recipesubcategories/checkRecipeSubcategoryUniqueName?name=" + recipeSubcategory.getName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
+    }
+
+    @Test
+    @Transactional
+    public void checkConnectedElementsTest() throws Exception {
+        RecipeSubcategory recipeSubcategory = recipeSubcategoryRepository.save(new RecipeSubcategory("Рыба"));
+        Recipe recipe = new Recipe();
+        recipe.setName("Гречневая каша");
+        recipe.setCookingTime(new Short("30"));
+        recipe.setPreparingTime(new Short("15"));
+        recipe.setPortions((short)2);
+        recipe.setImageLink("images/image.png");
+        recipe.setSource("http://bestrecipes.com/best-recipe");
+        recipe.setCookingMethod(cookingMethodRepository.save(new CookingMethod("Варка")));
+        recipe.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
+        recipe.addRecipeSubcategory(recipeSubcategory);
+        recipeRepository.save(recipe);
+
+        mockMvc.perform(get("/recipesubcategories/checkConnectedElements/" + recipeSubcategory.getId().toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }

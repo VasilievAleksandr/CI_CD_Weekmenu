@@ -1,8 +1,11 @@
 package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.RecipeSubcategoryDTO;
+import by.weekmenu.api.entity.Recipe;
 import by.weekmenu.api.entity.RecipeSubcategory;
+import by.weekmenu.api.entity.RecycleBin;
 import by.weekmenu.api.repository.RecipeSubcategoryRepository;
+import by.weekmenu.api.repository.RecycleBinRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,13 +27,17 @@ public class RecipeSubcategoryServiceImplTest {
     private RecipeSubcategoryRepository recipeSubcategoryRepository;
 
     @MockBean
+    private RecycleBinRepository recycleBinRepository;
+
+    @MockBean
     private ModelMapper modelMapper;
 
     private RecipeSubcategoryService recipeSubcategoryService;
 
     @Before
     public void setup() {
-        recipeSubcategoryService = new RecipeSubcategoryServiceImpl(recipeSubcategoryRepository, modelMapper);
+        recipeSubcategoryService = new RecipeSubcategoryServiceImpl(recipeSubcategoryRepository,
+                recycleBinRepository, modelMapper);
     }
 
     @Test
@@ -38,7 +45,7 @@ public class RecipeSubcategoryServiceImplTest {
         List<RecipeSubcategory> recipeSubcategories = new ArrayList<>();
         recipeSubcategories.add(new RecipeSubcategory(1L, "Курица"));
         recipeSubcategories.add(new RecipeSubcategory(2L, "Рыба"));
-        when(recipeSubcategoryRepository.findAll()).thenReturn(recipeSubcategories);
+        when(recipeSubcategoryRepository.findAllByIsArchivedIsFalse()).thenReturn(recipeSubcategories);
         List<RecipeSubcategoryDTO> result = recipeSubcategoryService.findAll();
         assertThat(recipeSubcategories.size()).isEqualTo(result.size());
     }
@@ -81,5 +88,25 @@ public class RecipeSubcategoryServiceImplTest {
         when(recipeSubcategoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
         RecipeSubcategory recipeSubcategory = recipeSubcategoryService.findByName("Курица");
         assertThat(recipeSubcategory).isNull();
+    }
+
+    @Test
+    public void moveToRecycleBinTest() {
+        RecipeSubcategoryDTO recipeSubcategoryDTO = new RecipeSubcategoryDTO();
+        recipeSubcategoryDTO.setId(1L);
+        recipeSubcategoryDTO.setName("Курица");
+        when(recycleBinRepository.save(any(RecycleBin.class))).thenReturn(new RecycleBin());
+        recipeSubcategoryService.moveToRecycleBin(recipeSubcategoryDTO);
+        verify(recipeSubcategoryRepository, times(1)).softDelete(recipeSubcategoryDTO.getId());
+    }
+
+    @Test
+    public void checkConnectedElementsTest() {
+        RecipeSubcategory recipeSubcategory = new RecipeSubcategory(1L, "Курица");
+        Recipe recipe = new Recipe();
+        recipe.addRecipeSubcategory(recipeSubcategory);
+        when(recipeSubcategoryRepository.findById(recipeSubcategory.getId())).thenReturn(Optional.of(recipeSubcategory));
+        List<String> list = recipeSubcategoryService.checkConnectedElements(recipeSubcategory.getId());
+        assertThat(list.size()).isEqualTo(1);
     }
 }

@@ -8,7 +8,6 @@ import java.util.List;
 public interface RecipeSubcategoryService extends CrudService<RecipeSubcategoryDTO, Long> {
 
     RecipeSubcategory findByName(String name);
-
-    List<String> getAllRecipeSubcategoryNames();
-
+    List<String> checkConnectedElements(Long id);
+    void moveToRecycleBin(RecipeSubcategoryDTO recipeSubcategoryDTO);
 }

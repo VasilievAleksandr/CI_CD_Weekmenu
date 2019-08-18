@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -34,7 +35,7 @@ public class RecipeSubcategoryControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    RecipeSubcategoryService recipeSubcategorySevice;
+    RecipeSubcategoryService recipeSubcategoryService;
 
     @MockBean
     private OwnershipRepository ownershipRepository;
@@ -52,7 +53,7 @@ public class RecipeSubcategoryControllerTest {
     @Test
     public void saveRecipeSubcategoryTest() throws Exception {
         RecipeSubcategoryDTO recipeSubcategoryDTO = createRecipeSubcategoryDTO(1L, "Курица");
-        when(recipeSubcategorySevice.save(any(RecipeSubcategoryDTO.class))).thenReturn(recipeSubcategoryDTO);
+        when(recipeSubcategoryService.save(any(RecipeSubcategoryDTO.class))).thenReturn(recipeSubcategoryDTO);
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(post("/recipesubcategories")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -67,7 +68,7 @@ public class RecipeSubcategoryControllerTest {
         List recipeSubcategoryDTOs = new ArrayList();
         recipeSubcategoryDTOs.add(createRecipeSubcategoryDTO(1L, "Курица"));
         recipeSubcategoryDTOs.add(createRecipeSubcategoryDTO(2L, "Рыба"));
-        when(recipeSubcategorySevice.findAll()).thenReturn(recipeSubcategoryDTOs);
+        when(recipeSubcategoryService.findAll()).thenReturn(recipeSubcategoryDTOs);
         mockMvc.perform(get("/recipesubcategories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -83,9 +84,9 @@ public class RecipeSubcategoryControllerTest {
     @Test
     public void updateRecipeSubcategoryTest() throws Exception {
         RecipeSubcategoryDTO recipeSubcategoryDTO = createRecipeSubcategoryDTO(1L, "Курица");
-        when(recipeSubcategorySevice.findById(recipeSubcategoryDTO.getId())).thenReturn(recipeSubcategoryDTO);
+        when(recipeSubcategoryService.findById(recipeSubcategoryDTO.getId())).thenReturn(recipeSubcategoryDTO);
         recipeSubcategoryDTO.setName("Рыба");
-        when(recipeSubcategorySevice.save(any(RecipeSubcategoryDTO.class))).thenReturn(recipeSubcategoryDTO);
+        when(recipeSubcategoryService.save(any(RecipeSubcategoryDTO.class))).thenReturn(recipeSubcategoryDTO);
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(put("/recipesubcategories/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -98,7 +99,7 @@ public class RecipeSubcategoryControllerTest {
     @Test
     public void deleteRecipeSubcategoryTest() throws Exception{
         RecipeSubcategoryDTO recipeSubcategoryDTO = createRecipeSubcategoryDTO(1L, "Курица");
-        when(recipeSubcategorySevice.findById(recipeSubcategoryDTO.getId())).thenReturn(recipeSubcategoryDTO);
+        when(recipeSubcategoryService.findById(recipeSubcategoryDTO.getId())).thenReturn(recipeSubcategoryDTO);
         mockMvc.perform(delete("/recipesubcategories/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -108,10 +109,20 @@ public class RecipeSubcategoryControllerTest {
     public void checkUniqueNameRecipeSubcategoryTest() throws Exception{
         RecipeSubcategory recipeSubcategory = new RecipeSubcategory ( 1L, "Рыба");
         String name = "Рыба";
-        when(recipeSubcategorySevice.findByName(name)).thenReturn(recipeSubcategory);
+        when(recipeSubcategoryService.findByName(name)).thenReturn(recipeSubcategory);
         mockMvc.perform(get("/recipesubcategories/checkRecipeSubcategoryUniqueName?name=" + name)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
+    }
+
+    @Test
+    public void checkConnectedElementsTest() throws Exception {
+        List<String> result = Collections.singletonList("рецепты: 1");
+        when(recipeSubcategoryService.checkConnectedElements(1L)).thenReturn(result);
+        mockMvc.perform(get("/recipesubcategories/checkConnectedElements/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }
