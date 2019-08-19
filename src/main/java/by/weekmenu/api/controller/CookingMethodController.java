@@ -68,12 +68,6 @@ public class CookingMethodController {
         }
     }
 
-    @GetMapping("/names")
-    @ApiOperation("Возвращает список всех name из CookingMethod")
-    public ResponseEntity <List<String>> getAllCookingMethodNames() {
-        return new ResponseEntity<>(cookingMethodService.getAllCookingMethodNames(), HttpStatus.OK);
-    }
-
     @GetMapping("/checkConnectedElements/{id}")
     @ApiOperation("Проверяет наличие связанных элементов по Id")
     public List<String> checkConnectedElements(@PathVariable("id") Integer id) {
