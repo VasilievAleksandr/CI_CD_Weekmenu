@@ -59,15 +59,6 @@ public class CookingMethodServiceImpl implements CookingMethodService{
     }
 
     @Override
-    public List<String> getAllCookingMethodNames() {
-        return cookingMethodRepository.findAllByIsArchivedIsFalse()
-                .stream()
-                .filter(Objects::nonNull)
-                .map(CookingMethod::getName)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<String> checkConnectedElements(Integer id) {
         List<String> list = new ArrayList<>();
         List<Recipe> recipes = recipeRepository.findAllByCookingMethod(cookingMethodRepository.findById(id).orElse(null));
