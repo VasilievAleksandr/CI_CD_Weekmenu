@@ -33,7 +33,15 @@ public class CookingMethod implements Serializable {
     )
     private String name;
 
+    @Column(name = "IS_ARCHIVED")
+    private boolean isArchived;
+
     public CookingMethod(String name) {
+        this.name = name;
+    }
+
+    public CookingMethod(Integer id, String name) {
+        this.id = id;
         this.name = name;
     }
 }

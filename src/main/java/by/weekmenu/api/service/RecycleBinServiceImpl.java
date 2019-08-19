@@ -30,6 +30,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
     private final RecipeRepository recipeRepository;
     private final RecipeService recipeService;
     private final RecipeCategoryRepository recipeCategoryRepository;
+    private final CookingMethodRepository cookingMethodRepository;
     private final RecipeSubcategoryRepository recipeSubcategoryRepository;
     private final ModelMapper modelMapper;
 
@@ -79,6 +80,11 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                      recipeSubcategoryRepository
                              .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                              .ifPresent(recipeSubcategory -> recipeSubcategoryRepository.restore(recipeSubcategory.getId()));
+                     break;
+                 case EntityNamesConsts.COOKING_METHOD:
+                     cookingMethodRepository
+                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                             .ifPresent(cookingMethod -> cookingMethodRepository.restore(cookingMethod.getId()));
                      break;
              }
             recycleBinRepository.delete(recycleBinElement.get());
@@ -133,6 +139,10 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                     recipeCategoryRepository
                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                             .ifPresent(recipeCategory -> recipeCategoryRepository.deleteById(recipeCategory.getId()));
+                case EntityNamesConsts.COOKING_METHOD:
+                    cookingMethodRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(cookingMethod -> cookingMethodRepository.deleteById(cookingMethod.getId()));
                     break;
                 case EntityNamesConsts.RECIPE_SUBCATEGORY:
                     recipeSubcategoryRepository

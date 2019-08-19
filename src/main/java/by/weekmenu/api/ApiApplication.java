@@ -1,10 +1,8 @@
 package by.weekmenu.api;
 
-import by.weekmenu.api.entity.CookingMethod;
 import by.weekmenu.api.entity.Ownership;
 import by.weekmenu.api.entity.OwnershipName;
 import by.weekmenu.api.entity.UnitOfMeasure;
-import by.weekmenu.api.repository.CookingMethodRepository;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import com.fasterxml.jackson.databind.Module;

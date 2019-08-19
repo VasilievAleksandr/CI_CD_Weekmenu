@@ -77,14 +77,11 @@ public class RecipeCategoryServiceImpl implements RecipeCategoryService{
         recipecategoryRepository.softDelete(recipeCategoryDTO.getId());
     }
 
-    private RecipeCategory convertToEntity(RecipeCategoryDTO recipecategoryDTO) {
-        return modelMapper.map(recipecategoryDTO, RecipeCategory.class);
+    private RecipeCategory convertToEntity(RecipeCategoryDTO recipeCategoryDTO) {
+        return modelMapper.map(recipeCategoryDTO, RecipeCategory.class);
     }
 
-    private RecipeCategoryDTO convertToDTO(RecipeCategory recipecategory) {
-        return modelMapper.map(recipecategory, RecipeCategoryDTO.class);
+    private RecipeCategoryDTO convertToDTO(RecipeCategory recipeCategory) {
+        return modelMapper.map(recipeCategory, RecipeCategoryDTO.class);
     }
-
-
 }
-

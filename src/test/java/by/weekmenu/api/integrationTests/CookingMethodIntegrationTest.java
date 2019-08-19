@@ -1,7 +1,7 @@
 package by.weekmenu.api.integrationTests;
 
 import by.weekmenu.api.ApiApplication;
-import by.weekmenu.api.dto.RecipeCategoryDTO;
+import by.weekmenu.api.dto.CookingMethodDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ApiApplication.class)
 @AutoConfigureMockMvc
-public class RecipeCategoryIntegrationTest {
+public class CookingMethodIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,74 +49,74 @@ public class RecipeCategoryIntegrationTest {
 
     @After
     public void cleanDB() {
-        recipeCategoryRepository.deleteAll();
-        recycleBinRepository.deleteAll();
-        recipeRepository.deleteAll();
         cookingMethodRepository.deleteAll();
+        recycleBinRepository.deleteAll();
+        recipeCategoryRepository.deleteAll();
+        recipeRepository.deleteAll();
     }
 
     @Test
     @Transactional
-    public void saveRecipeCategoryIntegrationTest() throws Exception {
-        RecipeCategoryDTO recipeCategoryDTO = new RecipeCategoryDTO();
-        recipeCategoryDTO.setName("Обед");
+    public void saveCookingMethodIntegrationTest() throws Exception {
+        CookingMethodDTO cookingMethodDTO = new CookingMethodDTO();
+        cookingMethodDTO.setName("Жарка");
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/recipecategories")
+        mockMvc.perform(post("/cookingmethods")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(recipeCategoryDTO)));
-        Iterable<RecipeCategory> recipeCategories = recipeCategoryRepository.findAll();
-        assertThat(recipeCategories).extracting(RecipeCategory::getName).containsOnly("Обед");
+                .content(objectMapper.writeValueAsBytes(cookingMethodDTO)));
+        Iterable<CookingMethod> cookingMethods = cookingMethodRepository.findAll();
+        assertThat(cookingMethods).extracting(CookingMethod::getName).containsOnly("Жарка");
     }
 
     @Test
-    public void getAllRecipeCategoryIntegrationTest() throws Exception {
-        RecipeCategory recipeCategory1 = new RecipeCategory("Обед");
-        RecipeCategory recipeCategory2 = new RecipeCategory("Ужин");
-        recipeCategoryRepository.save(recipeCategory1);
-        recipeCategoryRepository.save(recipeCategory2);
-        mockMvc.perform(get("/recipecategories")
+    public void getAllCookingMethodIntegrationTest() throws Exception {
+        CookingMethod cookingMethod1 = new CookingMethod("Жарка");
+        CookingMethod cookingMethod2 = new CookingMethod("Варка");
+        cookingMethodRepository.save(cookingMethod1);
+        cookingMethodRepository.save(cookingMethod2);
+        mockMvc.perform(get("/cookingmethods")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("Обед")))
-                .andExpect(jsonPath("$[1].name", is("Ужин")));
+                .andExpect(jsonPath("$[0].name", is("Жарка")))
+                .andExpect(jsonPath("$[1].name", is("Варка")));
     }
 
     @Test
-    public void updateRecipeCategoryIntegrationTest() throws Exception {
-        RecipeCategory recipeCategory = new RecipeCategory("Обед");
-        recipeCategoryRepository.save(recipeCategory);
-        RecipeCategoryDTO recipeCategoryDTO = new RecipeCategoryDTO();
-        recipeCategoryDTO.setName("Ужин");
+    public void updateCookingMethodIntegrationTest() throws Exception {
+        CookingMethod cookingMethod = new CookingMethod("Жарка");
+        cookingMethodRepository.save(cookingMethod);
+        CookingMethodDTO cookingMethodDTO = new CookingMethodDTO();
+        cookingMethodDTO.setName("Жарка");
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/recipecategories/" + recipeCategory.getId().toString())
+        mockMvc.perform(put("/cookingmethods/" + cookingMethod.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(recipeCategoryDTO)))
+                .content(objectMapper.writeValueAsBytes(cookingMethodDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is("Ужин")));
+                .andExpect(jsonPath("$.name", is("Жарка")));
     }
 
     @Test
-    public void deleteRecipeCategoryIntegrationTest() throws Exception {
-        RecipeCategory recipeCategory = recipeCategoryRepository.save(new RecipeCategory("Обед"));
-        mockMvc.perform(delete("/recipecategories/" + recipeCategory.getId().toString())
+    public void deleteCookingMethodIntegrationTest() throws Exception {
+        CookingMethod cookingMethod = cookingMethodRepository.save(new CookingMethod("Жарка"));
+        mockMvc.perform(delete("/cookingmethods/" + cookingMethod.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         Iterable<RecycleBin> recycleBins = recycleBinRepository.findAll();
-        assertThat(recycleBins).extracting(RecycleBin::getElementName).containsOnly("Обед");
-        assertThat(recycleBins).extracting(RecycleBin::getEntityName).containsOnly("Категория рецепта");
+        assertThat(recycleBins).extracting(RecycleBin::getElementName).containsOnly("Жарка");
+        assertThat(recycleBins).extracting(RecycleBin::getEntityName).containsOnly("Способ приготовления блюда");
         assertThat(recycleBins).extracting(RecycleBin::getDeleteDate).isNotNull();
 
-        Optional<RecipeCategory> recipeCategoryAfterSoftDelete = recipeCategoryRepository.findById(recipeCategory.getId());
-        assertThat(recipeCategoryAfterSoftDelete.get().isArchived()).isTrue();
+        Optional<CookingMethod> cookingMethodAfterSoftDelete = cookingMethodRepository.findById(cookingMethod.getId());
+        assertThat(cookingMethodAfterSoftDelete.get().isArchived()).isTrue();
     }
 
     @Test
-    public void checkUniqueNameRecipeCategoryIntegrationTest() throws Exception {
-        RecipeCategory recipeCategory = new RecipeCategory("Обед");
-        recipeCategoryRepository.save(recipeCategory);
-        mockMvc.perform(get("/recipecategories/checkRecipeCategoryUniqueName?name=" + recipeCategory.getName())
+    public void checkUniqueNameCookingMethodIntegrationTest() throws Exception {
+        CookingMethod cookingMethod = new CookingMethod("Жарка");
+        cookingMethodRepository.save(cookingMethod);
+        mockMvc.perform(get("/cookingmethods/checkCookingMethodUniqueName?name=" + cookingMethod.getName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -125,21 +125,19 @@ public class RecipeCategoryIntegrationTest {
     @Test
     @Transactional
     public void checkConnectedElementsTest() throws Exception {
-        RecipeCategory recipeCategory = new RecipeCategory("Обед");
-        recipeCategoryRepository.save(recipeCategory);
+        CookingMethod cookingMethod = new CookingMethod("Жарка");
         Recipe recipe = new Recipe();
         recipe.setName("Гречневая каша");
         recipe.setCookingTime(new Short("30"));
         recipe.setPreparingTime(new Short("15"));
-        recipe.setPortions((short)2);
+        recipe.setPortions((short) 2);
         recipe.setImageLink("images/image.png");
         recipe.setSource("http://bestrecipes.com/best-recipe");
-        recipe.setCookingMethod(cookingMethodRepository.save(new CookingMethod("Варка")));
+        recipe.setCookingMethod(cookingMethod);
         recipe.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
-        recipe.addRecipeCategory(recipeCategory);
+        cookingMethodRepository.save(cookingMethod);
         recipeRepository.save(recipe);
-
-        mockMvc.perform(get("/recipecategories/checkConnectedElements/" + recipeCategory.getId().toString())
+        mockMvc.perform(get("/cookingmethods/checkConnectedElements/" + cookingMethod.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));

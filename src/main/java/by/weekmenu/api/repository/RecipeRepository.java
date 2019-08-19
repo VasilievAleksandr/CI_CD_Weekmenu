@@ -1,5 +1,6 @@
 package by.weekmenu.api.repository;
 
+import by.weekmenu.api.entity.CookingMethod;
 import by.weekmenu.api.entity.Recipe;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,7 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     Optional<Recipe> findByNameIgnoreCase(String name);
     List<Recipe> findAllByIsArchivedIsFalse();
+    List<Recipe> findAllByCookingMethod(CookingMethod cookingMehtod);
 
     @Modifying
     @Query("update Recipe recipe set recipe.isArchived = true where recipe.id = :recipeId")
