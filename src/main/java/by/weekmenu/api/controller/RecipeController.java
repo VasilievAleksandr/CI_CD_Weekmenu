@@ -46,7 +46,7 @@ public class RecipeController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("Перемещает в корзиину рецепт по Id")
+    @ApiOperation("Перемещает в корзину рецепт по Id")
     public ResponseEntity<Void> deleteRecipe(@PathVariable("id") Long id) {
         RecipeDTO recipeDto = recipeService.findById(id);
         if (recipeDto!=null) {

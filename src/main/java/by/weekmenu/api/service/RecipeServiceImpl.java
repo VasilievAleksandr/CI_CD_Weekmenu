@@ -48,6 +48,7 @@ public class RecipeServiceImpl implements RecipeService {
         if (entityDto.getRecipeIngredients()!=null) {
             calculateRecipePrice(entityDto, recipe);
             saveRecipeIngredients(entityDto, recipe);
+            calculateCPFC(entityDto, recipe);
         }
         if (entityDto.getCookingSteps()!=null) {
             saveCookingSteps(entityDto, recipe);
@@ -157,15 +158,7 @@ public class RecipeServiceImpl implements RecipeService {
     private Recipe convertToEntity(RecipeDTO recipeDto) {
         Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
         ownershipRepository.findByName(recipeDto.getOwnershipName()).ifPresent(recipe::setOwnership);
-        //todo delete after adding cooking method
-        if (!cookingMethodRepository.findByNameIgnoreCase("Варка").isPresent()) {
-            cookingMethodRepository.save(new CookingMethod("Варка"));
-        }
         cookingMethodRepository.findByNameIgnoreCase(recipeDto.getCookingMethodName()).ifPresent(recipe::setCookingMethod);
-        if (recipeDto.getRecipeIngredients()!=null) {
-            calculateCPFC(recipeDto, recipe);
-            calculateRecipePrice(recipeDto, recipe);
-        }
         if (recipeDto.getCategoryNames()!=null) {
             for (String categoryName : recipeDto.getCategoryNames()) {
                 recipeCategoryRepository.findByNameIgnoreCase(categoryName)
@@ -275,7 +268,10 @@ public class RecipeServiceImpl implements RecipeService {
         Set<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAllById_IngredientId(ingredientId);
         for (RecipeIngredient recipeIngredient : recipeIngredients) {
             Recipe recipe = recipeIngredient.getRecipe();
-            recipeRepository.save(convertToEntity(convertToDto(recipe)));
+            RecipeDTO recipeDTO = convertToDto(recipe);
+            calculateCPFC(recipeDTO, recipe);
+            calculateRecipePrice(recipeDTO, recipe);
+            recipeRepository.save(recipe);
         }
     }
 
