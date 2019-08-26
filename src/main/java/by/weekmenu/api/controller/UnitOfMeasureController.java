@@ -6,6 +6,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,21 +17,15 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Api(description = "REST API для сущности UnitOfMeasure")
 public class UnitOfMeasureController {
-    
+
     private final UnitOfMeasureService unitOfMeasureService;
 
     @GetMapping
     @ApiOperation("Возвращает список всех UnitOfMeasure")
-    public List<UnitOfMeasureDTO> findAllUnitOfMeasure() {
-        return unitOfMeasureService.findAll();
+    public ResponseEntity<List<UnitOfMeasureDTO>> findAllUnitOfMeasure() {
+        return new ResponseEntity<>(unitOfMeasureService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    @ApiOperation("Находит UnitOfMeasure по его Id")
-    public UnitOfMeasureDTO findUnitOfMeasureById(@PathVariable("id") Long id) {
-        return unitOfMeasureService.findById(id);
-    }
-    
     @GetMapping("/checkUniqueShortName")
     @ApiOperation("Проверяет поле shortName у UnitOfMeasure на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
     public Integer checkUniqueShortName(@RequestParam String shortName) {
@@ -52,25 +48,31 @@ public class UnitOfMeasureController {
 
     @PostMapping
     @ApiOperation("Сохраняет UnitOfMeasure.")
-    public UnitOfMeasureDTO addUnitOfMeasure(@RequestBody UnitOfMeasureDTO unitOfMeasureDTO) {
-        return unitOfMeasureService.save(unitOfMeasureDTO);
+    public ResponseEntity<UnitOfMeasureDTO> addUnitOfMeasure(@RequestBody UnitOfMeasureDTO unitOfMeasureDTO) {
+        return new ResponseEntity<>(unitOfMeasureService.save(unitOfMeasureDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @ApiOperation("Обновляет UnitOfMeasure по Id.")
-    public UnitOfMeasureDTO updateUnitOfMeasure(@RequestBody UnitOfMeasureDTO unitOfMeasureDTO, @PathVariable("id") Long id) {
+    public ResponseEntity<UnitOfMeasureDTO> updateUnitOfMeasure(@RequestBody UnitOfMeasureDTO unitOfMeasureDTO, @PathVariable("id") Long id) {
         UnitOfMeasureDTO newUnitOfMeasureDTO = unitOfMeasureService.findById(id);
         if (newUnitOfMeasureDTO != null) {
             newUnitOfMeasureDTO.setFullName(unitOfMeasureDTO.getFullName());
             newUnitOfMeasureDTO.setShortName(unitOfMeasureDTO.getShortName());
         }
-        return unitOfMeasureService.save(newUnitOfMeasureDTO);
+        return new ResponseEntity<>(unitOfMeasureService.save(newUnitOfMeasureDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation("Перемещает в корзину UnitOfMeasure по Id.")
-    public void deleteUnitOfMeasureById(@PathVariable("id") Long id) {
-        unitOfMeasureService.delete(id);
+    public ResponseEntity<Void> deleteUnitOfMeasureById(@PathVariable("id") Long id) {
+        UnitOfMeasureDTO unitOfMeasureDTO = unitOfMeasureService.findById(id);
+        if (unitOfMeasureDTO != null) {
+            unitOfMeasureService.moveToRecycleBin(unitOfMeasureDTO);
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/checkConnectedElements/{id}")

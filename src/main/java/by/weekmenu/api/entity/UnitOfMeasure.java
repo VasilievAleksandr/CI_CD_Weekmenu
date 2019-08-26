@@ -49,4 +49,10 @@ public class UnitOfMeasure implements Serializable {
         this.shortName = shortName;
         this.fullName = fullName;
     }
+
+    public UnitOfMeasure(Long id, String shortName, String fullName) {
+        this.id = id;
+        this.shortName = shortName;
+        this.fullName = fullName;
+    }
 }

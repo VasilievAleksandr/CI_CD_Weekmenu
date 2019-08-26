@@ -87,8 +87,8 @@ public class CookingMethodServiceImplTest {
     @Test
     public void checkUniqueCookingMethodNameTest() {
         when(cookingMethodRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
-        CookingMethod recipeCategory = cookingMethodService.findByName("Жарка");
-        assertThat(recipeCategory).isNull();
+        CookingMethod cookingMethod = cookingMethodService.findByName("Жарка");
+        assertThat(cookingMethod).isNull();
     }
 
     @Test

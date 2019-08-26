@@ -57,4 +57,8 @@ public class IngredientUnitOfMeasure implements Serializable {
     )
     @Positive(message = "Equivalent '${validatedValue}' must be positive.")
     private BigDecimal equivalent;
+
+    public IngredientUnitOfMeasure(BigDecimal equivalent) {
+        this.equivalent = equivalent;
+    }
 }

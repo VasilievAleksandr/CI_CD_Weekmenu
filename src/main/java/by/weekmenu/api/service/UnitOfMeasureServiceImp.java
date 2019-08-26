@@ -96,4 +96,15 @@ public class UnitOfMeasureServiceImp implements UnitOfMeasureService {
     private UnitOfMeasureDTO convertToDto(UnitOfMeasure unitOfMeasure) {
         return modelMapper.map(unitOfMeasure, UnitOfMeasureDTO.class);
     }
+
+    @Override
+    @Transactional
+    public void moveToRecycleBin(UnitOfMeasureDTO unitOfMeasureDTO) {
+        RecycleBin recycleBin = new RecycleBin();
+        recycleBin.setElementName(unitOfMeasureDTO.getFullName());
+        recycleBin.setEntityName(EntityNamesConsts.UNIT_OF_MEASURE);
+        recycleBin.setDeleteDate(LocalDateTime.now());
+        recycleBinRepository.save(recycleBin);
+        unitOfMeasureRepository.softDelete(unitOfMeasureDTO.getId());
+    }
 }
