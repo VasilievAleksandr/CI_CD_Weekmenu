@@ -46,14 +46,42 @@ public class UnitOfMeasureIntegrationTest {
     private IngredientRepository ingredientRepository;
 
     @Autowired
-    IngredientUnitOfMeasureRepository ingredientUnitOfMeasureRepository;
+    private IngredientUnitOfMeasureRepository ingredientUnitOfMeasureRepository;
+
+    @Autowired
+    private IngredientPriceRepository ingredientPriceRepository;
+
+    @Autowired
+    private CurrencyRepository currencyRepository;
+
+    @Autowired
+    private RegionRepository regionRepository;
+
+    @Autowired
+    private CountryRepository countryRepository;
+
+    @Autowired
+    private RecipeRepository recipeRepository;
+
+    @Autowired
+    private CookingMethodRepository cookingMethodRepository;
+
+    @Autowired
+    RecipeIngredientRepository recipeIngredientRepository;
 
     @After
     public void cleanDB() {
+        ingredientPriceRepository.deleteAll();
+        currencyRepository.deleteAll();
+        regionRepository.deleteAll();
+        cookingMethodRepository.deleteAll();
+        recipeRepository.deleteAll();
+        countryRepository.deleteAll();
         recycleBinRepository.deleteAll();
         unitOfMeasureRepository.deleteAll();
         ingredientRepository.deleteAll();
         ingredientUnitOfMeasureRepository.deleteAll();
+        recipeIngredientRepository.deleteAll();
     }
 
     @Test
@@ -155,9 +183,35 @@ public class UnitOfMeasureIntegrationTest {
         IngredientUnitOfMeasure ingredientUnitOfMeasure = new IngredientUnitOfMeasure(new BigDecimal(3));
         ingredientUnitOfMeasure.setId(new IngredientUnitOfMeasure.Id(ingredient.getId(), unitOfMeasure.getId()));
         ingredientUnitOfMeasureRepository.save(ingredientUnitOfMeasure);
+        Currency currency = new Currency("Рубль", "RUR", false);
+        currencyRepository.save(currency);
+        Country country = new Country("Россия", "RU", currency);
+        countryRepository.save(country);
+        Region region = new Region("Тверь", country);
+        regionRepository.save(region);
+        IngredientPrice ingredientPrice = new IngredientPrice(
+                ingredient, region, unitOfMeasure, new BigDecimal(3), new BigDecimal(5));
+        ingredientPrice.setId(new IngredientPrice.Id(ingredient.getId(), region.getId()));
+        ingredientPriceRepository.save(ingredientPrice);
+        CookingMethod cookingMethod = new CookingMethod("Варка");
+        cookingMethodRepository.save(cookingMethod);
+        Recipe recipe = new Recipe();
+        recipe.setName("Рецепт");
+        recipe.setCookingTime((short) 3);
+        recipe.setPreparingTime((short) 5);
+        recipe.setPortions((short) 2);
+        recipe.setImageLink("images/image.png");
+        recipe.setSource("http://bestrecipes.com/best-recipe");
+        recipe.setCookingMethod(cookingMethod);
+        recipe.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
+        recipeRepository.save(recipe);
+        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal(3), ingredient, recipe);
+        recipeIngredient.setId(new RecipeIngredient.Id(ingredient.getId(), recipe.getId()));
+        recipeIngredient.setUnitOfMeasure(unitOfMeasure);
+        recipeIngredientRepository.save(recipeIngredient);
         mockMvc.perform(get("/unitOfMeasures/checkConnectedElements/" + unitOfMeasure.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(jsonPath("$", hasSize(3)));
     }
 }
