@@ -41,9 +41,6 @@ public class CurrencyIntegrationTest {
     @Autowired
     private CountryRepository countryRepository;
 
-//    @Autowired
-//    private OwnershipRepository ownershipRepository;
-
     @After
     public void cleanDB() {
         currencyRepository.deleteAll();
