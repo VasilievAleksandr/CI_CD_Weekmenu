@@ -9,7 +9,5 @@ public interface CrudService<E,PK extends Serializable> {
 
     E findById(PK id);
 
-    void delete(PK id);
-
     List<E> findAll();
 }

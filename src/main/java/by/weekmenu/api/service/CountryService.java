@@ -11,4 +11,5 @@ public interface CountryService extends CrudService<CountryDTO, Long> {
     Country findByAlphaCode2(String alphaCode2);
     List<String> getAllCountryNames();
     List<String> checkConnectedElements(Long id);
+    void moveToRecycleBin (CountryDTO countryDTO);
 }

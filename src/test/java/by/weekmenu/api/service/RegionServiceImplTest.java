@@ -111,14 +111,13 @@ public class RegionServiceImplTest {
 
     @Test
     public void deleteRegionTest() {
-        Region region = createRegion();
-        when(regionRepository.findById(region.getId())).thenReturn(Optional.of(region));
+        RegionDTO regionDTO = createRegionDto();
         RecycleBin recycleBin = new RecycleBin();
-        recycleBin.setElementName(region.getName());
+        recycleBin.setElementName(regionDTO.getName());
         recycleBin.setEntityName(EntityNamesConsts.REGION);
         recycleBin.setDeleteDate(LocalDateTime.now());
         when(recycleBinRepository.save(recycleBin)).thenReturn(recycleBin);
-        regionService.delete(1L);
+        regionService.moveToRecycleBin(regionDTO);
         verify(regionRepository, times(1)).softDelete(1L);
         assertThat(recycleBin.getElementName()).isEqualTo("Минск");
         assertThat(recycleBin.getEntityName()).isEqualTo("Регион");

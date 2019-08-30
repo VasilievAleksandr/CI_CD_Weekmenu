@@ -8,4 +8,5 @@ public interface RegionService extends CrudService<RegionDTO, Long> {
 
     RegionDTO findByName(String name);
     List<String> checkConnectedElements(Long id);
+    void  moveToRecycleBin (RegionDTO regionDTO);
 }

@@ -43,16 +43,13 @@ public class CurrencyServiceImp implements CurrencyService {
 
     @Override
     @Transactional
-    public void delete(Integer id) {
-        Currency currency = currencyRepository.findById(id).orElse(null);
-        if (currency!=null) {
-            RecycleBin recycleBin = new RecycleBin();
-            recycleBin.setElementName(currency.getName());
-            recycleBin.setEntityName(EntityNamesConsts.CURRENCY);
-            recycleBin.setDeleteDate(LocalDateTime.now());
-            recycleBinRepository.save(recycleBin);
-            currencyRepository.softDelete(id);
-        }
+    public void moveToRecycleBin(CurrencyDTO currencyDTO) {
+        RecycleBin recycleBin = new RecycleBin();
+        recycleBin.setElementName(currencyDTO.getName());
+        recycleBin.setEntityName(EntityNamesConsts.CURRENCY);
+        recycleBin.setDeleteDate(LocalDateTime.now());
+        recycleBinRepository.save(recycleBin);
+        currencyRepository.softDelete(currencyDTO.getId());
     }
 
     @Override
@@ -78,7 +75,7 @@ public class CurrencyServiceImp implements CurrencyService {
     public List<String> checkConnectedElements(Integer id) {
         List<String> list = new ArrayList<>();
         List<Country> countries = countryRepository.findAllByCurrency_Id(id);
-        if (countries.size()>0) {
+        if (countries.size() > 0) {
             list.add("страны: " + countries.size());
         }
         return list;

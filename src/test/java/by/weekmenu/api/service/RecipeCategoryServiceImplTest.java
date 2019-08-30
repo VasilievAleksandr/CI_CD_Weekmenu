@@ -73,12 +73,6 @@ public class RecipeCategoryServiceImplTest {
     }
 
     @Test
-    public void deleteRecipeCategoryTest() {
-        recipeCategoryService.delete(1L);
-        verify(recipeCategoryRepository, times(1)).deleteById(1L);
-    }
-
-    @Test
     public void checkUniqueRecipeCategoryNameTest() {
         when(recipeCategoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
         RecipeCategory recipeCategory = recipeCategoryService.findByName("Обед");

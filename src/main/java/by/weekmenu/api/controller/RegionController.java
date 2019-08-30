@@ -38,15 +38,15 @@ public class RegionController {
 
     @GetMapping("/{id}")
     @ApiOperation("Находит Region по его Id")
-    public RegionDTO findRegionById(@PathVariable ("id") Long id) {
+    public RegionDTO findRegionById(@PathVariable("id") Long id) {
         return regionService.findById(id);
     }
 
     @PutMapping("/{id}")
     @ApiOperation("Обновляет Region по Id.")
-    public RegionDTO updateRegion(@RequestBody RegionDTO updatedRegionDTO, @PathVariable("id")Long id) {
+    public RegionDTO updateRegion(@RequestBody RegionDTO updatedRegionDTO, @PathVariable("id") Long id) {
         RegionDTO regionDto = regionService.findById(id);
-        if (regionDto!=null) {
+        if (regionDto != null) {
             regionDto.setName(updatedRegionDTO.getName());
             regionDto.setCountryName(updatedRegionDTO.getCountryName());
         }
@@ -55,14 +55,20 @@ public class RegionController {
 
     @DeleteMapping("/{id}")
     @ApiOperation("Перемещает в корзину Region по Id.")
-    public void deleteRegion(@PathVariable ("id") Long id) {
-        regionService.delete(id);
+    public ResponseEntity<Void> deleteRegion(@PathVariable("id") Long id) {
+        RegionDTO regionDTO = regionService.findById(id);
+        if (regionDTO != null) {
+            regionService.moveToRecycleBin(regionDTO);
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/checkUniqueName")
     @ApiOperation("Проверяет поле name у Region на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
     public Integer checkUniqueName(@RequestParam String name) {
-        if(regionService.findByName(name)!=null) {
+        if (regionService.findByName(name) != null) {
             return -1;
         } else {
             return 0;

@@ -75,7 +75,7 @@ public class CurrencyController {
     public ResponseEntity<Void> deleteCurrencyById(@PathVariable("id") Integer id) {
         CurrencyDTO currencyDTO = currencyService.findById(id);
         if (currencyDTO != null) {
-            currencyService.delete(currencyDTO.getId());
+            currencyService.moveToRecycleBin(currencyDTO);
             return ResponseEntity.noContent().build();
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

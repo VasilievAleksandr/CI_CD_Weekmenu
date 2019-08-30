@@ -11,4 +11,5 @@ public interface RecipeService extends CrudService<RecipeDTO, Long> {
     void updateRecipes(Long ingredientId);
     List<String> checkConnectedElements(Long id);
     void moveToRecycleBin(RecipeDTO recipeDTO);
+    void delete (Long id);
 }

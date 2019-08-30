@@ -41,10 +41,10 @@ public class IngredientServiceImpl implements IngredientService {
         Ingredient ingredient = convertToEntity(entityDto);
         ownershipRepository.findByName("ADMIN").ifPresent(ingredient::setOwnership);
         ingredientRepository.save(ingredient);
-        if (entityDto.getUnitOfMeasureEquivalent()!=null) {
+        if (entityDto.getUnitOfMeasureEquivalent() != null) {
             saveIngredientUOM(entityDto, ingredient);
         }
-        if (entityDto.getIngredientPrices()!=null) {
+        if (entityDto.getIngredientPrices() != null) {
             saveIngredientPrice(entityDto, ingredient);
         }
         recipeService.updateRecipes(ingredient.getId());
@@ -106,7 +106,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     private IngredientDTO convertToDto(Ingredient ingredient) {
-        if (ingredient!=null) {
+        if (ingredient != null) {
             IngredientDTO ingredientDto = modelMapper.map(ingredient, IngredientDTO.class);
             List<IngredientUnitOfMeasure> ingredientUOMlist = ingredientUnitOfMeasureRepository.findAllById_IngredientId(ingredient.getId());
             Map<String, BigDecimal> map = new HashMap<>();

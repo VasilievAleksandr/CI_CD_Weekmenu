@@ -93,14 +93,16 @@ public class UnitOfMeasureServiceImplTest {
 
     @Test
     public void deleteUnitOfMeasureTest() {
-        UnitOfMeasure unitOfMeasure = new UnitOfMeasure(1L, "л", "Литр");
-        when(unitOfMeasureRepository.findById(unitOfMeasure.getId())).thenReturn(Optional.of(unitOfMeasure));
+       UnitOfMeasureDTO unitOfMeasureDTO = new UnitOfMeasureDTO();
+        unitOfMeasureDTO.setId(1L);
+        unitOfMeasureDTO.setFullName("Литр");
+        unitOfMeasureDTO.setShortName("л");
         RecycleBin recycleBin = new RecycleBin();
-        recycleBin.setElementName(unitOfMeasure.getFullName());
+        recycleBin.setElementName(unitOfMeasureDTO.getFullName());
         recycleBin.setEntityName(EntityNamesConsts.UNIT_OF_MEASURE);
         recycleBin.setDeleteDate(LocalDateTime.now());
         when(recycleBinRepository.save(recycleBin)).thenReturn(recycleBin);
-        unitOfMeasureService.delete(1L);
+        unitOfMeasureService.moveToRecycleBin(unitOfMeasureDTO);
         verify(unitOfMeasureRepository, times(1)).softDelete(1L);
         assertThat(recycleBin.getElementName()).isEqualTo("Литр");
         assertThat(recycleBin.getEntityName()).isEqualTo("Единица измерения");

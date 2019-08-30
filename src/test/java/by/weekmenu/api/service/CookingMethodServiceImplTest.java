@@ -79,12 +79,6 @@ public class CookingMethodServiceImplTest {
     }
 
     @Test
-    public void deleteCookingMethodTest() {
-        cookingMethodService.delete(1);
-        verify(cookingMethodRepository, times(1)).deleteById(1);
-    }
-
-    @Test
     public void checkUniqueCookingMethodNameTest() {
         when(cookingMethodRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
         CookingMethod cookingMethod = cookingMethodService.findByName("Жарка");
@@ -99,6 +93,7 @@ public class CookingMethodServiceImplTest {
         when(recycleBinRepository.save(any(RecycleBin.class))).thenReturn(new RecycleBin());
         cookingMethodService.moveToRecycleBin(cookingMethodDTO);
         verify(cookingMethodRepository, times(1)).softDelete(cookingMethodDTO.getId());
+        assertThat(cookingMethodDTO.getName()).isEqualTo("Жарка");
     }
 
     @Test

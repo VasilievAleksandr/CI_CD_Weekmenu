@@ -87,16 +87,17 @@ public class CurrencyServiceImplTest {
     }
 
     @Test
-    public void deleteCurrencyTest() {
-        Currency currency = new Currency("Рубль", "RUB", false);
-        currency.setId(1);
-        when(currencyRepository.findById(currency.getId())).thenReturn(Optional.of(currency));
+    public void moveToRecycleBinTest() {
+        CurrencyDTO currencyDTO = new CurrencyDTO();
+        currencyDTO.setId(1);
+        currencyDTO.setName("Рубль");
+        currencyDTO.setCode("RUB");
         RecycleBin recycleBin = new RecycleBin();
-        recycleBin.setElementName(currency.getName());
+        recycleBin.setElementName(currencyDTO.getName());
         recycleBin.setEntityName(EntityNamesConsts.CURRENCY);
         recycleBin.setDeleteDate(LocalDateTime.now());
         when(recycleBinRepository.save(recycleBin)).thenReturn(recycleBin);
-        currencyService.delete(1);
+        currencyService.moveToRecycleBin(currencyDTO);
         verify(currencyRepository, times(1)).softDelete(1);
         assertThat(recycleBin.getElementName()).isEqualTo("Рубль");
         assertThat(recycleBin.getEntityName()).isEqualTo("Валюта");

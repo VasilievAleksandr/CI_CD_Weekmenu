@@ -49,16 +49,16 @@ public class RegionControllerTest {
         when(regionService.findAll()).thenReturn(regions);
 
         mockMvc.perform(get("/regions")
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(jsonPath("$[0].id", is(1)))
-            .andExpect(jsonPath("$[0].name", is("Минск")))
-            .andExpect(jsonPath("$[0].countryName", is("Беларусь")))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is("Минск")))
+                .andExpect(jsonPath("$[0].countryName", is("Беларусь")))
                 .andExpect(jsonPath("$[1].id", is(2)))
                 .andExpect(jsonPath("$[1].name", is("Гродно")))
                 .andExpect(jsonPath("$[1].countryName", is("Беларусь")))
-        .andDo(print());
+                .andDo(print());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class RegionControllerTest {
         when(regionService.findById(regionDto.getId())).thenReturn(regionDto);
 
         mockMvc.perform(get("/regions/1")
-        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.name", is("Минск")))
@@ -111,9 +111,11 @@ public class RegionControllerTest {
 
     @Test
     public void deleteRegionTest() throws Exception {
+        RegionDTO regionDTO = new RegionDTO(1L, "Минск", "Беларусь", "BYN");
+        when(regionService.findById(regionDTO.getId())).thenReturn(regionDTO);
         mockMvc.perform(delete("/regions/1")
-        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -131,7 +133,7 @@ public class RegionControllerTest {
         List<String> result = Arrays.asList("цены ингредиентов: 1", "цены рецептов: 2");
         when(regionService.checkConnectedElements(1L)).thenReturn(result);
         mockMvc.perform(get("/regions/checkConnectedElements/1")
-        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
