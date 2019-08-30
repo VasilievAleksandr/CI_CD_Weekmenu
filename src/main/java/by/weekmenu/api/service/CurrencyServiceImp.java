@@ -64,14 +64,6 @@ public class CurrencyServiceImp implements CurrencyService {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getAllCurrencyCodes() {
-        return currencyRepository.findAllByIsArchivedIsFalse()
-                .stream()
-                .filter(Objects::nonNull)
-                .map(Currency::getCode)
-                .collect(Collectors.toList());
-    }
-
     @Override
     public Currency findByName(String name) {
         return currencyRepository.findByNameIgnoreCase(name).orElse(null);

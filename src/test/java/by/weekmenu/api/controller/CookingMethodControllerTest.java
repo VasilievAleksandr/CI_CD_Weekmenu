@@ -35,7 +35,7 @@ public class CookingMethodControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    CookingMethodService cookingMethodService;
+    private CookingMethodService cookingMethodService;
 
     @MockBean
     private OwnershipRepository ownershipRepository;
