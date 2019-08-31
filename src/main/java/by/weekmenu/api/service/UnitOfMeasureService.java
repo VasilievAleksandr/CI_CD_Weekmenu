@@ -10,6 +10,4 @@ public interface UnitOfMeasureService extends CrudService<UnitOfMeasureDTO, Long
     UnitOfMeasure findByShortName(String shortName);
     UnitOfMeasure findByFullName(String fullName);
     List<String> checkConnectedElements(Long id);
-    void moveToRecycleBin(UnitOfMeasureDTO unitOfMeasureDTO);
-
 }

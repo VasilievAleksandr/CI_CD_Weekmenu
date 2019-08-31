@@ -6,8 +6,7 @@ import java.util.List;
 public interface CrudService<E,PK extends Serializable> {
 
     E save(E entityDto);
-
     E findById(PK id);
-
     List<E> findAll();
+    void moveToRecycleBin(E entityDto);
 }
