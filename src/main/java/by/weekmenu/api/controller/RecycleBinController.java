@@ -6,6 +6,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,13 @@ public class RecycleBinController {
 
     @PutMapping("/{id}")
     @ApiOperation("Восстанавливает запись из корзины по Id.")
-    public void restoreElement(@PathVariable("id") Long id) {
-        recycleBinService.restoreElement(id);
+    public ResponseEntity<Void> restoreElement(@PathVariable("id") Long id) {
+        if (recycleBinService.findById(id)!=null) {
+            recycleBinService.restoreElement(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping
@@ -32,9 +39,12 @@ public class RecycleBinController {
 
     @DeleteMapping("/{id}")
     @ApiOperation("Удаляет запись из корзины по Id.")
-    public void deleteElement(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteElement(@PathVariable("id") Long id) {
         if (recycleBinService.findById(id)!=null) {
             recycleBinService.deleteElement(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
