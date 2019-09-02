@@ -4,13 +4,13 @@ import by.weekmenu.api.dto.*;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
 import by.weekmenu.api.utils.EntityNamesConsts;
+import by.weekmenu.api.utils.RecipeCalculation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,14 +25,13 @@ public class RecipeServiceImpl implements RecipeService {
     private final IngredientRepository ingredientRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
-    private final IngredientUnitOfMeasureRepository ingredientUnitOfMeasureRepository;
     private final CookingStepRepository cookingStepRepository;
-    private final IngredientPriceRepository ingredientPriceRepository;
     private final RecipePriceRepository recipePriceRepository;
     private final RecycleBinRepository recycleBinRepository;
     private final MenuRecipeRepository menuRecipeRepository;
     private final RecipeCategoryRepository recipeCategoryRepository;
     private final RecipeSubcategoryRepository recipeSubcategoryRepository;
+    private final RecipeCalculation recipeCalculation;
     private final ModelMapper modelMapper;
 
     @Override
@@ -45,10 +44,11 @@ public class RecipeServiceImpl implements RecipeService {
         }
         Recipe recipe = convertToEntity(entityDto);
         recipeRepository.save(recipe);
-        if (entityDto.getRecipeIngredients() != null) {
-            calculateRecipePrice(entityDto, recipe);
+        if (entityDto.getRecipeIngredients()!=null) {
+            recipeCalculation.calculateRecipePrice(entityDto, recipe);
             saveRecipeIngredients(entityDto, recipe);
-            calculateCPFC(entityDto, recipe);
+            recipeCalculation.calculateCPFC(entityDto, recipe);
+            recipeCalculation.calculateGramsPerPortion(entityDto, recipe);
         }
         if (entityDto.getCookingSteps() != null) {
             saveCookingSteps(entityDto, recipe);
@@ -174,90 +174,6 @@ public class RecipeServiceImpl implements RecipeService {
         return recipe;
     }
 
-    private void calculateRecipePrice(RecipeDTO recipeDto, Recipe recipe) {
-        Set<RecipeIngredientDTO> recipeIngredients = recipeDto.getRecipeIngredients();
-        Set<IngredientPrice> allIngredientPrices = new HashSet<>();
-        for (RecipeIngredientDTO recipeIngredientDTO : recipeIngredients) {
-            Set<IngredientPrice> ingredientPrices = ingredientPriceRepository.findAllById_IngredientId(ingredientRepository
-                    .findByNameIgnoreCase(recipeIngredientDTO.getIngredientName()).get().getId());
-            allIngredientPrices.addAll(ingredientPrices);
-        }
-        List<IngredientPrice> list = new ArrayList<>(allIngredientPrices);
-        Map<Region, List<IngredientPrice>> lists = list.stream().collect(Collectors.groupingBy(IngredientPrice::getRegion));
-        lists.forEach(((region, ingredientPrices) -> {
-            RecipePrice recipePrice = new RecipePrice();
-            recipePrice.setId(new RecipePrice.Id(recipe.getId(), region.getId()));
-            recipePrice.setRegion(region);
-            recipePrice.setRecipe(recipe);
-            BigDecimal priceValue = BigDecimal.ZERO;
-            for (IngredientPrice ingredientPrice : ingredientPrices) {
-                //count price depends on uom and quantity
-                for (RecipeIngredientDTO recipeIngredientDTO : recipeIngredients) {
-                    if (recipeIngredientDTO.getIngredientName().equals(ingredientPrice.getIngredient().getName())) {
-                        if (recipeIngredientDTO.getUnitOfMeasureShortName().equals(ingredientPrice.getUnitOfMeasure().getShortName())) {
-                            priceValue = priceValue
-                                    .add(recipeIngredientDTO.getQuantity().multiply(ingredientPrice.getPriceValue())
-                                            .divide(ingredientPrice.getQuantity(), 2, BigDecimal.ROUND_HALF_UP));
-                        } else {
-                            Optional<UnitOfMeasure> byShortNameUOM = unitOfMeasureRepository.findByShortNameIgnoreCase(recipeIngredientDTO.getUnitOfMeasureShortName());
-                            Optional<IngredientUnitOfMeasure> ingredientUnitOfMeasure = ingredientUnitOfMeasureRepository
-                                    .findById(new IngredientUnitOfMeasure.Id(ingredientPrice.getIngredient().getId(),
-                                            byShortNameUOM.get().getId()));
-                            if (ingredientUnitOfMeasure.isPresent()) {
-                                priceValue = priceValue
-                                        .add(recipeIngredientDTO.getQuantity().multiply(ingredientUnitOfMeasure.get().getEquivalent())
-                                                .multiply(ingredientPrice.getPriceValue())
-                                                .divide(ingredientPrice.getQuantity(), 2, BigDecimal.ROUND_HALF_UP));
-                            }
-                        }
-                    }
-                }
-            }
-//                recipe price per portion
-            recipePrice.setPriceValue(priceValue.divide(new BigDecimal(recipe.getPortions()), 2, BigDecimal.ROUND_HALF_UP));
-            recipePriceRepository.save(recipePrice);
-        }));
-    }
-
-    private void calculateCPFC(RecipeDTO recipeDto, Recipe recipe) {
-        Set<RecipeIngredientDTO> recipeIngredients = recipeDto.getRecipeIngredients();
-        BigDecimal totalCalories = BigDecimal.ZERO;
-        BigDecimal totalCarbs = BigDecimal.ZERO;
-        BigDecimal totalFats = BigDecimal.ZERO;
-        BigDecimal totalProteins = BigDecimal.ZERO;
-        for (RecipeIngredientDTO recipeIngredientDTO : recipeIngredients) {
-            Optional<Ingredient> ingredient = ingredientRepository.findByNameIgnoreCase(recipeIngredientDTO.getIngredientName());
-            Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureRepository.findByShortNameIgnoreCase(recipeIngredientDTO.getUnitOfMeasureShortName());
-            if (ingredient.isPresent() && unitOfMeasure.isPresent()) {
-                Optional<IngredientUnitOfMeasure> ingredientUnitOfMeasure = ingredientUnitOfMeasureRepository.findById_IngredientIdAndId_UnitOfMeasureId(ingredient.get().getId(),
-                        unitOfMeasure.get().getId());
-                if (ingredientUnitOfMeasure.isPresent()) {
-                    BigDecimal rate = ingredientUnitOfMeasure.get().getEquivalent()
-                            .divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_UP)
-                            .multiply(recipeIngredientDTO.getQuantity())
-                            .divide(new BigDecimal(recipe.getPortions()), 2, BigDecimal.ROUND_HALF_UP);
-
-                    totalCalories = totalCalories
-                            .add(ingredient.get().getCalories().multiply(rate))
-                            .setScale(1, BigDecimal.ROUND_HALF_UP);
-                    totalProteins = totalProteins
-                            .add(ingredient.get().getProteins().multiply(rate))
-                            .setScale(1, BigDecimal.ROUND_HALF_UP);
-                    totalCarbs = totalCarbs
-                            .add(ingredient.get().getCarbs().multiply(rate))
-                            .setScale(1, BigDecimal.ROUND_HALF_UP);
-                    totalFats = totalFats
-                            .add(ingredient.get().getFats().multiply(rate))
-                            .setScale(1, BigDecimal.ROUND_HALF_UP);
-                }
-            }
-        }
-        recipe.setCalories(totalCalories);
-        recipe.setCarbs(totalCarbs);
-        recipe.setFats(totalFats);
-        recipe.setProteins(totalProteins);
-    }
-
     @Override
     public Recipe findByName(String name) {
         return recipeRepository.findByNameIgnoreCase(name).orElse(null);
@@ -269,8 +185,9 @@ public class RecipeServiceImpl implements RecipeService {
         for (RecipeIngredient recipeIngredient : recipeIngredients) {
             Recipe recipe = recipeIngredient.getRecipe();
             RecipeDTO recipeDTO = convertToDto(recipe);
-            calculateCPFC(recipeDTO, recipe);
-            calculateRecipePrice(recipeDTO, recipe);
+            recipeCalculation.calculateCPFC(recipeDTO, recipe);
+            recipeCalculation.calculateRecipePrice(recipeDTO, recipe);
+            recipeCalculation.calculateGramsPerPortion(recipeDTO, recipe);
             recipeRepository.save(recipe);
         }
     }
