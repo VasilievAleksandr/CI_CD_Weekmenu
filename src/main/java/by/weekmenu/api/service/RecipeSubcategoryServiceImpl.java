@@ -38,11 +38,6 @@ public class RecipeSubcategoryServiceImpl implements RecipeSubcategoryService {
     }
 
     @Override
-    public void delete(Long id) {
-        recipeSubcategoryRepository.deleteById(id);
-    }
-
-    @Override
     public List<RecipeSubcategoryDTO> findAll() {
         return recipeSubcategoryRepository.findAllByIsArchivedIsFalse()
                 .stream()
@@ -60,7 +55,7 @@ public class RecipeSubcategoryServiceImpl implements RecipeSubcategoryService {
     public List<String> checkConnectedElements(Long id) {
         List<String> list = new ArrayList<>();
         Optional<RecipeSubcategory> recipeSubcategory = recipeSubcategoryRepository.findById(id);
-        if (recipeSubcategory.isPresent() && recipeSubcategory.get().getRecipes().size()>0) {
+        if (recipeSubcategory.isPresent() && recipeSubcategory.get().getRecipes().size() > 0) {
             list.add("рецепты: " + recipeSubcategory.get().getRecipes().size());
         }
         return list;

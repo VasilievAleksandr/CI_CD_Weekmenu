@@ -40,11 +40,6 @@ public class CookingMethodServiceImpl implements CookingMethodService{
     }
 
     @Override
-    public void delete(Integer id) {
-        cookingMethodRepository.deleteById(id);
-    }
-
-    @Override
     public List<CookingMethodDTO> findAll() {
         return cookingMethodRepository.findAllByIsArchivedIsFalse()
                 .stream()

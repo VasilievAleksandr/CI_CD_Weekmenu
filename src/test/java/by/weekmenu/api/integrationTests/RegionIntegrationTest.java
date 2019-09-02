@@ -157,7 +157,7 @@ public class RegionIntegrationTest {
         Region region = createRegion("Минск");
         mockMvc.perform(delete("/regions/" + region.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         Iterable<RecycleBin> recycleBins = recycleBinRepository.findAll();
         assertThat(recycleBins).extracting(RecycleBin::getElementName).containsOnly("Минск");

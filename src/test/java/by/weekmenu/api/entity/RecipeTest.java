@@ -236,36 +236,6 @@ public class RecipeTest {
     }
 
     @Test
-    public void testGramsPerProtionAreNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
-        recipe.setGramsPerPortion(new BigDecimal("-100"));
-        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
-        assertEquals(violations.size(), 1);
-        assertEquals("Grams per portion '-100' must be positive or '0'.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testGramsPerPortionHasTooManyFractionDigits() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
-        recipe.setGramsPerPortion(new BigDecimal("123.12"));
-        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
-        assertEquals(violations.size(), 1);
-        assertEquals("Grams per portion '123.12' must have up to '5' integer digits and '1' fraction digits.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testGramsPerPortionValueIsTooHigh() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
-        recipe.setGramsPerPortion(new BigDecimal("123456.1"));
-        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
-        assertEquals(violations.size(), 1);
-        assertEquals("Grams per portion '123456.1' must have up to '5' integer digits and '1' fraction digits.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
     public void testSourceIsTooLong() {
         Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         String source = StringUtils.repeat("source_name", "/", 30);
@@ -314,7 +284,6 @@ public class RecipeTest {
         recipe.setPreparingTime(new Short("15"));
         recipe.setImageLink("images/recipe.jpg");
         recipe.setPortions((short)2);
-        recipe.setGramsPerPortion(new BigDecimal("123.1"));
         recipe.setSource("http://bestrecipes.com/best-recipe");
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 0);

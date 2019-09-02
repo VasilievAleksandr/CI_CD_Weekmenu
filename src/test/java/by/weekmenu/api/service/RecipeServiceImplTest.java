@@ -5,7 +5,6 @@ import by.weekmenu.api.dto.RecipeDTO;
 import by.weekmenu.api.dto.RecipeIngredientDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
-import by.weekmenu.api.utils.RecipeCalculation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +34,11 @@ public class RecipeServiceImplTest {
     @MockBean
     private RecipeIngredientRepository recipeIngredientRepository;
     @MockBean
+    private IngredientUnitOfMeasureRepository ingredientUnitOfMeasureRepository;
+    @MockBean
     private CookingStepRepository cookingStepRepository;
+    @MockBean
+    private IngredientPriceRepository ingredientPriceRepository;
     @MockBean
     private RecipePriceRepository recipePriceRepository;
     @MockBean
@@ -48,8 +51,6 @@ public class RecipeServiceImplTest {
     private RecipeSubcategoryRepository recipeSubcategoryRepository;
     @MockBean
     private ModelMapper modelMapper;
-    @MockBean
-    private RecipeCalculation recipeCalculation;
 
     private RecipeService recipeService;
 
@@ -57,9 +58,9 @@ public class RecipeServiceImplTest {
     public void setup(){
         recipeService = new RecipeServiceImpl(recipeRepository, ownershipRepository,
                 cookingMethodRepository, ingredientRepository,
-                unitOfMeasureRepository, recipeIngredientRepository, cookingStepRepository,
+                unitOfMeasureRepository, recipeIngredientRepository, ingredientUnitOfMeasureRepository, cookingStepRepository, ingredientPriceRepository,
                 recipePriceRepository, recycleBinRepository, menuRecipeRepository,
-                recipeCategoryRepository, recipeSubcategoryRepository, recipeCalculation, modelMapper);
+                recipeCategoryRepository, recipeSubcategoryRepository, modelMapper);
     }
 
     private RecipeDTO createRecipeDto(String name) {
@@ -226,19 +227,5 @@ public class RecipeServiceImplTest {
         when(menuRecipeRepository.findAllById_RecipeId(recipe.getId())).thenReturn(menuRecipes);
         List<String> list = recipeService.checkConnectedElements(recipe.getId());
         assertThat(list.size()).isEqualTo(1);
-    }
-
-    @Test
-    public void updateRecipesTest() {
-        Set<RecipeIngredient> recipeIngredients = new HashSet<>();
-        RecipeIngredient recipeIngredient = mock(RecipeIngredient.class);
-        recipeIngredients.add(recipeIngredient);
-        when(recipeIngredientRepository.findAllById_IngredientId(anyLong())).thenReturn(recipeIngredients);
-        Recipe recipe = createRecipe("Гречневая каша");
-        RecipeDTO recipeDto = createRecipeDto("Гечневая каша");
-        when(recipeIngredient.getRecipe()).thenReturn(recipe);
-        when(modelMapper.map(recipe, RecipeDTO.class)).thenReturn(recipeDto);
-        recipeService.updateRecipes(1L);
-        verify(recipeRepository, times(1)).save(recipe);
     }
 }

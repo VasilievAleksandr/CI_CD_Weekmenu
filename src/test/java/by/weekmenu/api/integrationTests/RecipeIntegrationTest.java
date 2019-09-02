@@ -293,7 +293,6 @@ public class RecipeIntegrationTest {
                 .containsOnly(cookingMethodRepository.findByNameIgnoreCase(recipes.iterator().next().getCookingMethod().getName()).get());
         assertThat(recipes).extracting(Recipe::getOwnership)
                 .containsOnly(ownershipRepository.findByName(recipes.iterator().next().getOwnership().getName()).get());
-        assertThat(recipes).extracting(Recipe::getGramsPerPortion).containsOnly(new BigDecimal("50.0"));
 
         Set<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAllById_RecipeId(recipes.iterator().next().getId());
         assertThat(recipeIngredients).extracting(RecipeIngredient::getIngredient)

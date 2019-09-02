@@ -1,12 +1,13 @@
 package by.weekmenu.api.integrationTests;
 
 import by.weekmenu.api.ApiApplication;
-import by.weekmenu.api.dto.*;
+import by.weekmenu.api.dto.IngredientDTO;
+import by.weekmenu.api.dto.IngredientPriceDTO;
+import by.weekmenu.api.dto.UnitOfMeasureDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.entity.Currency;
 import by.weekmenu.api.repository.*;
 import by.weekmenu.api.service.IngredientService;
-import by.weekmenu.api.service.RecipeService;
 import by.weekmenu.api.service.UnitOfMeasureService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -53,9 +54,6 @@ public class IngredientIntegrationTest {
     private CountryRepository countryRepository;
 
     @Autowired
-    private RecipePriceRepository recipePriceRepository;
-
-    @Autowired
     private IngredientPriceRepository ingredientPriceRepository;
 
     @Autowired
@@ -85,9 +83,6 @@ public class IngredientIntegrationTest {
     @Autowired
     private RecipeIngredientRepository recipeIngredientRepository;
 
-    @Autowired
-    private RecipeService recipeService;
-
     @Before
     public void createBaseData() {
         if (ownershipRepository.findAll().spliterator().getExactSizeIfKnown()==0) {
@@ -103,15 +98,11 @@ public class IngredientIntegrationTest {
     @After
     public void cleanDB() {
         ingredientPriceRepository.deleteAll();
-        recipePriceRepository.deleteAll();
         regionRepository.deleteAll();
         countryRepository.deleteAll();
         currencyRepository.deleteAll();
         ingredientUnitOfMeasureRepository.deleteAll();
-        recipeIngredientRepository.deleteAll();
         ingredientRepository.deleteAll();
-        recipeRepository.deleteAll();
-        cookingMethodRepository.deleteAll();
         recycleBinRepository.deleteAll();
     }
 
@@ -178,34 +169,6 @@ public class IngredientIntegrationTest {
         region.setName(name);
         region.setCountry(countryRepository.findByNameIgnoreCase("Беларусь").orElse(null));
         regionRepository.save(region);
-    }
-
-    private RecipeDTO createRecipeDto(String name) {
-        RecipeDTO recipeDto = new RecipeDTO();
-        recipeDto.setName(name);
-        recipeDto.setCookingTime("30");
-        recipeDto.setPreparingTime("15");
-        recipeDto.setPortions((short) 2);
-        recipeDto.setImageLink("images/image.png");
-        recipeDto.setSource("http://bestrecipes.com/best-recipe");
-        recipeDto.setCookingMethodName("Варка");
-        recipeDto.setOwnershipName("ADMIN");
-        recipeDto.setCategoryNames(new HashSet<>(Arrays.asList("Обед", "Ужин")));
-        recipeDto.setSubcategoryNames(new HashSet<>(Arrays.asList("Курица", "Мясо")));
-
-        Set<RecipeIngredientDTO> recipeIngredients = getRecipeIngredients();
-        recipeDto.setRecipeIngredients(recipeIngredients);
-        return recipeDto;
-    }
-
-    private Set<RecipeIngredientDTO> getRecipeIngredients() {
-        Set<RecipeIngredientDTO> recipeIngredients = new HashSet<>();
-        RecipeIngredientDTO recipeIngredientDTO = new RecipeIngredientDTO();
-        recipeIngredientDTO.setIngredientName("Гречка");
-        recipeIngredientDTO.setUnitOfMeasureShortName("Лж");
-        recipeIngredientDTO.setQuantity(new BigDecimal("1"));
-        recipeIngredients.add(recipeIngredientDTO);
-        return recipeIngredients;
     }
 
     @Test
@@ -302,39 +265,28 @@ public class IngredientIntegrationTest {
     }
 
     @Test
-    @Transactional
     public void updateIngredient() throws Exception {
-        IngredientDTO ingredientDTO = createIngredientDto("Гречка");
-        cookingMethodRepository.save(new CookingMethod("Варка"));
-        RecipeDTO recipeDTO = recipeService.save(createRecipeDto("Гречневая каша"));
-        //change ingredient fats
-        ingredientDTO.setFats(new BigDecimal("50"));
-        //change ingredient price
-        ingredientDTO.getIngredientPrices().iterator().next().setPriceValue(new BigDecimal("100"));
-        //change equivalent in grams of spoon for ingredient
-        ingredientDTO.getUnitOfMeasureEquivalent().put("Ложка", new BigDecimal("50"));
+        Ingredient ingredient = createIngredient("Курица");
+        IngredientDTO ingredientDto = new IngredientDTO();
+        ingredientDto.setName("Ананас");
+        ingredientDto.setCalories(new BigDecimal("100"));
+        ingredientDto.setCarbs(new BigDecimal("100"));
+        ingredientDto.setFats(new BigDecimal("50"));
+        ingredientDto.setProteins(new BigDecimal("100"));
+        UnitOfMeasureDTO unitOfMeasureDto = new UnitOfMeasureDTO();
+        unitOfMeasureDto.setShortName("Гр");
+        unitOfMeasureDto.setFullName("Грамм");
         ObjectMapper objectMapper = new ObjectMapper();
 
-        mockMvc.perform(put("/ingredients/" + ingredientDTO.getId().toString())
+        mockMvc.perform(put("/ingredients/" + ingredient.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(ingredientDTO)))
+                .content(objectMapper.writeValueAsBytes(ingredientDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is("Гречка")))
+                .andExpect(jsonPath("$.name", is("Ананас")))
                 .andExpect(jsonPath("$.calories", is(100)))
                 .andExpect(jsonPath("$.carbs", is(100)))
                 .andExpect(jsonPath("$.fats", is(50)))
                 .andExpect(jsonPath("$.proteins", is(100)));
-
-        Optional<Recipe> recipeAfterIngredientUpdate = recipeRepository.findByNameIgnoreCase("гречневая каша");
-        //check that fats in recipe changed after changes in ingredient
-        assertThat(recipeAfterIngredientUpdate.get().getFats()).isNotEqualByComparingTo(recipeDTO.getFats());
-        //check that recipe price changed after changes of ingredient's price
-        List<RecipePrice> recipePrices = recipePriceRepository.findAllById_RecipeId(recipeDTO.getId());
-        assertThat(recipeDTO.getRecipePrices().iterator().next()
-                .getPriceValue()).isNotEqualTo(recipePrices.iterator().next().getPriceValue());
-        //check that recipe's grams per portion changed after changes in equivalent of spoon in grams in ingredient
-        assertThat(recipeAfterIngredientUpdate.get().getGramsPerPortion())
-                .isNotEqualByComparingTo(recipeDTO.getGramsPerPortion());
     }
 
     @Test

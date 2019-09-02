@@ -39,20 +39,6 @@ public class UnitOfMeasureServiceImp implements UnitOfMeasureService {
     }
 
     @Override
-    @Transactional
-    public void delete(Long id) {
-        UnitOfMeasure unitOfMeasure = unitOfMeasureRepository.findById(id).orElse(null);
-        if (unitOfMeasure!=null) {
-            RecycleBin recycleBin = new RecycleBin();
-            recycleBin.setElementName(unitOfMeasure.getFullName());
-            recycleBin.setEntityName(EntityNamesConsts.UNIT_OF_MEASURE);
-            recycleBin.setDeleteDate(LocalDateTime.now());
-            recycleBinRepository.save(recycleBin);
-            unitOfMeasureRepository.softDelete(id);
-        }
-    }
-
-    @Override
     public List<UnitOfMeasureDTO> findAll() {
         return unitOfMeasureRepository.findAllByIsArchivedIsFalse().stream()
                 .map(this::convertToDto)
@@ -83,7 +69,7 @@ public class UnitOfMeasureServiceImp implements UnitOfMeasureService {
         if (ingredientPrices.size() > 0) {
             list.add("цены ингредиентов: " + ingredientPrices.size());
         }
-         if (recipeIngredients.size() > 0) {
+        if (recipeIngredients.size() > 0) {
             list.add("рецепты: " + recipeIngredients.size());
         }
         return list;
@@ -95,5 +81,16 @@ public class UnitOfMeasureServiceImp implements UnitOfMeasureService {
 
     private UnitOfMeasureDTO convertToDto(UnitOfMeasure unitOfMeasure) {
         return modelMapper.map(unitOfMeasure, UnitOfMeasureDTO.class);
+    }
+
+    @Override
+    @Transactional
+    public void moveToRecycleBin(UnitOfMeasureDTO unitOfMeasureDTO) {
+        RecycleBin recycleBin = new RecycleBin();
+        recycleBin.setElementName(unitOfMeasureDTO.getFullName());
+        recycleBin.setEntityName(EntityNamesConsts.UNIT_OF_MEASURE);
+        recycleBin.setDeleteDate(LocalDateTime.now());
+        recycleBinRepository.save(recycleBin);
+        unitOfMeasureRepository.softDelete(unitOfMeasureDTO.getId());
     }
 }

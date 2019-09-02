@@ -23,7 +23,6 @@ public class RecipeDTO {
     private String imageLink;
     private String source;
     private Short portions;
-    private BigDecimal gramsPerPortion;
     private String cookingMethodName;
     private String ownershipName;
     private Set<RecipeIngredientDTO> recipeIngredients;

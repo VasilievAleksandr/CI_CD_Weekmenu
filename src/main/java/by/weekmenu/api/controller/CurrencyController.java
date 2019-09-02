@@ -28,14 +28,8 @@ public class CurrencyController {
 
     @GetMapping
     @ApiOperation("Возвращает список всех Currency")
-    public List<CurrencyDTO> findAllCurrencies() {
-        return currencyService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    @ApiOperation("Находит Currency по его Id")
-    public CurrencyDTO findCurrencyById(@PathVariable("id") Integer id) {
-        return currencyService.findById(id);
+    public ResponseEntity<List<CurrencyDTO>> findAllCurrencies() {
+        return new ResponseEntity<>(currencyService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/checkCurrencyUniqueName")
@@ -60,8 +54,8 @@ public class CurrencyController {
 
     @PostMapping
     @ApiOperation("Сохраняет Currency.")
-    public CurrencyDTO addCurrency(@RequestBody CurrencyDTO currencyDTO) {
-        return currencyService.save(currencyDTO);
+    public ResponseEntity<CurrencyDTO> addCurrency(@RequestBody CurrencyDTO currencyDTO) {
+        return new ResponseEntity<>(currencyService.save(currencyDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -69,23 +63,23 @@ public class CurrencyController {
     public ResponseEntity<CurrencyDTO> updateCurrency(@RequestBody CurrencyDTO currencyDTO, @PathVariable("id") Integer id) {
         CurrencyDTO newCurrencyDTO = currencyService.findById(id);
         if (newCurrencyDTO != null) {
-            return new ResponseEntity<>(currencyService.save(modelMapper.map(currencyDTO, CurrencyDTO.class)),
+            return new ResponseEntity<>(currencyService.save(currencyDTO),
                     HttpStatus.OK);
         } else {
-            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("Удаляет Currency по Id.")
-    public void deleteCurrencyById(@PathVariable("id") Integer id) {
-        currencyService.delete(id);
-    }
-
-    @GetMapping("/codes")
-    @ApiOperation("Возвращает список полей code у активированных Currency ")
-    public List<String> getAllCurrencyCodes() {
-        return currencyService.getAllCurrencyCodes();
+    @ApiOperation("Перемещает в корзину Currency по Id.")
+    public ResponseEntity<Void> deleteCurrencyById(@PathVariable("id") Integer id) {
+        CurrencyDTO currencyDTO = currencyService.findById(id);
+        if (currencyDTO != null) {
+            currencyService.moveToRecycleBin(currencyDTO);
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/checkConnectedElements/{id}")

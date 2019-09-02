@@ -44,16 +44,13 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        Country country = countryRepository.findById(id).orElse(null);
-        if (country!=null) {
-            RecycleBin recycleBin = new RecycleBin();
-            recycleBin.setElementName(country.getName());
-            recycleBin.setEntityName(EntityNamesConsts.COUNTRY);
-            recycleBin.setDeleteDate(LocalDateTime.now());
-            recycleBinRepository.save(recycleBin);
-            countryRepository.softDelete(id);
-        }
+    public void moveToRecycleBin(CountryDTO countryDTO) {
+        RecycleBin recycleBin = new RecycleBin();
+        recycleBin.setElementName(countryDTO.getName());
+        recycleBin.setEntityName(EntityNamesConsts.COUNTRY);
+        recycleBin.setDeleteDate(LocalDateTime.now());
+        recycleBinRepository.save(recycleBin);
+        countryRepository.softDelete(countryDTO.getId());
     }
 
     @Override
@@ -87,7 +84,7 @@ public class CountryServiceImpl implements CountryService {
     public List<String> checkConnectedElements(Long id) {
         List<String> list = new ArrayList<>();
         List<Region> regions = regionRepository.findAllByCountry_Id(id);
-        if (regions.size()>0) {
+        if (regions.size() > 0) {
             list.add("регионы :" + regions.size());
         }
         return list;
@@ -102,6 +99,4 @@ public class CountryServiceImpl implements CountryService {
     private CountryDTO convertToDto(Country country) {
         return modelMapper.map(country, CountryDTO.class);
     }
-
-
 }

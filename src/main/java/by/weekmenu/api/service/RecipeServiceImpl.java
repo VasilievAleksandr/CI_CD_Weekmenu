@@ -37,7 +37,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     @Transactional
     public RecipeDTO save(RecipeDTO entityDto) {
-        if (entityDto.getId()!=null) {
+        if (entityDto.getId() != null) {
             recipeIngredientRepository.deleteById_RecipeId(entityDto.getId());
             recipePriceRepository.deleteById_RecipeId(entityDto.getId());
             cookingStepRepository.deleteAllByRecipe_Id(entityDto.getId());
@@ -50,7 +50,7 @@ public class RecipeServiceImpl implements RecipeService {
             recipeCalculation.calculateCPFC(entityDto, recipe);
             recipeCalculation.calculateGramsPerPortion(entityDto, recipe);
         }
-        if (entityDto.getCookingSteps()!=null) {
+        if (entityDto.getCookingSteps() != null) {
             saveCookingSteps(entityDto, recipe);
         }
         return convertToDto(recipe);
@@ -70,7 +70,7 @@ public class RecipeServiceImpl implements RecipeService {
         recipeIngredients.forEach(recipeIngredientDTO -> {
             RecipeIngredient recipeIngredient = new RecipeIngredient();
             Ingredient ingredient = ingredientRepository.findByNameIgnoreCase(recipeIngredientDTO.getIngredientName()).orElse(null);
-            if (ingredient!=null) {
+            if (ingredient != null) {
                 recipeIngredient.setId(new RecipeIngredient.Id(ingredient.getId(), recipe.getId()));
                 recipeIngredient.setIngredient(ingredient);
             }
@@ -105,7 +105,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private RecipeDTO convertToDto(Recipe recipe) {
-        if (recipe!=null) {
+        if (recipe != null) {
             RecipeDTO recipeDto = modelMapper.map(recipe, RecipeDTO.class);
             recipeDto.setCookingTime(recipe.getCookingTime().toString());
             recipeDto.setPreparingTime(recipe.getPreparingTime().toString());
@@ -159,13 +159,13 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
         ownershipRepository.findByName(recipeDto.getOwnershipName()).ifPresent(recipe::setOwnership);
         cookingMethodRepository.findByNameIgnoreCase(recipeDto.getCookingMethodName()).ifPresent(recipe::setCookingMethod);
-        if (recipeDto.getCategoryNames()!=null) {
+        if (recipeDto.getCategoryNames() != null) {
             for (String categoryName : recipeDto.getCategoryNames()) {
                 recipeCategoryRepository.findByNameIgnoreCase(categoryName)
                         .ifPresent(recipe::addRecipeCategory);
             }
         }
-        if (recipeDto.getSubcategoryNames()!=null) {
+        if (recipeDto.getSubcategoryNames() != null) {
             for (String subcategoryName : recipeDto.getSubcategoryNames()) {
                 recipeSubcategoryRepository.findByNameIgnoreCase(subcategoryName)
                         .ifPresent(recipe::addRecipeSubcategory);

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class RecipeCategoryServiceImpl implements RecipeCategoryService{
+public class RecipeCategoryServiceImpl implements RecipeCategoryService {
 
     private final RecipeCategoryRepository recipecategoryRepository;
     private final RecycleBinRepository recycleBinRepository;
@@ -35,11 +35,6 @@ public class RecipeCategoryServiceImpl implements RecipeCategoryService{
     @Override
     public RecipeCategoryDTO findById(Long id) {
         return convertToDTO(recipecategoryRepository.findById(id).orElse(null));
-    }
-
-    @Override
-    public void delete(Long id) {
-        recipecategoryRepository.deleteById(id);
     }
 
     @Override
@@ -60,7 +55,7 @@ public class RecipeCategoryServiceImpl implements RecipeCategoryService{
     public List<String> checkConnectedElements(Long id) {
         List<String> list = new ArrayList<>();
         Optional<RecipeCategory> recipeCategory = recipecategoryRepository.findById(id);
-        if (recipeCategory.isPresent() && recipeCategory.get().getRecipes().size()>0) {
+        if (recipeCategory.isPresent() && recipeCategory.get().getRecipes().size() > 0) {
             list.add("рецепты: " + recipeCategory.get().getRecipes().size());
         }
         return list;

@@ -43,17 +43,14 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        Region region = regionRepository.findById(id).orElse(null);
-        if (region!=null) {
-            RecycleBin recycleBin = new RecycleBin();
-            recycleBin.setElementName(region.getName());
+    public void moveToRecycleBin (RegionDTO regionDTO) {
+                   RecycleBin recycleBin = new RecycleBin();
+            recycleBin.setElementName(regionDTO.getName());
             recycleBin.setEntityName(EntityNamesConsts.REGION);
             recycleBin.setDeleteDate(LocalDateTime.now());
             recycleBinRepository.save(recycleBin);
-            regionRepository.softDelete(id);
+            regionRepository.softDelete(regionDTO.getId());
         }
-    }
 
     @Override
     public List<RegionDTO> findAll() {

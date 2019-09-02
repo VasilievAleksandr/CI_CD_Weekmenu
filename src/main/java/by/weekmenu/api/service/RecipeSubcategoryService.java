@@ -9,5 +9,4 @@ public interface RecipeSubcategoryService extends CrudService<RecipeSubcategoryD
 
     RecipeSubcategory findByName(String name);
     List<String> checkConnectedElements(Long id);
-    void moveToRecycleBin(RecipeSubcategoryDTO recipeSubcategoryDTO);
 }

@@ -4,6 +4,8 @@ import by.weekmenu.api.dto.CountryDTO;
 import by.weekmenu.api.service.CountryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.List;
 @RequestMapping("/countries")
 @Api(description = "REST API для сущности Country")
 public class CountryController {
-    
+
     private final CountryService countryService;
 
     public CountryController(CountryService countryService) {
@@ -41,7 +43,7 @@ public class CountryController {
     @ApiOperation("Обновляет Country по Id.")
     public CountryDTO updateCountry(@RequestBody CountryDTO updatedCountryDTO, @PathVariable("id") Long id) {
         CountryDTO countryDto = countryService.findById(id);
-        if (countryDto!=null) {
+        if (countryDto != null) {
             countryDto.setName(updatedCountryDTO.getName());
             countryDto.setAlphaCode2(updatedCountryDTO.getAlphaCode2());
             countryDto.setCurrencyCode(updatedCountryDTO.getCurrencyCode());
@@ -51,10 +53,16 @@ public class CountryController {
 
     @DeleteMapping("/{id}")
     @ApiOperation("Перемещает в корзину Country по Id.")
-    public void deleteCountry(@PathVariable("id") Long id) {
-         countryService.delete(id);
+    public ResponseEntity<Void> deleteCountry(@PathVariable("id") Long id) {
+        CountryDTO countryDTO = countryService.findById(id);
+        if (countryDTO != null) {
+            countryService.moveToRecycleBin(countryDTO);
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
-    
+
     @GetMapping("/checkUniqueName")
     @ApiOperation("Проверяет поле name у Country на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
     public Integer checkUniqueName(@RequestParam String name) {

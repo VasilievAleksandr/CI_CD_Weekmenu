@@ -9,5 +9,4 @@ public interface CookingMethodService extends CrudService<CookingMethodDTO, Inte
 
     CookingMethod findByName(String name);
     List<String> checkConnectedElements(Integer id);
-    void moveToRecycleBin(CookingMethodDTO cookingMethodDTO);
 }
