@@ -91,6 +91,15 @@ public class Recipe implements Serializable {
     @Positive(message = "Recipe's portions '${validatedValue}' must be positive.")
     private Short portions;
 
+    @Column(name = "GRAMS_PER_PORTION")
+    @Digits(
+            integer = 5,
+            fraction = 1,
+            message = "Grams per portion '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
+    @PositiveOrZero(message = "Grams per portion '${validatedValue}' must be positive or '0'.")
+    private BigDecimal gramsPerPortion;
+
     @Column(name = "SOURCE")
     @Size(max = 255, message = "Recipe's source length '${validatedValue}' mustn't be more than '{max}' characters long.")
     private String source;
@@ -109,8 +118,8 @@ public class Recipe implements Serializable {
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "RECIPE_RECIPECATEGORY",
-        joinColumns = @JoinColumn(name = "RECIPE_ID"),
-        inverseJoinColumns = @JoinColumn(name = "RECIPECATEGORY_ID"))
+            joinColumns = @JoinColumn(name = "RECIPE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "RECIPECATEGORY_ID"))
     private Set<RecipeCategory> recipeCategories = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -136,6 +145,7 @@ public class Recipe implements Serializable {
         this.fats = fats == null ? BigDecimal.ZERO : fats;
         this.proteins = proteins == null ? BigDecimal.ZERO : proteins;
         this.portions = portions == null ? 1 : portions;
+        this.gramsPerPortion = gramsPerPortion == null ? BigDecimal.ZERO : gramsPerPortion;
     }
 
     public void addRecipeCategory(RecipeCategory recipeCategory) {
