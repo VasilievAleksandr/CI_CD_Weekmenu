@@ -259,12 +259,13 @@ public class RecycleBinServiceImplTest {
 
     @Test
     public void findById() {
-        RecycleBin recycleBin = createRecycleBin("Гречневая каша", "Рецепт", LocalDateTime.now());
+        LocalDateTime date = LocalDateTime.now();
+        RecycleBin recycleBin = createRecycleBin("Гречневая каша", "Рецепт", date);
         when(recycleBinRepository.findById(anyLong())).thenReturn(Optional.of(recycleBin));
         RecycleBin found = recycleBinService.findById(1L);
         assertThat(found).isNotNull();
         assertThat(found.getElementName()).isEqualTo("Гречневая каша");
         assertThat(found.getEntityName()).isEqualTo("Рецепт");
-        assertThat(found.getDeleteDate()).isBefore(LocalDateTime.now());
+        assertThat(found.getDeleteDate()).isEqualTo(date);
     }
 }
