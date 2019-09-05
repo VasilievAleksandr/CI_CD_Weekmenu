@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.RecycleBinDTO;
 import by.weekmenu.api.service.RecycleBinService;
+import by.weekmenu.api.utils.UrlConsts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/recycleBin")
+@RequestMapping(UrlConsts.PATH_RECYCLE_BIN)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Api(description = "REST API для сущности Recycle Bin")
 public class RecycleBinController {

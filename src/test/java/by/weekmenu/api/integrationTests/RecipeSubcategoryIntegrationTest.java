@@ -4,6 +4,7 @@ import by.weekmenu.api.ApiApplication;
 import by.weekmenu.api.dto.RecipeSubcategoryDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -59,7 +60,7 @@ public class RecipeSubcategoryIntegrationTest {
         RecipeSubcategoryDTO recipeSubcategoryDTO = new RecipeSubcategoryDTO();
         recipeSubcategoryDTO.setName("Курица");
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/recipesubcategories")
+        mockMvc.perform(post(UrlConsts.PATH_RECIPESUBCATEGORIES)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(recipeSubcategoryDTO)));
         Iterable<RecipeSubcategory> recipeSubcategories = recipeSubcategoryRepository.findAll();
@@ -72,7 +73,7 @@ public class RecipeSubcategoryIntegrationTest {
         RecipeSubcategory recipeSubcategory2 = new RecipeSubcategory("Рыба");
         recipeSubcategoryRepository.save(recipeSubcategory1);
         recipeSubcategoryRepository.save(recipeSubcategory2);
-        mockMvc.perform(get("/recipesubcategories")
+        mockMvc.perform(get(UrlConsts.PATH_RECIPESUBCATEGORIES)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -87,7 +88,7 @@ public class RecipeSubcategoryIntegrationTest {
         RecipeSubcategoryDTO recipeSubcategoryDTO = new RecipeSubcategoryDTO();
         recipeSubcategoryDTO.setName("Рыба");
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/recipesubcategories/" + recipeSubcategory.getId().toString())
+        mockMvc.perform(put(UrlConsts.PATH_RECIPESUBCATEGORIES + "/" + recipeSubcategory.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(recipeSubcategoryDTO)))
                 .andExpect(status().isOk())
@@ -97,7 +98,7 @@ public class RecipeSubcategoryIntegrationTest {
     @Test
     public void deleteRecipeSubcategoryIntegrationTest() throws Exception {
         RecipeSubcategory recipeSubcategory = recipeSubcategoryRepository.save(new RecipeSubcategory("Рыба"));
-        mockMvc.perform(delete("/recipesubcategories/" + recipeSubcategory.getId().toString())
+        mockMvc.perform(delete(UrlConsts.PATH_RECIPESUBCATEGORIES + "/" + recipeSubcategory.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -114,7 +115,7 @@ public class RecipeSubcategoryIntegrationTest {
     public void checkUniqueNameRecipeSubcategoryIntegrationTest() throws Exception {
         RecipeSubcategory recipeSubcategory = new RecipeSubcategory("Рыба");
         recipeSubcategoryRepository.save(recipeSubcategory);
-        mockMvc.perform(get("/recipesubcategories/checkRecipeSubcategoryUniqueName?name=" + recipeSubcategory.getName())
+        mockMvc.perform(get(UrlConsts.PATH_RECIPESUBCATEGORIES + "/checkRecipeSubcategoryUniqueName?name=" + recipeSubcategory.getName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -136,7 +137,7 @@ public class RecipeSubcategoryIntegrationTest {
         recipe.addRecipeSubcategory(recipeSubcategory);
         recipeRepository.save(recipe);
 
-        mockMvc.perform(get("/recipesubcategories/checkConnectedElements/" + recipeSubcategory.getId().toString())
+        mockMvc.perform(get(UrlConsts.PATH_RECIPESUBCATEGORIES + "/checkConnectedElements/" + recipeSubcategory.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));

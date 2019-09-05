@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.CookingMethodDTO;
 import by.weekmenu.api.service.CookingMethodService;
+import by.weekmenu.api.utils.UrlConsts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cookingmethods")
+@RequestMapping(UrlConsts.PATH_COOKINGMETHODS)
 @Api(description = "REST API для сущности CookingMethod")
 public class CookingMethodController {
 

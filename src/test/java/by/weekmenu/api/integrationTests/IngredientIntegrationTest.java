@@ -8,6 +8,7 @@ import by.weekmenu.api.repository.*;
 import by.weekmenu.api.service.IngredientService;
 import by.weekmenu.api.service.RecipeService;
 import by.weekmenu.api.service.UnitOfMeasureService;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -224,7 +225,7 @@ public class IngredientIntegrationTest {
         ingredientDto.setIngredientPrices(getIngredientPriceDTOS());
 
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/ingredients")
+        mockMvc.perform(post(UrlConsts.PATH_INGREDIENTS)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(ingredientDto)))
                 .andDo(print());
@@ -254,7 +255,7 @@ public class IngredientIntegrationTest {
         createIngredientDto("Курица");
         createIngredientDto("Ананас");
 
-        mockMvc.perform(get("/ingredients").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(UrlConsts.PATH_INGREDIENTS).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name", is("Курица")))
@@ -274,7 +275,7 @@ public class IngredientIntegrationTest {
     public void findIngredientByIdTest() throws Exception {
         IngredientDTO ingredientDto = createIngredientDto("Курица");
 
-        mockMvc.perform(get("/ingredients/" + ingredientDto.getId().toString())
+        mockMvc.perform(get(UrlConsts.PATH_INGREDIENTS + "/" + ingredientDto.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(ingredientDto.getId().intValue())))
@@ -288,7 +289,7 @@ public class IngredientIntegrationTest {
     @Test
     public void deleteIngredientTest() throws Exception {
         IngredientDTO ingredientDto = createIngredientDto("Курица");
-        mockMvc.perform(delete("/ingredients/" + ingredientDto.getId().toString())
+        mockMvc.perform(delete(UrlConsts.PATH_INGREDIENTS + "/" + ingredientDto.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -315,7 +316,7 @@ public class IngredientIntegrationTest {
         ingredientDTO.getUnitOfMeasureEquivalent().put("Ложка", new BigDecimal("50"));
         ObjectMapper objectMapper = new ObjectMapper();
 
-        mockMvc.perform(put("/ingredients/" + ingredientDTO.getId().toString())
+        mockMvc.perform(put(UrlConsts.PATH_INGREDIENTS + "/" + ingredientDTO.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(ingredientDTO)))
                 .andExpect(status().isOk())
@@ -340,7 +341,7 @@ public class IngredientIntegrationTest {
     @Test
     public void checkUniqueNameTest() throws Exception {
         Ingredient ingredient = createIngredient("Курица");
-        mockMvc.perform(get("/ingredients/checkUniqueName?name=" + ingredient.getName())
+        mockMvc.perform(get(UrlConsts.PATH_INGREDIENTS + "/checkUniqueName?name=" + ingredient.getName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -359,7 +360,7 @@ public class IngredientIntegrationTest {
         recipeIngredient.setId(new RecipeIngredient.Id(ingredient.getId(), recipe.getId()));
         recipeIngredient.setUnitOfMeasure(unitOfMeasure);
         recipeIngredientRepository.save(recipeIngredient);
-        mockMvc.perform(get("/ingredients/checkConnectedElements/" + ingredient.getId().toString())
+        mockMvc.perform(get(UrlConsts.PATH_INGREDIENTS + "/checkConnectedElements/" + ingredient.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));

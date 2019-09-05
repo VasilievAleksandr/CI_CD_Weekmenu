@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.IngredientDTO;
 import by.weekmenu.api.service.IngredientService;
+import by.weekmenu.api.utils.UrlConsts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ingredients")
+@RequestMapping(UrlConsts.PATH_INGREDIENTS)
 @Api(description = "REST API для сущности ингредиент")
 public class IngredientController {
 

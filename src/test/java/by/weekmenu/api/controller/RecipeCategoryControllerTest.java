@@ -5,6 +5,7 @@ import by.weekmenu.api.entity.RecipeCategory;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.RecipeCategoryService;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +56,7 @@ public class RecipeCategoryControllerTest {
         RecipeCategoryDTO recipeCategoryDTO = createRecipeCategoryDTO(1L, "Обед");
         when(recipeCategorySevice.save(any(RecipeCategoryDTO.class))).thenReturn(recipeCategoryDTO);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/recipecategories")
+        mockMvc.perform(post(UrlConsts.PATH_RECIPECATEGORIES)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(recipeCategoryDTO)))
                 .andExpect(status().isCreated())
@@ -69,7 +70,7 @@ public class RecipeCategoryControllerTest {
         recipeCategoryDTOs.add(createRecipeCategoryDTO(1L, "Обед"));
         recipeCategoryDTOs.add(createRecipeCategoryDTO(2L, "Ужин"));
         when(recipeCategorySevice.findAll()).thenReturn(recipeCategoryDTOs);
-        mockMvc.perform(get("/recipecategories")
+        mockMvc.perform(get(UrlConsts.PATH_RECIPECATEGORIES)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -87,7 +88,7 @@ public class RecipeCategoryControllerTest {
         recipeCategoryDTO.setName("Ужин");
         when(recipeCategorySevice.save(any(RecipeCategoryDTO.class))).thenReturn(recipeCategoryDTO);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/recipecategories/1")
+        mockMvc.perform(put(UrlConsts.PATH_RECIPECATEGORIES + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(recipeCategoryDTO)))
                 .andExpect(status().isOk())
@@ -99,7 +100,7 @@ public class RecipeCategoryControllerTest {
     public void deleteRecipeCategoryTest() throws Exception {
         RecipeCategoryDTO recipeCategoryDTO = createRecipeCategoryDTO(1L, "Обед");
         when(recipeCategorySevice.findById(recipeCategoryDTO.getId())).thenReturn(recipeCategoryDTO);
-        mockMvc.perform(delete("/recipecategories/1")
+        mockMvc.perform(delete(UrlConsts.PATH_RECIPECATEGORIES + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -109,7 +110,7 @@ public class RecipeCategoryControllerTest {
         RecipeCategory recipeCategory = new RecipeCategory(1L, "Ужин");
         String name = "Ужин";
         when(recipeCategorySevice.findByName(name)).thenReturn(recipeCategory);
-        mockMvc.perform(get("/recipecategories/checkRecipeCategoryUniqueName?name=" + name)
+        mockMvc.perform(get(UrlConsts.PATH_RECIPECATEGORIES + "/checkRecipeCategoryUniqueName?name=" + name)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -119,7 +120,7 @@ public class RecipeCategoryControllerTest {
     public void checkConnectedElementsTest() throws Exception {
         List<String> result = Collections.singletonList("рецепты: 1");
         when(recipeCategorySevice.checkConnectedElements(1L)).thenReturn(result);
-        mockMvc.perform(get("/recipecategories/checkConnectedElements/1")
+        mockMvc.perform(get(UrlConsts.PATH_RECIPECATEGORIES + "/checkConnectedElements/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));

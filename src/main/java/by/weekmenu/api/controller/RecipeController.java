@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.RecipeDTO;
 import by.weekmenu.api.service.RecipeService;
+import by.weekmenu.api.utils.UrlConsts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/recipes")
+@RequestMapping(UrlConsts.PATH_RECIPES)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Api(description = "REST API для сущности рецепт")
 public class RecipeController {

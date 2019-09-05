@@ -8,6 +8,7 @@ import by.weekmenu.api.repository.*;
 import by.weekmenu.api.service.IngredientService;
 import by.weekmenu.api.service.RecipeService;
 import by.weekmenu.api.service.UnitOfMeasureService;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -264,7 +265,7 @@ public class RecipeIntegrationTest {
     public void saveRecipeTest() throws Exception {
         RecipeDTO recipeDto = createRecipeDto("Гречневая каша");
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/recipes")
+        mockMvc.perform(post(UrlConsts.PATH_RECIPES)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(recipeDto)))
                 .andDo(print());
@@ -318,7 +319,7 @@ public class RecipeIntegrationTest {
         recipeService.save(createRecipeDto("Гречневая каша"));
         recipeService.save(createRecipeDto("Гречка с овощами"));
 
-        mockMvc.perform(get("/recipes").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(UrlConsts.PATH_RECIPES).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name", is("Гречневая каша")))
@@ -364,7 +365,7 @@ public class RecipeIntegrationTest {
         recipeDto.setPortions((short)4);
         ObjectMapper objectMapper = new ObjectMapper();
 
-        mockMvc.perform(put("/recipes/" + recipeDto.getId().toString())
+        mockMvc.perform(put(UrlConsts.PATH_RECIPES + "/" + recipeDto.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(recipeDto)))
                 .andExpect(status().isOk())
@@ -390,7 +391,7 @@ public class RecipeIntegrationTest {
     @Test
     public void deleteRecipeTest() throws Exception{
         RecipeDTO recipeDto = recipeService.save(createRecipeDto("Гречневая каша"));
-        mockMvc.perform(delete("/recipes/" + recipeDto.getId().toString())
+        mockMvc.perform(delete(UrlConsts.PATH_RECIPES + "/" + recipeDto.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -414,7 +415,7 @@ public class RecipeIntegrationTest {
         MenuRecipe menuRecipe = new MenuRecipe(menu, recipe, dishType, dayOfWeek);
         menuRecipe.setId(new MenuRecipe.Id(menu.getId(), recipe.getId()));
         menuRecipeRepository.save(menuRecipe);
-        mockMvc.perform(get("/recipes/checkConnectedElements/" + recipe.getId().toString())
+        mockMvc.perform(get(UrlConsts.PATH_RECIPES + "/checkConnectedElements/" + recipe.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -423,11 +424,11 @@ public class RecipeIntegrationTest {
     @Test
     public void checkUniqueNameTest() throws Exception {
         RecipeDTO recipeDto = recipeService.save(createRecipeDto("Гречневая каша"));
-        mockMvc.perform(get("/recipes/checkUniqueName?name=" + recipeDto.getName())
+        mockMvc.perform(get(UrlConsts.PATH_RECIPES + "/checkUniqueName?name=" + recipeDto.getName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
-        mockMvc.perform(get("/recipes/checkUniqueName?name=" + "Шашлык")
+        mockMvc.perform(get(UrlConsts.PATH_RECIPES + "/checkUniqueName?name=" + "Шашлык")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(0)));

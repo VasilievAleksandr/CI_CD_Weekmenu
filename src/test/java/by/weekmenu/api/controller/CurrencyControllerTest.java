@@ -5,6 +5,7 @@ import by.weekmenu.api.entity.Currency;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.CurrencyService;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,7 +61,7 @@ public class CurrencyControllerTest {
         CurrencyDTO currencyDTO = createCurrencyDTO(1, "Рубль", "RUB");
         when(currencyService.save(any(CurrencyDTO.class))).thenReturn(currencyDTO);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/currencies")
+        mockMvc.perform(post(UrlConsts.PATH_CURRENCIES)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(currencyDTO)))
                 .andExpect(status().isCreated())
@@ -75,7 +76,7 @@ public class CurrencyControllerTest {
         currencyDTOs.add(createCurrencyDTO(1, "Рубль", "RUB"));
         currencyDTOs.add(createCurrencyDTO(2, "Доллар", "USD"));
         when(currencyService.findAll()).thenReturn(currencyDTOs);
-        mockMvc.perform(get("/currencies")
+        mockMvc.perform(get(UrlConsts.PATH_CURRENCIES)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -96,7 +97,7 @@ public class CurrencyControllerTest {
         currencyDTO.setCode("USD");
         when(currencyService.save(any(CurrencyDTO.class))).thenReturn(currencyDTO);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/currencies/1")
+        mockMvc.perform(put(UrlConsts.PATH_CURRENCIES + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(currencyDTO)))
                 .andExpect(status().isOk())
@@ -109,7 +110,7 @@ public class CurrencyControllerTest {
     public void deleteCurrencyTest() throws Exception {
         CurrencyDTO currencyDTO = createCurrencyDTO(1, "Рубль", "RUB");
         when(currencyService.findById(currencyDTO.getId())).thenReturn(currencyDTO);
-        mockMvc.perform(delete("/currencies/1")
+        mockMvc.perform(delete(UrlConsts.PATH_CURRENCIES + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -119,7 +120,7 @@ public class CurrencyControllerTest {
         Currency currency = new Currency("Рубль", "RUB", false);
         String name = "Рубль";
         when(currencyService.findByName(name)).thenReturn(currency);
-        mockMvc.perform(get("/currencies/checkCurrencyUniqueName?name=" + name)
+        mockMvc.perform(get(UrlConsts.PATH_CURRENCIES + "/checkCurrencyUniqueName?name=" + name)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -130,7 +131,7 @@ public class CurrencyControllerTest {
         Currency currency = new Currency("Рубль", "RUB", false);
         String code = "RUB";
         when(currencyService.findByCode(code)).thenReturn(currency);
-        mockMvc.perform(get("/currencies/checkCurrencyUniqueCode?code=" + code)
+        mockMvc.perform(get(UrlConsts.PATH_CURRENCIES + "/checkCurrencyUniqueCode?code=" + code)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -140,7 +141,7 @@ public class CurrencyControllerTest {
     public void checkConnectedElementsTest() throws Exception {
         List<String> result = Collections.singletonList("Страны: 1");
         when(currencyService.checkConnectedElements(1)).thenReturn(result);
-        mockMvc.perform(get("/currencies/checkConnectedElements/1")
+        mockMvc.perform(get(UrlConsts.PATH_CURRENCIES + "/checkConnectedElements/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));

@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.UnitOfMeasureDTO;
 import by.weekmenu.api.service.UnitOfMeasureService;
+import by.weekmenu.api.utils.UrlConsts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping({"/unitOfMeasures"})
+@RequestMapping(UrlConsts.PATH_UOM)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Api(description = "REST API для сущности UnitOfMeasure")
 public class UnitOfMeasureController {

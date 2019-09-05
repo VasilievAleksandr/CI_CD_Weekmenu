@@ -7,6 +7,7 @@ import by.weekmenu.api.entity.RecipeSubcategory;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.RecipeService;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,7 +89,7 @@ public class RecipeControllerTest {
         list.add(createRecipeDto(2L, "Батон"));
         when(recipeService.findAll()).thenReturn(list);
 
-        mockMvc.perform(get("/recipes")
+        mockMvc.perform(get(UrlConsts.PATH_RECIPES)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -118,7 +119,7 @@ public class RecipeControllerTest {
         RecipeDTO recipeDto = createRecipeDto(1L, "Шашлык");
         when(recipeService.save(any(RecipeDTO.class))).thenReturn(recipeDto);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/recipes")
+        mockMvc.perform(post(UrlConsts.PATH_RECIPES)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(recipeDto)))
                 .andExpect(status().isCreated())
@@ -142,7 +143,7 @@ public class RecipeControllerTest {
         when(modelMapper.map(any(), any())).thenReturn(recipeDto);
         when(recipeService.save(any(RecipeDTO.class))).thenReturn(recipeDto);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/recipes/1")
+        mockMvc.perform(put(UrlConsts.PATH_RECIPES + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(recipeDto)))
                 .andExpect(status().isOk())
@@ -161,7 +162,7 @@ public class RecipeControllerTest {
     public void deleteRecipeTest() throws Exception{
         RecipeDTO recipeDto = createRecipeDto(1L, "Шашлык");
         when(recipeService.findById(recipeDto.getId())).thenReturn(recipeDto);
-        mockMvc.perform(delete("/recipes/1")
+        mockMvc.perform(delete(UrlConsts.PATH_RECIPES + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -171,7 +172,7 @@ public class RecipeControllerTest {
         Recipe recipe = createRecipe(1L, "Шашлык");
         String name = "Шашлык";
         when(recipeService.findByName(name)).thenReturn(recipe);
-        mockMvc.perform(get("/recipes/checkUniqueName?name=" + name)
+        mockMvc.perform(get(UrlConsts.PATH_RECIPES + "/checkUniqueName?name=" + name)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -181,7 +182,7 @@ public class RecipeControllerTest {
     public void checkConnectedElementsTest() throws Exception {
         List<String> result = Collections.singletonList("меню: 1");
         when(recipeService.checkConnectedElements(1L)).thenReturn(result);
-        mockMvc.perform(get("/recipes/checkConnectedElements/1")
+        mockMvc.perform(get(UrlConsts.PATH_RECIPES + "/checkConnectedElements/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));

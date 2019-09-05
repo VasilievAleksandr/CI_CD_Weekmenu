@@ -4,6 +4,7 @@ import by.weekmenu.api.ApiApplication;
 import by.weekmenu.api.dto.RegionDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -100,7 +101,7 @@ public class RegionIntegrationTest {
         regionDto.setCountryName("Беларусь");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/regions")
+        mockMvc.perform(post(UrlConsts.PATH_REGIONS)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsBytes(regionDto)));
 
@@ -115,7 +116,7 @@ public class RegionIntegrationTest {
         createRegion("Минск");
         createRegion("Гродно");
 
-        mockMvc.perform(get("/regions").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(UrlConsts.PATH_REGIONS).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name", is("Минск")))
@@ -132,7 +133,7 @@ public class RegionIntegrationTest {
         regionDto.setCountryName("Беларусь");
         ObjectMapper objectMapper = new ObjectMapper();
 
-        mockMvc.perform(put("/regions/" + region.getId().toString())
+        mockMvc.perform(put(UrlConsts.PATH_REGIONS + "/"  + region.getId().toString())
         .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(regionDto)))
                 .andExpect(status().isOk())
@@ -144,7 +145,7 @@ public class RegionIntegrationTest {
     public void findRegionByIdTest() throws Exception {
         Region region = createRegion("Минск");
 
-        mockMvc.perform(get("/regions/" + region.getId().toString())
+        mockMvc.perform(get(UrlConsts.PATH_REGIONS + "/"  + region.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(region.getId().intValue())))
@@ -155,7 +156,7 @@ public class RegionIntegrationTest {
     @Test
     public void deleteRegionTest() throws Exception {
         Region region = createRegion("Минск");
-        mockMvc.perform(delete("/regions/" + region.getId().toString())
+        mockMvc.perform(delete(UrlConsts.PATH_REGIONS + "/"  + region.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -171,7 +172,7 @@ public class RegionIntegrationTest {
     @Test
     public void checkUniqueNameTest() throws Exception {
         Region region = createRegion("Минск");
-        mockMvc.perform(get("/regions/checkUniqueName?name=" + region.getName())
+        mockMvc.perform(get(UrlConsts.PATH_REGIONS + "/checkUniqueName?name=" + region.getName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -200,7 +201,7 @@ public class RegionIntegrationTest {
         recipePrice.setRecipe(recipe);
         recipePrice.setPriceValue(new BigDecimal("111"));
         recipePriceRepository.save(recipePrice);
-        mockMvc.perform(get("/regions/checkConnectedElements/" + region.getId().toString())
+        mockMvc.perform(get(UrlConsts.PATH_REGIONS + "/checkConnectedElements/" + region.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));

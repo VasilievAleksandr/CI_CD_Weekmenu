@@ -5,6 +5,7 @@ import by.weekmenu.api.entity.Ingredient;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.IngredientService;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,7 +78,7 @@ public class IngredientControllerTest {
         list.add(createIngredientDto(2L, "Ананас"));
         when(ingredientService.findAll()).thenReturn(list);
 
-        mockMvc.perform(get("/ingredients")
+        mockMvc.perform(get(UrlConsts.PATH_INGREDIENTS)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -100,7 +101,7 @@ public class IngredientControllerTest {
     public void findIngredientById() throws Exception{
         IngredientDTO ingredientDto = createIngredientDto(1L, "Курица");
         when(ingredientService.findById(ingredientDto.getId())).thenReturn(ingredientDto);
-        mockMvc.perform(get("/ingredients/1")
+        mockMvc.perform(get(UrlConsts.PATH_INGREDIENTS + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
@@ -116,7 +117,7 @@ public class IngredientControllerTest {
         IngredientDTO ingredientDto = createIngredientDto(1L, "Курица");
         when(ingredientService.save(any(IngredientDTO.class))).thenReturn(ingredientDto);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/ingredients").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post(UrlConsts.PATH_INGREDIENTS).contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(ingredientDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", is(1)))
@@ -136,7 +137,7 @@ public class IngredientControllerTest {
         when(modelMapper.map(any(), any())).thenReturn(ingredientDto);
         when(ingredientService.save(any(IngredientDTO.class))).thenReturn(ingredientDto);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/ingredients/1")
+        mockMvc.perform(put(UrlConsts.PATH_INGREDIENTS + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(ingredientDto)))
                 .andExpect(status().isOk())
@@ -152,7 +153,7 @@ public class IngredientControllerTest {
     public void deleteIngredient() throws Exception{
         IngredientDTO ingredientDto = createIngredientDto(1L, "Курица");
         when(ingredientService.findById(ingredientDto.getId())).thenReturn(ingredientDto);
-        mockMvc.perform(delete("/ingredients/1")
+        mockMvc.perform(delete(UrlConsts.PATH_INGREDIENTS + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -162,7 +163,7 @@ public class IngredientControllerTest {
         Ingredient ingredient = createIngredient(1L, "Курица");
         String name = "Курица";
         when(ingredientService.findByName(name)).thenReturn(ingredient);
-        mockMvc.perform(get("/ingredients/checkUniqueName?name=" + name)
+        mockMvc.perform(get(UrlConsts.PATH_INGREDIENTS + "/checkUniqueName?name=" + name)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -172,7 +173,7 @@ public class IngredientControllerTest {
     public void checkConnectedElementsTest() throws Exception {
         List<String> result = Collections.singletonList("рецепты: 1");
         when(ingredientService.checkConnectedElements(1L)).thenReturn(result);
-        mockMvc.perform(get("/ingredients/checkConnectedElements/1")
+        mockMvc.perform(get(UrlConsts.PATH_INGREDIENTS + "/checkConnectedElements/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
