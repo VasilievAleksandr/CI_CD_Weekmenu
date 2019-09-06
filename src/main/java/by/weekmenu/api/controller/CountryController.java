@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Year;
 import java.util.List;
 
 @RestController
@@ -84,12 +83,6 @@ public class CountryController {
             return 0;
         }
     }
-
-//    @GetMapping("/names")
-//    @ApiOperation("Возвращает список всех name из Country")
-//    public List<String> getAllCountryNames() {
-//        return countryService.getAllCountryNames();
-//    }
 
     @GetMapping("/checkConnectedElements/{id}")
     @ApiOperation("Проверяет наличие связанных элементов по Id")
