@@ -32,16 +32,6 @@ public class CurrencyController {
         return new ResponseEntity<>(currencyService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/checkCurrencyUniqueName")
-    @ApiOperation("Проверяет поле name у Currency на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
-    public Integer checkCurrencyUniqueName(@RequestParam String name) {
-        if (currencyService.findByName(name) != null) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }
-
     @GetMapping("/checkCurrencyUniqueCode")
     @ApiOperation("Проверяет поле code у Currency на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
     public Integer checkCurrencyUniqueCode(@RequestParam String code) {

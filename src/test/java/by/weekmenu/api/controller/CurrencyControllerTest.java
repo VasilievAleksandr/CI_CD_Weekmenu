@@ -115,17 +115,6 @@ public class CurrencyControllerTest {
     }
 
     @Test
-    public void checkCurrencyUniqueNameTest() throws Exception {
-        Currency currency = new Currency("Рубль", "RUB", false);
-        String name = "Рубль";
-        when(currencyService.findByName(name)).thenReturn(currency);
-        mockMvc.perform(get("/currencies/checkCurrencyUniqueName?name=" + name)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(-1)));
-    }
-
-    @Test
     public void checkCurrencyUniqueCodeTest() throws Exception {
         Currency currency = new Currency("Рубль", "RUB", false);
         String code = "RUB";

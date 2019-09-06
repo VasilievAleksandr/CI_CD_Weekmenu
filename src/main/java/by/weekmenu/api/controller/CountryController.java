@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Year;
 import java.util.List;
 
 @RestController
@@ -23,32 +24,33 @@ public class CountryController {
 
     @GetMapping
     @ApiOperation("Возвращает список всех Country")
-    public List<CountryDTO> findAllCountries() {
-        return countryService.findAll();
+    public ResponseEntity<List<CountryDTO>> findAllCountries() {
+        return new ResponseEntity<>(countryService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ApiOperation("Находит Country по его Id")
-    public CountryDTO findCountryById(@PathVariable("id") Long id) {
-        return countryService.findById(id);
+    public ResponseEntity<CountryDTO> findCountryById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(countryService.findById(id), HttpStatus.OK);
     }
 
     @PostMapping
     @ApiOperation("Сохраняет Country.")
-    public CountryDTO addCountry(@RequestBody CountryDTO countryDto) {
-        return countryService.save(countryDto);
+    public ResponseEntity<CountryDTO> addCountry(@RequestBody CountryDTO countryDto) {
+        return new ResponseEntity<>(countryService.save(countryDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @ApiOperation("Обновляет Country по Id.")
-    public CountryDTO updateCountry(@RequestBody CountryDTO updatedCountryDTO, @PathVariable("id") Long id) {
+    public ResponseEntity<CountryDTO> updateCountry(@RequestBody CountryDTO updatedCountryDTO, @PathVariable("id") Long id) {
         CountryDTO countryDto = countryService.findById(id);
         if (countryDto != null) {
             countryDto.setName(updatedCountryDTO.getName());
             countryDto.setAlphaCode2(updatedCountryDTO.getAlphaCode2());
             countryDto.setCurrencyCode(updatedCountryDTO.getCurrencyCode());
-        }
-        return countryService.save(countryDto);
+            return new ResponseEntity<>(countryService.save(countryDto), HttpStatus.OK);
+        } else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
@@ -83,11 +85,11 @@ public class CountryController {
         }
     }
 
-    @GetMapping("/names")
-    @ApiOperation("Возвращает список всех name из Country")
-    public List<String> getAllCountryNames() {
-        return countryService.getAllCountryNames();
-    }
+//    @GetMapping("/names")
+//    @ApiOperation("Возвращает список всех name из Country")
+//    public List<String> getAllCountryNames() {
+//        return countryService.getAllCountryNames();
+//    }
 
     @GetMapping("/checkConnectedElements/{id}")
     @ApiOperation("Проверяет наличие связанных элементов по Id")
