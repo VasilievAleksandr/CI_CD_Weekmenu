@@ -4,6 +4,7 @@ import by.weekmenu.api.ApiApplication;
 import by.weekmenu.api.dto.CurrencyDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class CurrencyIntegrationTest {
         currencyDTO.setName("Рубль");
         currencyDTO.setCode("RUB");
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/currencies")
+        mockMvc.perform(post(UrlConsts.PATH_CURRENCIES)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(currencyDTO)));
         Iterable<Currency> currencies = currencyRepository.findAll();
@@ -70,7 +71,7 @@ public class CurrencyIntegrationTest {
         Currency currency2 = new Currency("Доллар", "USD", false);
         currencyRepository.save(currency1);
         currencyRepository.save(currency2);
-        mockMvc.perform(get("/currencies")
+        mockMvc.perform(get(UrlConsts.PATH_CURRENCIES)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -89,7 +90,7 @@ public class CurrencyIntegrationTest {
         currencyDTO.setName("Доллар");
         currencyDTO.setCode("USD");
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/currencies/" + currency.getId().toString())
+        mockMvc.perform(put(UrlConsts.PATH_CURRENCIES + "/" + currency.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(currencyDTO)))
                 .andExpect(status().isOk())
@@ -100,7 +101,7 @@ public class CurrencyIntegrationTest {
     @Test
     public void deleteCurrencyIntegrationTest() throws Exception {
         Currency currency = currencyRepository.save(new Currency("Рубль", "RUB", false));
-        mockMvc.perform(delete("/currencies/" + currency.getId().toString())
+        mockMvc.perform(delete(UrlConsts.PATH_CURRENCIES + "/" + currency.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
         Iterable<RecycleBin> recycleBins = recycleBinRepository.findAll();
@@ -115,7 +116,7 @@ public class CurrencyIntegrationTest {
     public void checkUniqueNameCurrencyIntegrationTest() throws Exception {
         Currency currency = new Currency("Рубль", "RUB", false);
         currencyRepository.save(currency);
-        mockMvc.perform(get("/currencies/checkCurrencyUniqueName?name=" + currency.getName())
+        mockMvc.perform(get(UrlConsts.PATH_CURRENCIES + "/checkCurrencyUniqueName?name=" + currency.getName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -125,7 +126,7 @@ public class CurrencyIntegrationTest {
     public void checkUniqueCodeCurrencyIntegrationTest() throws Exception {
         Currency currency = new Currency("Рубль", "RUB", false);
         currencyRepository.save(currency);
-        mockMvc.perform(get("/currencies/checkCurrencyUniqueCode?code=" + currency.getCode())
+        mockMvc.perform(get(UrlConsts.PATH_CURRENCIES + "/checkCurrencyUniqueCode?code=" + currency.getCode())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -138,7 +139,7 @@ public class CurrencyIntegrationTest {
         currencyRepository.save(currency);
         Country country =  new Country("Россия", "RU", currency);
         countryRepository.save(country);
-        mockMvc.perform(get("/currencies/checkConnectedElements/" + currency.getId().toString())
+        mockMvc.perform(get(UrlConsts.PATH_CURRENCIES + "/checkConnectedElements/" + currency.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));

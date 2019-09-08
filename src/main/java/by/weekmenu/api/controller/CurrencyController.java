@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.CurrencyDTO;
 import by.weekmenu.api.service.CurrencyService;
+import by.weekmenu.api.utils.UrlConsts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
@@ -14,16 +15,14 @@ import java.util.List;
 
 @RestController
 @Api(description = "REST API для сущности Currency")
-@RequestMapping({"/currencies"})
+@RequestMapping(UrlConsts.PATH_CURRENCIES)
 public class CurrencyController {
 
     private final CurrencyService currencyService;
-    private final ModelMapper modelMapper;
 
     @Autowired
     public CurrencyController(CurrencyService currencyService, ModelMapper modelMapper) {
         this.currencyService = currencyService;
-        this.modelMapper = modelMapper;
     }
 
     @GetMapping

@@ -5,6 +5,7 @@ import by.weekmenu.api.entity.UnitOfMeasure;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.UnitOfMeasureService;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,7 +57,7 @@ public class UnitOfMeasureControllerTest {
         UnitOfMeasureDTO unitOfMeasureDTO = createUnitOfMeasureDTO(1L, "л", "Литр");
         when(unitOfMeasureService.save(any(UnitOfMeasureDTO.class))).thenReturn(unitOfMeasureDTO);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/unitOfMeasures")
+        mockMvc.perform(post(UrlConsts.PATH_UOM)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(unitOfMeasureDTO)))
                 .andExpect(status().isCreated())
@@ -71,7 +72,7 @@ public class UnitOfMeasureControllerTest {
         unitOfMeasureDTOs.add(createUnitOfMeasureDTO(1L, "л", "Литр"));
         unitOfMeasureDTOs.add(createUnitOfMeasureDTO(2L, "кг", "Килограмм"));
         when(unitOfMeasureService.findAll()).thenReturn(unitOfMeasureDTOs);
-        mockMvc.perform(get("/unitOfMeasures")
+        mockMvc.perform(get(UrlConsts.PATH_UOM)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -91,7 +92,7 @@ public class UnitOfMeasureControllerTest {
         unitOfMeasureDTO.setShortName("Л");
         when(unitOfMeasureService.save(any(UnitOfMeasureDTO.class))).thenReturn(unitOfMeasureDTO);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/unitOfMeasures/1")
+        mockMvc.perform(put(UrlConsts.PATH_UOM + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(unitOfMeasureDTO)))
                 .andExpect(status().isOk())
@@ -103,7 +104,7 @@ public class UnitOfMeasureControllerTest {
     public void deleteUnitOfMeasureTest() throws Exception {
         UnitOfMeasureDTO unitOfMeasureDTO = createUnitOfMeasureDTO(1L, "л", "Литр");
         when(unitOfMeasureService.findById(unitOfMeasureDTO.getId())).thenReturn(unitOfMeasureDTO);
-        mockMvc.perform(delete("/unitOfMeasures/1")
+        mockMvc.perform(delete(UrlConsts.PATH_UOM + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -113,7 +114,7 @@ public class UnitOfMeasureControllerTest {
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure(1L, "л", "Литр");
         String name = "Литр";
         when(unitOfMeasureService.findByFullName(name)).thenReturn(unitOfMeasure);
-        mockMvc.perform(get("/unitOfMeasures/checkUniqueFullName?fullName=" + name)
+        mockMvc.perform(get(UrlConsts.PATH_UOM + "/checkUniqueFullName?fullName=" + name)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -124,7 +125,7 @@ public class UnitOfMeasureControllerTest {
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure(1L, "л", "Литр");
         String name = "л";
         when(unitOfMeasureService.findByShortName(name)).thenReturn(unitOfMeasure);
-        mockMvc.perform(get("/unitOfMeasures/checkUniqueShortName?shortName=" + name)
+        mockMvc.perform(get(UrlConsts.PATH_UOM + "/checkUniqueShortName?shortName=" + name)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -134,7 +135,7 @@ public class UnitOfMeasureControllerTest {
     public void checkConnectedElementsTest() throws Exception {
         List<String> result = Collections.singletonList("ингредиенты: 1");
         when(unitOfMeasureService.checkConnectedElements(1L)).thenReturn(result);
-        mockMvc.perform(get("/unitOfMeasures/checkConnectedElements/1")
+        mockMvc.perform(get(UrlConsts.PATH_UOM + "/checkConnectedElements/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));

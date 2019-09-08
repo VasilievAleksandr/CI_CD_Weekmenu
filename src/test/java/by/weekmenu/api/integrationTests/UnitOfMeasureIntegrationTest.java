@@ -4,6 +4,7 @@ import by.weekmenu.api.ApiApplication;
 import by.weekmenu.api.dto.UnitOfMeasureDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -92,7 +93,7 @@ public class UnitOfMeasureIntegrationTest {
         unitOfMeasureDTO.setShortName("л");
         unitOfMeasureDTO.setFullName("Литр");
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/unitOfMeasures")
+        mockMvc.perform(post(UrlConsts.PATH_UOM)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(unitOfMeasureDTO)));
         Iterable<UnitOfMeasure> unitOfMeasure = unitOfMeasureRepository.findAll();
@@ -107,7 +108,7 @@ public class UnitOfMeasureIntegrationTest {
         UnitOfMeasure unitOfMeasure2 = new UnitOfMeasure("Гр", "Грамм");
         unitOfMeasureRepository.save(unitOfMeasure);
         unitOfMeasureRepository.save(unitOfMeasure2);
-        mockMvc.perform(get("/unitOfMeasures")
+        mockMvc.perform(get(UrlConsts.PATH_UOM)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -125,7 +126,7 @@ public class UnitOfMeasureIntegrationTest {
         unitOfMeasureDTO.setFullName("ЛЛитРР");
         unitOfMeasureDTO.setShortName("л");
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/unitOfMeasures/" + unitOfMeasure.getId().toString())
+        mockMvc.perform(put(UrlConsts.PATH_UOM + "/" + unitOfMeasure.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(unitOfMeasureDTO)))
                 .andExpect(status().isOk())
@@ -136,7 +137,7 @@ public class UnitOfMeasureIntegrationTest {
     public void deleteUnitOfMeasureIntegrationTest() throws Exception {
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure("л", "Литр");
         unitOfMeasureRepository.save(unitOfMeasure);
-        mockMvc.perform(delete("/unitOfMeasures/" + unitOfMeasure.getId().toString())
+        mockMvc.perform(delete(UrlConsts.PATH_UOM + "/" + unitOfMeasure.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
         Iterable<RecycleBin> recycleBins = recycleBinRepository.findAll();
@@ -151,7 +152,7 @@ public class UnitOfMeasureIntegrationTest {
     public void checkUniqueFullNameUnitOfMeasureIntegrationTest() throws Exception {
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure("л", "Литр");
         unitOfMeasureRepository.save(unitOfMeasure);
-        mockMvc.perform(get("/unitOfMeasures/checkUniqueFullName?fullName=" + unitOfMeasure.getFullName())
+        mockMvc.perform(get(UrlConsts.PATH_UOM + "/checkUniqueFullName?fullName=" + unitOfMeasure.getFullName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -161,7 +162,7 @@ public class UnitOfMeasureIntegrationTest {
     public void checkUniqueShortNameUnitOfMeasureIntegrationTest() throws Exception {
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure("л", "Литр");
         unitOfMeasureRepository.save(unitOfMeasure);
-        mockMvc.perform(get("/unitOfMeasures/checkUniqueShortName?shortName=" + unitOfMeasure.getShortName())
+        mockMvc.perform(get(UrlConsts.PATH_UOM + "/checkUniqueShortName?shortName=" + unitOfMeasure.getShortName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -209,7 +210,7 @@ public class UnitOfMeasureIntegrationTest {
         recipeIngredient.setId(new RecipeIngredient.Id(ingredient.getId(), recipe.getId()));
         recipeIngredient.setUnitOfMeasure(unitOfMeasure);
         recipeIngredientRepository.save(recipeIngredient);
-        mockMvc.perform(get("/unitOfMeasures/checkConnectedElements/" + unitOfMeasure.getId().toString())
+        mockMvc.perform(get(UrlConsts.PATH_UOM + "/checkConnectedElements/" + unitOfMeasure.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)));

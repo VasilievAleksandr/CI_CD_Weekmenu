@@ -5,6 +5,7 @@ import by.weekmenu.api.entity.CookingMethod;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.CookingMethodService;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +56,7 @@ public class CookingMethodControllerTest {
         CookingMethodDTO cookingMethodDTO = createCookingMethodDTO(1, "Жарка");
         when(cookingMethodService.save(any(CookingMethodDTO.class))).thenReturn(cookingMethodDTO);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/cookingmethods")
+        mockMvc.perform(post(UrlConsts.PATH_COOKINGMETHODS)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(cookingMethodDTO)))
                 .andExpect(status().isCreated())
@@ -69,7 +70,7 @@ public class CookingMethodControllerTest {
         cookingMethodDTOs.add(createCookingMethodDTO(1, "Жарка"));
         cookingMethodDTOs.add(createCookingMethodDTO(2, "Варка"));
         when(cookingMethodService.findAll()).thenReturn(cookingMethodDTOs);
-        mockMvc.perform(get("/cookingmethods")
+        mockMvc.perform(get(UrlConsts.PATH_COOKINGMETHODS)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -82,14 +83,14 @@ public class CookingMethodControllerTest {
 
     @Test
     public void updateCookingMethodTest() throws Exception {
-        CookingMethodDTO сookingMethodDTO = createCookingMethodDTO(1, "Жарка");
-        when(cookingMethodService.findById(сookingMethodDTO.getId())).thenReturn(сookingMethodDTO);
-        сookingMethodDTO.setName("Варка");
-        when(cookingMethodService.save(any(CookingMethodDTO.class))).thenReturn(сookingMethodDTO);
+        CookingMethodDTO cookingMethodDTO = createCookingMethodDTO(1, "Жарка");
+        when(cookingMethodService.findById(cookingMethodDTO.getId())).thenReturn(cookingMethodDTO);
+        cookingMethodDTO.setName("Варка");
+        when(cookingMethodService.save(any(CookingMethodDTO.class))).thenReturn(cookingMethodDTO);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/cookingmethods/1")
+        mockMvc.perform(put(UrlConsts.PATH_COOKINGMETHODS + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(сookingMethodDTO)))
+                .content(objectMapper.writeValueAsBytes(cookingMethodDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.name", is("Варка")));
@@ -97,9 +98,9 @@ public class CookingMethodControllerTest {
 
     @Test
     public void deleteCookingMethodTest() throws Exception {
-        CookingMethodDTO сookingMethodDTO = createCookingMethodDTO(1, "Жарка");
-        when(cookingMethodService.findById(сookingMethodDTO.getId())).thenReturn(сookingMethodDTO);
-        mockMvc.perform(delete("/cookingmethods/1")
+        CookingMethodDTO cookingMethodDTO = createCookingMethodDTO(1, "Жарка");
+        when(cookingMethodService.findById(cookingMethodDTO.getId())).thenReturn(cookingMethodDTO);
+        mockMvc.perform(delete(UrlConsts.PATH_COOKINGMETHODS + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -109,7 +110,7 @@ public class CookingMethodControllerTest {
         CookingMethod cookingMethod = new CookingMethod(1, "Жарка");
         String name = "Жарка";
         when(cookingMethodService.findByName(name)).thenReturn(cookingMethod);
-        mockMvc.perform(get("/cookingmethods/checkCookingMethodUniqueName?name=" + name)
+        mockMvc.perform(get(UrlConsts.PATH_COOKINGMETHODS + "/checkCookingMethodUniqueName?name=" + name)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -119,7 +120,7 @@ public class CookingMethodControllerTest {
     public void checkConnectedElementsTest() throws Exception {
         List<String> result = Collections.singletonList("рецепты: 1");
         when(cookingMethodService.checkConnectedElements(1)).thenReturn(result);
-        mockMvc.perform(get("/cookingmethods/checkConnectedElements/1")
+        mockMvc.perform(get(UrlConsts.PATH_COOKINGMETHODS + "/checkConnectedElements/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));

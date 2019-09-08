@@ -5,6 +5,7 @@ import by.weekmenu.api.entity.RecycleBin;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.RecycleBinService;
+import by.weekmenu.api.utils.UrlConsts;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class RecycleBinControllerTest {
         RecycleBin recycleBin = createRecycleBin(1L,"Гречка", "Ингредиент",
                 LocalDateTime.of(2019, Month.AUGUST, 31, 11, 0));
         when(recycleBinService.findById(1L)).thenReturn(recycleBin);
-        mockMvc.perform(put("/recycleBin/1")
+        mockMvc.perform(put(UrlConsts.PATH_RECYCLE_BIN + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -76,7 +77,7 @@ public class RecycleBinControllerTest {
         list.add(createRecycleBinDTO("Гречка", "Ингредиент", LocalDateTime.of(2019, Month.AUGUST, 31, 11, 0)));
         list.add(createRecycleBinDTO("Гречневая каша", "Рецепт", LocalDateTime.of(2019, Month.AUGUST, 31, 10, 0)));
         when(recycleBinService.findAll()).thenReturn(list);
-        mockMvc.perform(get("/recycleBin")
+        mockMvc.perform(get(UrlConsts.PATH_RECYCLE_BIN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -94,7 +95,7 @@ public class RecycleBinControllerTest {
         RecycleBin recycleBin = createRecycleBin(1L,"Гречка", "Ингредиент",
                 LocalDateTime.of(2019, Month.AUGUST, 31, 11, 0));
         when(recycleBinService.findById(1L)).thenReturn(recycleBin);
-        mockMvc.perform(delete("/recycleBin/1")
+        mockMvc.perform(delete(UrlConsts.PATH_RECYCLE_BIN + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }

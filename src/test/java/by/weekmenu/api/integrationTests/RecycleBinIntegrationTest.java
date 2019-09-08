@@ -6,6 +6,7 @@ import by.weekmenu.api.entity.UnitOfMeasure;
 import by.weekmenu.api.repository.RecycleBinRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.utils.EntityNamesConsts;
+import by.weekmenu.api.utils.UrlConsts;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Test;
@@ -61,7 +62,7 @@ public class RecycleBinIntegrationTest {
     public void getAllRecycleBins() throws Exception{
         recycleBinRepository.save(createRecycleBin("Литр", EntityNamesConsts.UNIT_OF_MEASURE, LocalDateTime.of(2019, Month.AUGUST, 31, 11, 0)));
         recycleBinRepository.save(createRecycleBin("Молоко", EntityNamesConsts.INGREDIENT, LocalDateTime.of(2019, Month.AUGUST, 31, 10, 0)));
-        mockMvc.perform(get("/recycleBin")
+        mockMvc.perform(get(UrlConsts.PATH_RECYCLE_BIN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -81,7 +82,7 @@ public class RecycleBinIntegrationTest {
         RecycleBin recycleBin = recycleBinRepository
                 .save(createRecycleBin("Литр", EntityNamesConsts.UNIT_OF_MEASURE,
                         LocalDateTime.of(2019, Month.AUGUST, 31, 11, 0)));
-        mockMvc.perform(put("/recycleBin/" + recycleBin.getId().toString())
+        mockMvc.perform(put(UrlConsts.PATH_RECYCLE_BIN + "/" + recycleBin.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -101,7 +102,7 @@ public class RecycleBinIntegrationTest {
         RecycleBin recycleBin = recycleBinRepository
                 .save(createRecycleBin("Литр", EntityNamesConsts.UNIT_OF_MEASURE,
                         LocalDateTime.of(2019, Month.AUGUST, 31, 11, 0)));
-        mockMvc.perform(delete("/recycleBin/" + recycleBin.getId().toString())
+        mockMvc.perform(delete(UrlConsts.PATH_RECYCLE_BIN + "/" + recycleBin.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

@@ -4,6 +4,7 @@ import by.weekmenu.api.ApiApplication;
 import by.weekmenu.api.dto.CookingMethodDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -61,7 +62,7 @@ public class CookingMethodIntegrationTest {
         CookingMethodDTO cookingMethodDTO = new CookingMethodDTO();
         cookingMethodDTO.setName("Жарка");
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(post("/cookingmethods")
+        mockMvc.perform(post(UrlConsts.PATH_COOKINGMETHODS)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(cookingMethodDTO)));
         Iterable<CookingMethod> cookingMethods = cookingMethodRepository.findAll();
@@ -74,7 +75,7 @@ public class CookingMethodIntegrationTest {
         CookingMethod cookingMethod2 = new CookingMethod("Варка");
         cookingMethodRepository.save(cookingMethod1);
         cookingMethodRepository.save(cookingMethod2);
-        mockMvc.perform(get("/cookingmethods")
+        mockMvc.perform(get(UrlConsts.PATH_COOKINGMETHODS)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -89,7 +90,7 @@ public class CookingMethodIntegrationTest {
         CookingMethodDTO cookingMethodDTO = new CookingMethodDTO();
         cookingMethodDTO.setName("Жарка");
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/cookingmethods/" + cookingMethod.getId().toString())
+        mockMvc.perform(put(UrlConsts.PATH_COOKINGMETHODS + "/" + cookingMethod.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(cookingMethodDTO)))
                 .andExpect(status().isOk())
@@ -99,7 +100,7 @@ public class CookingMethodIntegrationTest {
     @Test
     public void deleteCookingMethodIntegrationTest() throws Exception {
         CookingMethod cookingMethod = cookingMethodRepository.save(new CookingMethod("Жарка"));
-        mockMvc.perform(delete("/cookingmethods/" + cookingMethod.getId().toString())
+        mockMvc.perform(delete(UrlConsts.PATH_COOKINGMETHODS + "/" + cookingMethod.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -116,7 +117,7 @@ public class CookingMethodIntegrationTest {
     public void checkUniqueNameCookingMethodIntegrationTest() throws Exception {
         CookingMethod cookingMethod = new CookingMethod("Жарка");
         cookingMethodRepository.save(cookingMethod);
-        mockMvc.perform(get("/cookingmethods/checkCookingMethodUniqueName?name=" + cookingMethod.getName())
+        mockMvc.perform(get(UrlConsts.PATH_COOKINGMETHODS + "/checkCookingMethodUniqueName?name=" + cookingMethod.getName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(-1)));
@@ -137,7 +138,7 @@ public class CookingMethodIntegrationTest {
         recipe.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
         cookingMethodRepository.save(cookingMethod);
         recipeRepository.save(recipe);
-        mockMvc.perform(get("/cookingmethods/checkConnectedElements/" + cookingMethod.getId().toString())
+        mockMvc.perform(get(UrlConsts.PATH_COOKINGMETHODS + "/checkConnectedElements/" + cookingMethod.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));

@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.RegionDTO;
 import by.weekmenu.api.service.RegionService;
+import by.weekmenu.api.utils.UrlConsts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/regions")
+@RequestMapping(UrlConsts.PATH_REGIONS)
 @Api(description = "REST API для сущности Region")
 public class RegionController {
 

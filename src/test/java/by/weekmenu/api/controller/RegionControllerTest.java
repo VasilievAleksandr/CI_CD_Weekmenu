@@ -4,6 +4,7 @@ import by.weekmenu.api.dto.RegionDTO;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.RegionService;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +49,7 @@ public class RegionControllerTest {
         regions.add(new RegionDTO(2L, "Гродно", "Беларусь", "BYN"));
         when(regionService.findAll()).thenReturn(regions);
 
-        mockMvc.perform(get("/regions")
+        mockMvc.perform(get(UrlConsts.PATH_REGIONS)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -68,7 +69,7 @@ public class RegionControllerTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        mockMvc.perform(post("/regions")
+        mockMvc.perform(post(UrlConsts.PATH_REGIONS)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(regionDto)))
                 .andExpect(status().isCreated())
@@ -83,7 +84,7 @@ public class RegionControllerTest {
         RegionDTO regionDto = new RegionDTO(1L, "Минск", "Беларусь", "BYN");
         when(regionService.findById(regionDto.getId())).thenReturn(regionDto);
 
-        mockMvc.perform(get("/regions/1")
+        mockMvc.perform(get(UrlConsts.PATH_REGIONS + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
@@ -99,7 +100,7 @@ public class RegionControllerTest {
         regionDto.setName("Гродно");
         when(regionService.save(any(RegionDTO.class))).thenReturn(regionDto);
         ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(put("/regions/1")
+        mockMvc.perform(put(UrlConsts.PATH_REGIONS + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(regionDto)))
                 .andExpect(status().isOk())
@@ -113,7 +114,7 @@ public class RegionControllerTest {
     public void deleteRegionTest() throws Exception {
         RegionDTO regionDTO = new RegionDTO(1L, "Минск", "Беларусь", "BYN");
         when(regionService.findById(regionDTO.getId())).thenReturn(regionDTO);
-        mockMvc.perform(delete("/regions/1")
+        mockMvc.perform(delete(UrlConsts.PATH_REGIONS + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -122,7 +123,7 @@ public class RegionControllerTest {
     public void checkUniqueNameTest() throws Exception {
         String name = "Минск";
         when(regionService.findByName(name)).thenReturn(null);
-        mockMvc.perform(get("/regions/checkUniqueName?name=" + name)
+        mockMvc.perform(get(UrlConsts.PATH_REGIONS + "/checkUniqueName?name=" + name)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(0)));
@@ -132,7 +133,7 @@ public class RegionControllerTest {
     public void checkConnectedElementsTest() throws Exception {
         List<String> result = Arrays.asList("цены ингредиентов: 1", "цены рецептов: 2");
         when(regionService.checkConnectedElements(1L)).thenReturn(result);
-        mockMvc.perform(get("/regions/checkConnectedElements/1")
+        mockMvc.perform(get(UrlConsts.PATH_REGIONS + "/checkConnectedElements/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
