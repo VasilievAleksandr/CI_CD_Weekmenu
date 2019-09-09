@@ -137,7 +137,7 @@ public class CurrencyIntegrationTest {
     public void checkConnectedElementsTest() throws Exception {
         Currency currency = new Currency("Рубль", "RUB", false);
         currencyRepository.save(currency);
-        Country country =  new Country("Россия", "RU", currency);
+        Country country = new Country("Россия", "RU", currency);
         countryRepository.save(country);
         mockMvc.perform(get(UrlConsts.PATH_CURRENCIES + "/checkConnectedElements/" + currency.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
