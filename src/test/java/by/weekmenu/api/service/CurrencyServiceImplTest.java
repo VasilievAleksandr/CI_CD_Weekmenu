@@ -103,7 +103,8 @@ public class CurrencyServiceImplTest {
         assertThat(recycleBin.getEntityName()).isEqualTo("Валюта");
         assertThat(recycleBin.getDeleteDate()).isNotNull();
     }
-
+    
+    @Test
     public void checkUniqueCurrencyNameTest() {
         Currency currency = new Currency("Рубль", "RUB", false);
         currency.setId(1);
