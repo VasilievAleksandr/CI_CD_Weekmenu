@@ -112,6 +112,7 @@ public class CurrencyIntegrationTest {
         assertThat(currencyAfterSoftDelete.get().isArchived()).isTrue();
     }
 
+    @Test
     public void checkUniqueNameCurrencyIntegrationTest() throws Exception {
         Currency currency = new Currency("Рубль", "RUB", false);
         currencyRepository.save(currency);

@@ -115,6 +115,7 @@ public class CurrencyControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    @Test
     public void checkCurrencyUniqueNameTest() throws Exception {
         Currency currency = new Currency("Рубль", "RUB", false);
         String name = "Рубль";
