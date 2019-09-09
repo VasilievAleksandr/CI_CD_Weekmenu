@@ -4,6 +4,7 @@ import by.weekmenu.api.ApiApplication;
 import by.weekmenu.api.dto.CurrencyDTO;
 import by.weekmenu.api.entity.*;
 import by.weekmenu.api.repository.*;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -109,6 +110,15 @@ public class CurrencyIntegrationTest {
         assertThat(recycleBins).extracting(RecycleBin::getDeleteDate).isNotNull();
         Optional<Currency> currencyAfterSoftDelete = currencyRepository.findById(currency.getId());
         assertThat(currencyAfterSoftDelete.get().isArchived()).isTrue();
+    }
+
+    public void checkUniqueNameCurrencyIntegrationTest() throws Exception {
+        Currency currency = new Currency("Рубль", "RUB", false);
+        currencyRepository.save(currency);
+        mockMvc.perform(get(UrlConsts.PATH_CURRENCIES + "/checkCurrencyUniqueName?name=" + currency.getName())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(-1)));
     }
 
     @Test

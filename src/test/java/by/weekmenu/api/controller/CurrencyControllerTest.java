@@ -5,6 +5,7 @@ import by.weekmenu.api.entity.Currency;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.CurrencyService;
+import by.weekmenu.api.utils.UrlConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -112,6 +113,16 @@ public class CurrencyControllerTest {
         mockMvc.perform(delete("/currencies/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+
+    public void checkCurrencyUniqueNameTest() throws Exception {
+        Currency currency = new Currency("Рубль", "RUB", false);
+        String name = "Рубль";
+        when(currencyService.findByName(name)).thenReturn(currency);
+        mockMvc.perform(get(UrlConsts.PATH_CURRENCIES + "/checkCurrencyUniqueName?name=" + name)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(-1)));
     }
 
     @Test

@@ -104,6 +104,13 @@ public class CurrencyServiceImplTest {
         assertThat(recycleBin.getDeleteDate()).isNotNull();
     }
 
+    public void checkUniqueCurrencyNameTest() {
+        Currency currency = new Currency("Рубль", "RUB", false);
+        currency.setId(1);
+        when(currencyRepository.findByNameIgnoreCase(currency.getName())).thenReturn(Optional.of(currency));
+        assertThat(currency.getName()).isEqualTo("Рубль");
+    }
+
     @Test
     public void checkConnectedElementsTest() {
         Currency currency = new Currency("Рубль", "RUB", false);

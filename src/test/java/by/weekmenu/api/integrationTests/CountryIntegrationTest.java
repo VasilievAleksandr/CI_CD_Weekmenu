@@ -80,8 +80,8 @@ public class CountryIntegrationTest {
 
     @Test
     public void getAllCountriesIntegrationTest() throws Exception {
-        Currency currency1 = new Currency("Рубль", "RUB", false);
-        Currency currency2 = new Currency("Рубль", "BUN", false);
+        Currency currency1 = new Currency("Российский рубль", "RUB", false);
+        Currency currency2 = new Currency("Белорусский рубль", "BUN", false);
         Country country1 = new Country("РБ", "RB", currency2);
         Country country2 = new Country("РФ", "RU", currency1);
         countryRepository.save(country1);
