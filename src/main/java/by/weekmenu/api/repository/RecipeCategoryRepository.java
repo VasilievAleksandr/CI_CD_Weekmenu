@@ -15,8 +15,8 @@ public interface RecipeCategoryRepository extends CrudRepository<RecipeCategory,
     List<RecipeCategory> findAllByIsArchivedIsFalse();
 
     @Modifying
-    @Query("update RecipeCategory e set e.isArchived = true where e.id = :recipecategoryId")
-    void softDelete(@Param("recipecategoryId") Long recipecategoryId);
+    @Query("update RecipeCategory e set e.isArchived = true where e.id = :recipeCategoryId")
+    void softDelete(@Param("recipeCategoryId") Long recipeCategoryId);
 
     @Modifying
     @Query("update RecipeCategory recipeCategory set recipeCategory.isArchived = false " +
