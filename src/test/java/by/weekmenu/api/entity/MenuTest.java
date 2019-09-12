@@ -182,7 +182,7 @@ public class MenuTest {
     @Test
     public void testHasInvalidMenuCategory() {
         Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
-        menu.setMenuCategory(new MenuCategory(1,"", true));
+        menu.setMenuCategory(new MenuCategory("", true));
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
         assertEquals("MenuCategory must have name.",
@@ -215,7 +215,7 @@ public class MenuTest {
     @Test
     public void testMenuIsValid() {
         Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
-        menu.setMenuCategory(new MenuCategory(1,"Вегетарианское", true));
+        menu.setMenuCategory(new MenuCategory("Вегетарианское", true));
         menu.getMenuRecipes().add(new MenuRecipe(menu, getValidRecipe(), getValidDishType(), getValidDayOfWeek()));
         menu.setCarbs(100);
         menu.setFats(100);
