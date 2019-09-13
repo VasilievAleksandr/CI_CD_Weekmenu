@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -43,12 +42,17 @@ public class MenuCategory implements Serializable {
     )
     private String imageLink;
 
-    @Column(name = "IS_ACTIVE")
-    @NotNull(message = "MenuCategory must have field 'isActive' defined.")
-    private Boolean isActive;
+    @Column(name = "IS_ARCHIVED")
+    private boolean isArchived;
 
-    public MenuCategory(String name, Boolean isActive) {
+    public MenuCategory(String name, Boolean isArchived) {
         this.name = name;
-        this.isActive = isActive;
+        this.isArchived = isArchived;
+    }
+
+    public MenuCategory(Integer id, String name, Boolean isArchived) {
+        this.id = id;
+        this.name = name;
+        this.isArchived = isArchived;
     }
 }

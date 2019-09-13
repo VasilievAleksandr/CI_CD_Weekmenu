@@ -11,4 +11,6 @@ public class EntityNamesConsts {
     public static final String RECIPE_CATEGORY = "Категория рецепта";
     public static final String RECIPE_SUBCATEGORY = "Подкатегория рецепта";
     public static final String COOKING_METHOD = "Способ приготовления блюда";
+    public static final String MENU_CATEGORY = "Категория меню";
+
 }
