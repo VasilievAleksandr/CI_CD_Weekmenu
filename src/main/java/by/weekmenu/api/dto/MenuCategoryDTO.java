@@ -13,6 +13,6 @@ public class MenuCategoryDTO {
     private String name;
     private Integer priority;
     private String imageLink;
-    private Boolean isArchived;
+    private boolean isArchived;
 
 }

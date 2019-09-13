@@ -43,7 +43,7 @@ public class MenuCategory implements Serializable {
     private String imageLink;
 
     @Column(name = "IS_ARCHIVED")
-    private Boolean isArchived;
+    private boolean isArchived;
 
     public MenuCategory(String name, Boolean isArchived) {
         this.name = name;
