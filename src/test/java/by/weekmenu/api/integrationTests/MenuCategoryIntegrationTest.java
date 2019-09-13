@@ -113,7 +113,7 @@ public class MenuCategoryIntegrationTest {
         assertThat(recycleBins).extracting(RecycleBin::getDeleteDate).isNotNull();
 
         Optional<MenuCategory> menuCategoryAfterSoftDelete = menuCategoryRepository.findById(menuCategory.getId());
-        assertThat(menuCategoryAfterSoftDelete.get().getIsArchived()).isTrue();
+        assertThat(menuCategoryAfterSoftDelete.get().isArchived()).isTrue();
     }
 
     @Test
