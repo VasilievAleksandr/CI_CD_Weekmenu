@@ -32,6 +32,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
     private final RecipeCategoryRepository recipeCategoryRepository;
     private final CookingMethodRepository cookingMethodRepository;
     private final RecipeSubcategoryRepository recipeSubcategoryRepository;
+    private final MenuCategoryRepository menuCategoryRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -86,6 +87,11 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                              .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                              .ifPresent(cookingMethod -> cookingMethodRepository.restore(cookingMethod.getId()));
                      break;
+                 case EntityNamesConsts.MENU_CATEGORY:
+                     menuCategoryRepository
+                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                             .ifPresent(menuCategory -> menuCategoryRepository.restore(menuCategory.getId()));
+                     break;
              }
             recycleBinRepository.delete(recycleBinElement.get());
         }
@@ -139,6 +145,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                     recipeCategoryRepository
                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                             .ifPresent(recipeCategory -> recipeCategoryRepository.deleteById(recipeCategory.getId()));
+                    break;
                 case EntityNamesConsts.COOKING_METHOD:
                     cookingMethodRepository
                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
@@ -148,6 +155,11 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                     recipeSubcategoryRepository
                             .findByNameIgnoreCase(recycleBinElement.get().getElementName())
                             .ifPresent(recipeSubcategory -> recipeSubcategoryRepository.deleteById(recipeSubcategory.getId()));
+                    break;
+                case EntityNamesConsts.MENU_CATEGORY:
+                    menuCategoryRepository
+                            .findByNameIgnoreCase(recycleBinElement.get().getElementName())
+                            .ifPresent(menuCategory -> menuCategoryRepository.deleteById(menuCategory.getId()));
                     break;
             }
             recycleBinRepository.deleteById(id);

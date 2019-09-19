@@ -48,6 +48,8 @@ public class RecycleBinServiceImplTest {
     @MockBean
     private RecipeSubcategoryRepository recipeSubcategoryRepository;
     @MockBean
+    private MenuCategoryRepository menuCategoryRepository;
+    @MockBean
     private ModelMapper modelMapper;
 
     private RecycleBinService recycleBinService;
@@ -56,7 +58,7 @@ public class RecycleBinServiceImplTest {
     public void setup() {
         recycleBinService = new RecycleBinServiceImpl(recycleBinRepository, unitOfMeasureRepository, currencyRepository,
                 countryRepository, regionRepository,ingredientRepository, ingredientService, recipeRepository, recipeService,
-                recipeCategoryRepository, cookingMethodRepository, recipeSubcategoryRepository, modelMapper);
+                recipeCategoryRepository, cookingMethodRepository, recipeSubcategoryRepository,menuCategoryRepository, modelMapper);
     }
 
     private RecycleBin createRecycleBin(String elementName, String entityName, LocalDateTime deleteDate) {
@@ -158,6 +160,16 @@ public class RecycleBinServiceImplTest {
     }
 
     @Test
+    public void restoreElement_MenuCategory() {
+        RecycleBin recycleBin = createRecycleBin("Диетическое", EntityNamesConsts.MENU_CATEGORY, LocalDateTime.now());
+        when(recycleBinRepository.findById(anyLong())).thenReturn(Optional.of(recycleBin));
+        MenuCategory menuCategory = mock(MenuCategory.class);
+        when(menuCategoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(menuCategory));
+        recycleBinService.restoreElement(1L);
+        verify(menuCategoryRepository, times(1)).restore(0);
+    }
+
+    @Test
     public void findAll() {
         List<RecycleBin> list = new ArrayList<>();
         list.add(createRecycleBin("Гречневая каша", "Рецепт", LocalDateTime.now()));
@@ -255,6 +267,16 @@ public class RecycleBinServiceImplTest {
         when(cookingMethodRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(cookingMethod));
         recycleBinService.deleteElement(1L);
         verify(cookingMethodRepository, times(1)).deleteById(0);
+    }
+
+    @Test
+    public void deleteElement_MenuCategory() {
+        RecycleBin recycleBin = createRecycleBin("Диетическое", EntityNamesConsts.MENU_CATEGORY, LocalDateTime.now());
+        when(recycleBinRepository.findById(anyLong())).thenReturn(Optional.of(recycleBin));
+        MenuCategory menuCategory = mock(MenuCategory.class);
+        when(menuCategoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(menuCategory));
+        recycleBinService.deleteElement(1L);
+        verify(menuCategoryRepository, times(1)).deleteById(0);
     }
 
     @Test
