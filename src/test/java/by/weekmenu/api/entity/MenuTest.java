@@ -31,12 +31,8 @@ public class MenuTest {
         return new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
     }
 
-    private DishType getValidDishType() {
-        return new DishType("Обед", true);
-    }
-
-    private DishType getInvalidDishType() {
-        return new DishType("Обед", null);
+    private MealType getValidMealType() {
+        return new MealType("Обед", true);
     }
 
     private DayOfWeek getValidDayOfWeek() {
@@ -86,7 +82,7 @@ public class MenuTest {
         menu.setName(name);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         assertEquals(violations.size(), 1);
-        assertEquals("Menu's name '" + name +"' must be '255' characters long",
+        assertEquals("Menu's name '" + name + "' must be '255' characters long",
                 violations.iterator().next().getMessage());
     }
 
@@ -167,15 +163,14 @@ public class MenuTest {
     @Test
     public void testHasInvalidMenuRecipes() {
         Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
-        menu.getMenuRecipes().add(new MenuRecipe(getValidRecipe(), getInvalidDishType(), getValidDayOfWeek()));
+        menu.getMenuRecipes().add(new MenuRecipe(getValidRecipe(), getValidMealType(), getValidDayOfWeek()));
         menu.getMenuRecipes().add(null);
         Set<ConstraintViolation<Menu>> violations = validator.validate(menu);
         List<String> messages = violations.stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
-        assertEquals(violations.size(), 3);
+        assertEquals(violations.size(), 2);
         assertTrue(messages.contains("MenuRecipe must have menu."));
-        assertTrue(messages.contains("DishType must have field 'isActive' defined."));
         assertTrue(messages.contains("Menu must have list of menuRecipes without null elements."));
     }
 
@@ -216,7 +211,7 @@ public class MenuTest {
     public void testMenuIsValid() {
         Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
         menu.setMenuCategory(new MenuCategory("Вегетарианское", true));
-        menu.getMenuRecipes().add(new MenuRecipe(menu, getValidRecipe(), getValidDishType(), getValidDayOfWeek()));
+        menu.getMenuRecipes().add(new MenuRecipe(menu, getValidRecipe(), getValidMealType(), getValidDayOfWeek()));
         menu.setCarbs(100);
         menu.setFats(100);
         menu.setProteins(150);

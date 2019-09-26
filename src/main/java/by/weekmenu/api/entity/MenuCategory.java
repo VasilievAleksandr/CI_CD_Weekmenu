@@ -45,12 +45,12 @@ public class MenuCategory implements Serializable {
     @Column(name = "IS_ARCHIVED")
     private boolean isArchived;
 
-    public MenuCategory(String name, Boolean isArchived) {
+    public MenuCategory(String name, boolean isArchived) {
         this.name = name;
         this.isArchived = isArchived;
     }
 
-    public MenuCategory(Integer id, String name, Boolean isArchived) {
+    public MenuCategory(Integer id, String name, boolean isArchived) {
         this.id = id;
         this.name = name;
         this.isArchived = isArchived;
