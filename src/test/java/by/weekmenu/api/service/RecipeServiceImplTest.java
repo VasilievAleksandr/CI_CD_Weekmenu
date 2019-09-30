@@ -221,7 +221,7 @@ public class RecipeServiceImplTest {
         Recipe recipe = createRecipe("Гречневая каша");
         List<MenuRecipe> menuRecipes = new ArrayList<>();
         menuRecipes.add(new MenuRecipe(new Menu("Бюджетное", true, new Ownership(OwnershipName.USER)),
-                recipe, new DishType("Обед", true),
+                recipe, new MealType("Обед", true),
                 new DayOfWeek("Понедельник", "ПН")));
         when(menuRecipeRepository.findAllById_RecipeId(recipe.getId())).thenReturn(menuRecipes);
         List<String> list = recipeService.checkConnectedElements(recipe.getId());

@@ -52,10 +52,10 @@ public class MenuRecipe implements Serializable {
     private Recipe recipe;
 
     @ManyToOne
-    @JoinColumn(name = "DISH_TYPE_ID")
+    @JoinColumn(name = "MEAL_TYPE_ID")
     @Valid
-    @NotNull(message = "MenuRecipe must have dishType.")
-    private DishType dishType;
+    @NotNull(message = "MenuRecipe must have mealType.")
+    private MealType mealType;
 
     @ManyToOne
     @JoinColumn(name = "DAY_OF_WEEK_ID")
@@ -63,16 +63,16 @@ public class MenuRecipe implements Serializable {
     @NotNull(message = "MenuRecipe must have dayOfWeek.")
     private DayOfWeek dayOfWeek;
 
-    public MenuRecipe(Menu menu, Recipe recipe, DishType dishType, DayOfWeek dayOfWeek) {
+    public MenuRecipe(Menu menu, Recipe recipe, MealType mealType, DayOfWeek dayOfWeek) {
         this.menu = menu;
         this.recipe = recipe;
-        this.dishType = dishType;
+        this.mealType = mealType;
         this.dayOfWeek = dayOfWeek;
     }
 
-    public MenuRecipe(Recipe recipe, DishType dishType, DayOfWeek dayOfWeek) {
+    public MenuRecipe(Recipe recipe, MealType mealType, DayOfWeek dayOfWeek) {
         this.recipe = recipe;
-        this.dishType = dishType;
+        this.mealType = mealType;
         this.dayOfWeek = dayOfWeek;
     }
 }
