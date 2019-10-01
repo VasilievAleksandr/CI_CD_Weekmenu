@@ -13,5 +13,5 @@ public class UrlConsts {
     public static final String PATH_RECYCLE_BIN = "/recycleBin";
     public static final String PATH_COOKINGMETHODS = "/cookingMethods";
     public static final String PATH_MENU_CATEGORIES = "/menuCategories";
-
+    public static final String PATH_MENUS = "/menus";
 }

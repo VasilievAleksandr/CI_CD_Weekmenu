@@ -10,13 +10,14 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id", "menuRecipes", "dailyMenuStatistics", "menuPrices"})
+@EqualsAndHashCode(exclude = {"id", "dailyMenuStatistics", "menuPrices"})
 @Entity
 @Table(name = "MENU")
 public class Menu implements Serializable {
@@ -34,30 +35,62 @@ public class Menu implements Serializable {
     private String name;
 
     @Column(name = "CALORIES")
-    @Positive(message = "Menu's calories '${validatedValue}' must be positive.")
-    private Integer calories;
+    @Digits(
+            integer = 7,
+            fraction = 1,
+            message = "Calories '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
+    @PositiveOrZero(message = "Menu's calories '${validatedValue}' must be positive or '0'.")
+    private BigDecimal calories;
 
     @Column(name = "PROTEINS")
+    @Digits(
+            integer = 7,
+            fraction = 1,
+            message = "Proteins '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
     @PositiveOrZero(message = "Menu's proteins '${validatedValue}' must be positive or '0'.")
-    private Integer proteins;
+    private BigDecimal proteins;
 
     @Column(name = "FATS")
+    @Digits(
+            integer = 7,
+            fraction = 1,
+            message = "Fats '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
     @PositiveOrZero(message = "Menu's fats '${validatedValue}' must be positive or '0'.")
-    private Integer fats;
+    private BigDecimal fats;
 
     @Column(name = "CARBS")
+    @Digits(
+            integer = 7,
+            fraction = 1,
+            message = "Carbs '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
+    )
     @PositiveOrZero(message = "Menu's carbs '${validatedValue}' must be positive or '0'.")
-    private Integer carbs;
+    private BigDecimal carbs;
 
     @Column(name = "IS_ACTIVE")
     @NotNull(message = "Menu must have field 'isActive' defined.")
     private Boolean isActive;
 
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
-    private Set<
-            @Valid
-            @NotNull(message = "Menu must have list of menuRecipes without null elements.")
-            MenuRecipe> menuRecipes = new HashSet<>();
+    @Column(name = "IS_ARCHIVED")
+    private boolean isArchived;
+
+    @Column(name = "AUTHOR_NAME")
+    private String authorName;
+
+    @Column(name = "AUTHOR_IMAGE_LINK")
+    private String authorImageLink;
+
+    @Column(name = "MENU_DESCRIPTION")
+    private String menuDescription;
+
+//    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
+//    private Set<
+//            @Valid
+//            @NotNull(message = "Menu must have list of menuRecipes without null elements.")
+//            MenuRecipe> menuRecipes = new HashSet<>();
 
     @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
     private Set<
@@ -86,5 +119,17 @@ public class Menu implements Serializable {
         this.name = name;
         this.isActive = isActive;
         this.ownership = ownership;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void prepareData(){
+        this.calories = calories == null ? BigDecimal.ZERO : calories;
+        this.carbs = carbs == null ? BigDecimal.ZERO : carbs;
+        this.fats = fats == null ? BigDecimal.ZERO : fats;
+        this.proteins = proteins == null ? BigDecimal.ZERO : proteins;
+        this.authorName = authorName == null ? "" : authorName;
+        this.authorImageLink = authorImageLink == null ? "" : authorImageLink;
+        this.menuDescription = menuDescription == null ? "" : menuDescription;
     }
 }
