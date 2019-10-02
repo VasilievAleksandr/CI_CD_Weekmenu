@@ -65,6 +65,7 @@ public class MealTypeIntegrationTest {
         mealTypeDTO.setId(id);
         mealTypeDTO.setName(name);
         mealTypeDTO.setPriority(priority);
+        mealTypeDTO.setArchived(false);
         return mealTypeDTO;
     }
 
@@ -82,10 +83,10 @@ public class MealTypeIntegrationTest {
 
     @Test
     public void getAllMealTypeIntegrationTest() throws Exception {
-        MealType mealType1 = new MealType(new Short("1"), "Завтрак", 5, false);
+        MealType mealType1 = new MealType( "Завтрак",  false);
+        MealType mealType2 = new MealType( "Обед",  false);
         mealTypeRepository.save(mealType1);
-//        MealType mealType2 = new MealType(new Short("2"), "Обед", 5, false);
-//        mealTypeRepository.save(mealType2);
+        mealTypeRepository.save(mealType2);
         mockMvc.perform(get(UrlConsts.PATH_MEAL_TYPES)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -96,7 +97,7 @@ public class MealTypeIntegrationTest {
 
     @Test
     public void updateMealTypeIntegrationTest() throws Exception {
-        MealType mealType = new MealType(new Short("1"), "Завтрак", 5, false);
+        MealType mealType = new MealType( "Завтрак", false);
         mealTypeRepository.save(mealType);
         MealTypeDTO mealTypeDTO = createMealTypeDTO(mealType.getId(), "Обед", 3);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -109,7 +110,7 @@ public class MealTypeIntegrationTest {
 
     @Test
     public void deleteMealTypeIntegrationTest() throws Exception {
-        MealType mealType = new MealType(new Short("1"), "Завтрак", 5, false);
+        MealType mealType = new MealType( "Завтрак", false);
         mealTypeRepository.save(mealType);
         mockMvc.perform(delete(UrlConsts.PATH_MEAL_TYPES + "/" + mealType.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -137,7 +138,7 @@ public class MealTypeIntegrationTest {
     @Test
     @Transactional
     public void checkConnectedElementsTest() throws Exception {
-        MealType mealType = new MealType(new Short("1"), "Завтрак", 5, false);
+        MealType mealType = new MealType("Завтрак",  false);
         mealTypeRepository.save(mealType);
 
         CookingMethod cookingMethod = new CookingMethod("Жарка");
@@ -158,7 +159,7 @@ public class MealTypeIntegrationTest {
 //        TODO
 //        menuRepository.save(menu);
 
-        MenuRecipe menuRecipe = new MenuRecipe(menu, recipe,mealType, new DayOfWeek("Понедельник", "ПН"));
+        MenuRecipe menuRecipe = new MenuRecipe(menu, recipe, mealType, new DayOfWeek("Понедельник", "ПН"));
 //        TODO
 //        menuRecipeRepository.save(menuRecipe);
 
