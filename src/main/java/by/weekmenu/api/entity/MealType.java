@@ -38,8 +38,15 @@ public class MealType implements Serializable {
     @Column(name = "IS_ARCHIVED")
     private boolean isArchived;
 
-    public MealType(String name, Boolean isArchived) {
+    public MealType(String name, boolean isArchived) {
         this.name = name;
+        this.isArchived = isArchived;
+    }
+
+    public MealType(Short id, String name, Integer priority, boolean isArchived) {
+        this.id = id;
+        this.name = name;
+        this.priority = priority;
         this.isArchived = isArchived;
     }
 }

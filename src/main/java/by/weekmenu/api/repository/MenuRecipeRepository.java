@@ -8,4 +8,5 @@ import java.util.List;
 public interface MenuRecipeRepository extends CrudRepository<MenuRecipe, MenuRecipe.Id> {
 
     List<MenuRecipe> findAllById_RecipeId(Long recipeId);
+    List<MenuRecipe> findAllByMealType_Id (Short mealTypeId);
 }

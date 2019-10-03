@@ -45,8 +45,8 @@ public class MenuCategoryServiceImplTest {
     @Test
     public void getAllMenuCategoryTest() {
         List<MenuCategory> menuCategories = new ArrayList<>();
-        menuCategories.add(new MenuCategory(1, "Постное", true));
-        menuCategories.add(new MenuCategory(2, "Диетическое", true));
+        menuCategories.add(new MenuCategory(1, "Постное", false));
+        menuCategories.add(new MenuCategory(2, "Диетическое", false));
         when(menuCategoryRepository.findAllByIsArchivedIsFalse()).thenReturn(menuCategories);
         List<MenuCategoryDTO> result = menuCategoryService.findAll();
         assertThat(menuCategories.size()).isEqualTo(result.size());
