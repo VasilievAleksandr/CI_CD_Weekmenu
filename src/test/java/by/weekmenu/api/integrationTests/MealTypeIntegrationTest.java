@@ -159,7 +159,7 @@ public class MealTypeIntegrationTest {
 //        TODO
 //        menuRepository.save(menu);
 
-        MenuRecipe menuRecipe = new MenuRecipe(menu, recipe, mealType, new DayOfWeek("Понедельник", "ПН"));
+//        MenuRecipe menuRecipe = new MenuRecipe(menu, recipe, mealType, new DayOfWeek("Понедельник", "ПН"));
 //        TODO
 //        menuRecipeRepository.save(menuRecipe);
 
