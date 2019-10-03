@@ -1,6 +1,6 @@
 package by.weekmenu.api.repository;
 
-import by.weekmenu.api.entity.DishType;
+import by.weekmenu.api.entity.MealType;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

@@ -16,8 +16,8 @@ import java.io.Serializable;
 @Setter
 @EqualsAndHashCode(exclude = {"id", "priority"})
 @Entity
-@Table(name = "DISH_TYPE")
-public class DishType implements Serializable {
+@Table(name = "MEAL_TYPE")
+public class MealType implements Serializable {
 
     private static final long serialVersionUID = -8986552656545603913L;
 
@@ -27,20 +27,19 @@ public class DishType implements Serializable {
     private Short id;
 
     @Column(name = "NAME", unique = true)
-    @NotBlank(message = "DishType must have name.")
-    @Size(max = 255, message = "DishType's name '${validatedValue}' must be '{max}' characters long")
+    @NotBlank(message = "MealType must have name.")
+    @Size(max = 255, message = "MealType's name '${validatedValue}' must be '{max}' characters long")
     private String name;
 
     @Column(name = "PRIORITY")
-    @Positive(message = "DishType's priority '${validatedValue}' must be positive.")
+    @Positive(message = "MealType's priority '${validatedValue}' must be positive.")
     private Integer priority;
 
-    @Column(name = "IS_ACTIVE")
-    @NotNull(message = "DishType must have field 'isActive' defined.")
-    private Boolean isActive;
+    @Column(name = "IS_ARCHIVED")
+    private boolean isArchived;
 
-    public DishType(String name, Boolean isActive) {
+    public MealType(String name, Boolean isArchived) {
         this.name = name;
-        this.isActive = isActive;
+        this.isArchived = isArchived;
     }
 }

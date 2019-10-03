@@ -93,7 +93,7 @@ public class RecipeIntegrationTest {
     private MenuRecipeRepository menuRecipeRepository;
 
     @Autowired
-    private DishTypeRepository dishTypeRepository;
+    private MealTypeRepository mealTypeRepository;
 
     @Autowired
     private MenuRepository menuRepository;
@@ -408,11 +408,11 @@ public class RecipeIntegrationTest {
     @Transactional
     public void checkConnectedElementsTest() throws Exception {
         Recipe recipe = createRecipe("Гречневая каша");
-        DishType dishType = dishTypeRepository.save(new DishType("Обед", true));
+        MealType mealType = mealTypeRepository.save(new MealType("Обед", true));
         Menu menu = menuRepository.save(new Menu("Бюджетное", true,
                 ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null)));
         DayOfWeek dayOfWeek = dayOfWeekRepository.save(new DayOfWeek("Понедельник", "ПН"));
-        MenuRecipe menuRecipe = new MenuRecipe(menu, recipe, dishType, dayOfWeek);
+        MenuRecipe menuRecipe = new MenuRecipe(menu, recipe, mealType, dayOfWeek);
         menuRecipe.setId(new MenuRecipe.Id(menu.getId(), recipe.getId()));
         menuRecipeRepository.save(menuRecipe);
         mockMvc.perform(get(UrlConsts.PATH_RECIPES + "/checkConnectedElements/" + recipe.getId().toString())

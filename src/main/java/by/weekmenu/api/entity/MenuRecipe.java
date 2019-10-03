@@ -52,10 +52,10 @@ public class MenuRecipe implements Serializable {
     private Recipe recipe;
 
     @ManyToOne
-    @JoinColumn(name = "DISH_TYPE_ID")
+    @JoinColumn(name = "MEAL_TYPE_ID")
     @Valid
-    @NotNull(message = "MenuRecipe must have dishType.")
-    private DishType dishType;
+    @NotNull(message = "MenuRecipe must have mealType.")
+    private MealType mealType;
 
 //    @ManyToOne
 //    @JoinColumn(name = "DAY_OF_WEEK_ID")
