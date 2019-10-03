@@ -57,22 +57,25 @@ public class MenuRecipe implements Serializable {
     @NotNull(message = "MenuRecipe must have mealType.")
     private MealType mealType;
 
-    @ManyToOne
-    @JoinColumn(name = "DAY_OF_WEEK_ID")
-    @Valid
-    @NotNull(message = "MenuRecipe must have dayOfWeek.")
-    private DayOfWeek dayOfWeek;
+//    @ManyToOne
+//    @JoinColumn(name = "DAY_OF_WEEK_ID")
+//    @Valid
+//    @NotNull(message = "MenuRecipe must have dayOfWeek.")
+//    private DayOfWeek dayOfWeek;
 
-    public MenuRecipe(Menu menu, Recipe recipe, MealType mealType, DayOfWeek dayOfWeek) {
-        this.menu = menu;
-        this.recipe = recipe;
-        this.mealType = mealType;
-        this.dayOfWeek = dayOfWeek;
-    }
+    @Column(name = "DAY_OF_WEEK")
+    private java.time.DayOfWeek dayOfWeek;
 
-    public MenuRecipe(Recipe recipe, MealType mealType, DayOfWeek dayOfWeek) {
-        this.recipe = recipe;
-        this.mealType = mealType;
-        this.dayOfWeek = dayOfWeek;
-    }
+//    public MenuRecipe(Menu menu, Recipe recipe, MealType mealType, DayOfWeek dayOfWeek) {
+//        this.menu = menu;
+//        this.recipe = recipe;
+//        this.mealType = mealType;
+//        this.dayOfWeek = dayOfWeek;
+//    }
+
+//    public MenuRecipe(Recipe recipe, MealType mealType, DayOfWeek dayOfWeek) {
+//        this.recipe = recipe;
+//        this.mealType = mealType;
+//        this.dayOfWeek = dayOfWeek;
+//    }
 }
