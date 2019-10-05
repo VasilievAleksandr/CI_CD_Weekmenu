@@ -5,7 +5,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface MenuRecipeRepository extends CrudRepository<MenuRecipe, MenuRecipe.Id> {
+public interface MenuRecipeRepository extends CrudRepository<MenuRecipe, Long> {
 
-    List<MenuRecipe> findAllById_RecipeId(Long recipeId);
+    List<MenuRecipe> findAllByRecipe_Id(Long recipeId);
+    List<MenuRecipe> findAllByMenu_Id(Long menuId);
 }

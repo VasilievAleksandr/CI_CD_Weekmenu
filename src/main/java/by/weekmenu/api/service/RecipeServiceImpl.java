@@ -195,7 +195,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<String> checkConnectedElements(Long id) {
         List<String> list = new ArrayList<>();
-        List<MenuRecipe> menuRecipes = menuRecipeRepository.findAllById_RecipeId(id);
+        List<MenuRecipe> menuRecipes = menuRecipeRepository.findAllByRecipe_Id(id);
         if (menuRecipes.size() > 0) {
             list.add("меню: " + menuRecipes.size());
         }
