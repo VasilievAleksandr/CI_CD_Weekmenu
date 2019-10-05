@@ -12,7 +12,6 @@ public class MenuDTO {
     private Long id;
     private String name;
     private String menuCategoryName;
-    private Set<String> mealTypeNames;
     private String authorName;
     private String authorImageLink;
     private String menuDescription;

@@ -10,8 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -42,23 +41,19 @@ public class MenuServiceImpl implements MenuService{
     }
 
     private void saveMenuRecipes(MenuDTO menuDTO, Menu menu) {
-        Set<MenuRecipeDTO> menuRecipeDTOS = menuDTO.getMenuRecipeDTOS();
-        menuRecipeDTOS.forEach(menuRecipeDTO -> {
-            MenuRecipe menuRecipe = new MenuRecipe();
-            menuRecipe.setMenu(menu);
-            recipeRepository.findByNameIgnoreCase(menuRecipeDTO.getRecipeName()).ifPresent(recipe -> {
-                menuRecipe.setId(new MenuRecipe.Id(menu.getId(), recipe.getId()));
-                menuRecipe.setRecipe(recipe);
+        menuDTO.getMenuRecipeDTOS().forEach(menuRecipeDTO -> {
+                MenuRecipe menuRecipe = new MenuRecipe();
+                menuRecipe.setMenu(menu);
+                recipeRepository.findByNameIgnoreCase(menuRecipeDTO.getRecipeName()).ifPresent(menuRecipe::setRecipe);
+                mealTypeRepository.findByNameIgnoreCase(menuRecipeDTO.getMealTypeName()).ifPresent(menuRecipe::setMealType);
+                menuRecipe.setDayOfWeek(menuRecipeDTO.getDayOfWeek());
+                menuRecipeRepository.save(menuRecipe);
             });
-            mealTypeRepository.findByNameIgnoreCase(menuRecipeDTO.getMealTypeName()).ifPresent(menuRecipe::setMealType);
-            menuRecipe.setDayOfWeek(menuRecipeDTO.getDayOfWeek());
-            menuRecipeRepository.save(menuRecipe);
-        });
     }
 
     @Override
     public MenuDTO findById(Long id) {
-        return null;
+        return convertToDTO(menuRepository.findById(id).orElse(null));
     }
 
     @Override
@@ -77,7 +72,6 @@ public class MenuServiceImpl implements MenuService{
         if (menuDTO.getMenuCategoryName()!=null) {
             menuCategoryRepository.findByNameIgnoreCase(menuDTO.getMenuCategoryName()).ifPresent(menu::setMenuCategory);
         }
-//            TODO  save MenuRecipe
         return menu;
     }
 
@@ -86,6 +80,11 @@ public class MenuServiceImpl implements MenuService{
             MenuDTO menuDTO = modelMapper.map(menu, MenuDTO.class);
             menuDTO.setMenuCategoryName(menu.getMenuCategory().getName());
             menuDTO.setOwnershipName(menu.getOwnership().getName());
+
+            Set<MenuRecipeDTO> menuRecipeDTOS = new HashSet<>();
+            menuRecipeRepository.findAllByMenu_Id(menu.getId())
+                .forEach(menuRecipe -> menuRecipeDTOS.add(modelMapper.map(menuRecipe, MenuRecipeDTO.class)));
+            menuDTO.setMenuRecipeDTOS(menuRecipeDTOS);
             return menuDTO;
         } else {
             return null;
