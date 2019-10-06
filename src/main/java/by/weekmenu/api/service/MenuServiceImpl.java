@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -30,7 +31,11 @@ public class MenuServiceImpl implements MenuService{
     }
 
     @Override
+    @Transactional
     public MenuDTO save(MenuDTO menuDTO) {
+        if (menuDTO.getId()!=null) {
+            menuRecipeRepository.deleteAllByMenu_Id(menuDTO.getId());
+        }
         Menu menu = convertToEntity(menuDTO);
         menuRepository.save(menu);
         if (menuDTO.getMenuRecipeDTOS()!=null) {
