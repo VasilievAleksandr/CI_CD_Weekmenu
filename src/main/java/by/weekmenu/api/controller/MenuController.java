@@ -23,6 +23,12 @@ public class MenuController {
     private final MenuService menuService;
     private final ModelMapper modelMapper;
 
+    @GetMapping
+    @ApiOperation("Возвращает список всех меню")
+    public ResponseEntity<List<MenuDTO>> findAllMenus() {
+        return new ResponseEntity<>(menuService.findAll(), HttpStatus.OK);
+    }
+
     @PostMapping
     @ApiOperation("Сохраняет меню")
     public ResponseEntity<MenuDTO> addMenu(@RequestBody MenuDTO menuDTO) {

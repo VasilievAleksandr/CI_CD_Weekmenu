@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -75,7 +76,10 @@ public class MenuServiceImpl implements MenuService{
 
     @Override
     public List<MenuDTO> findAll() {
-        return null;
+        return menuRepository.findAllByIsArchivedIsFalse().stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
