@@ -49,6 +49,7 @@ public class RecipeServiceImpl implements RecipeService {
             saveRecipeIngredients(entityDto, recipe);
             recipeCalculation.calculateCPFC(entityDto, recipe);
             recipeCalculation.calculateGramsPerPortion(entityDto, recipe);
+            recipeRepository.save(recipe);
         }
         if (entityDto.getCookingSteps()!=null) {
             saveCookingSteps(entityDto, recipe);

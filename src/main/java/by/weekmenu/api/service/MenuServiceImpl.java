@@ -5,6 +5,7 @@ import by.weekmenu.api.dto.MenuRecipeDTO;
 import by.weekmenu.api.entity.Menu;
 import by.weekmenu.api.entity.MenuRecipe;
 import by.weekmenu.api.repository.*;
+import by.weekmenu.api.utils.MenuCalculations;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,18 @@ public class MenuServiceImpl implements MenuService{
     private final RecipeRepository recipeRepository;
     private final MealTypeRepository mealTypeRepository;
     private final MenuRecipeRepository menuRecipeRepository;
+    private final MenuCalculations menuCalculations;
     private final ModelMapper modelMapper;
 
     @Override
     public void updateMenus(Long recipeId) {
-
+        List<MenuRecipe> menuRecipes = menuRecipeRepository.findAllByRecipe_Id(recipeId);
+        menuRecipes.forEach(menuRecipe -> {
+            Menu menu = menuRecipe.getMenu();
+            MenuDTO menuDTO = convertToDTO(menu);
+            menuCalculations.calculateCPFC(menuDTO, menu);
+            menuRepository.save(menu);
+        });
     }
 
     @Override
@@ -39,8 +47,10 @@ public class MenuServiceImpl implements MenuService{
         Menu menu = convertToEntity(menuDTO);
         menuRepository.save(menu);
         if (menuDTO.getMenuRecipeDTOS()!=null) {
-            //TODO do calculations
             saveMenuRecipes(menuDTO, menu);
+            //TODO do calculations
+            menuCalculations.calculateCPFC(menuDTO, menu);
+            menuRepository.save(menu);
         }
         return convertToDTO(menu);
     }
