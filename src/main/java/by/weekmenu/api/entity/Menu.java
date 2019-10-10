@@ -11,13 +11,11 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id", "dailyMenuStatistics", "menuPrices"})
+@EqualsAndHashCode(exclude = {"id"})
 @Entity
 @Table(name = "MENU")
 public class Menu implements Serializable {
@@ -86,18 +84,6 @@ public class Menu implements Serializable {
     @Column(name = "MENU_DESCRIPTION")
     private String menuDescription;
 
-//    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
-//    private Set<
-//            @Valid
-//            @NotNull(message = "Menu must have list of menuRecipes without null elements.")
-//            MenuRecipe> menuRecipes = new HashSet<>();
-
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
-    private Set<
-            @Valid
-            @NotNull(message = "Menu must have list of menuPrices without null elements.")
-                    MenuPrice> menuPrices = new HashSet<>();
-
     @ManyToOne
     @JoinColumn(name = "MENU_CATEGORY_ID")
     @Valid
@@ -108,12 +94,6 @@ public class Menu implements Serializable {
     @Valid
     @NotNull(message = "Menu's ownership mustn't be null.")
     private Ownership ownership;
-
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
-    private Set<
-            @Valid
-            @NotNull(message = "Menu must have list of dailyMenuStatistics without null elements.")
-            DailyMenuStatistics> dailyMenuStatistics = new HashSet<>();
 
     public Menu(String name, Boolean isActive, Ownership ownership) {
         this.name = name;
