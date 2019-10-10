@@ -4,15 +4,19 @@ import by.weekmenu.api.dto.MenuDTO;
 import by.weekmenu.api.dto.MenuRecipeDTO;
 import by.weekmenu.api.entity.Menu;
 import by.weekmenu.api.entity.MenuRecipe;
+import by.weekmenu.api.entity.RecycleBin;
 import by.weekmenu.api.repository.*;
 import by.weekmenu.api.utils.MenuCalculations;
+import by.weekmenu.api.utils.EntityNamesConsts;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -25,6 +29,7 @@ public class MenuServiceImpl implements MenuService{
     private final MealTypeRepository mealTypeRepository;
     private final MenuRecipeRepository menuRecipeRepository;
     private final MenuCalculations menuCalculations;
+    private final RecycleBinRepository recycleBinRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -36,6 +41,14 @@ public class MenuServiceImpl implements MenuService{
             menuCalculations.calculateCPFC(menuDTO, menu);
             menuRepository.save(menu);
         });
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        menuRecipeRepository.deleteAllByMenu_Id(id);
+        //TODO delete recipePrices
+        menuRepository.deleteById(id);
     }
 
     @Override
@@ -73,12 +86,21 @@ public class MenuServiceImpl implements MenuService{
 
     @Override
     public List<MenuDTO> findAll() {
-        return null;
+        return menuRepository.findAllByIsArchivedIsFalse().stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void moveToRecycleBin(MenuDTO entityDto) {
-
+    @Transactional
+    public void moveToRecycleBin(MenuDTO menuDTO) {
+        RecycleBin recycleBin = new RecycleBin();
+        recycleBin.setElementName(menuDTO.getName());
+        recycleBin.setEntityName(EntityNamesConsts.MENU);
+        recycleBin.setDeleteDate(LocalDateTime.now());
+        recycleBinRepository.save(recycleBin);
+        menuRepository.softDelete(menuDTO.getId());
     }
 
     private Menu convertToEntity(MenuDTO menuDTO) {
@@ -104,5 +126,10 @@ public class MenuServiceImpl implements MenuService{
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<String> checkConnectedElements(Long id) {
+        return new ArrayList<>();
     }
 }

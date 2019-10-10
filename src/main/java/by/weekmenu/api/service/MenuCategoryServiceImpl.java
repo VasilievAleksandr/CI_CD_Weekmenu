@@ -57,7 +57,7 @@ public class MenuCategoryServiceImpl implements MenuCategoryService {
     public List<String> checkConnectedElements(Integer id) {
         List<String> list = new ArrayList<>();
         Optional<MenuCategory> menuCategory = menuCategoryRepository.findById(id);
-        Integer size = menuRepository.findAllByMenuCategory_Id(id).size();
+        Integer size = menuRepository.findAllByMenuCategory_IdAndIsArchivedIsFalse(id).size();
         if (menuCategory.isPresent() && size > 0) {
             list.add("меню: " + size);
         }
