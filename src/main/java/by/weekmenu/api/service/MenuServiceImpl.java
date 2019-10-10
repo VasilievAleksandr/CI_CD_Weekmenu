@@ -1,8 +1,10 @@
 package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.MenuDTO;
+import by.weekmenu.api.dto.MenuPriceDTO;
 import by.weekmenu.api.dto.MenuRecipeDTO;
 import by.weekmenu.api.entity.Menu;
+import by.weekmenu.api.entity.MenuPrice;
 import by.weekmenu.api.entity.MenuRecipe;
 import by.weekmenu.api.entity.RecycleBin;
 import by.weekmenu.api.repository.*;
@@ -125,6 +127,17 @@ public class MenuServiceImpl implements MenuService{
             menuRecipeRepository.findAllByMenu_Id(menu.getId())
                 .forEach(menuRecipe -> menuRecipeDTOS.add(modelMapper.map(menuRecipe, MenuRecipeDTO.class)));
             menuDTO.setMenuRecipeDTOS(menuRecipeDTOS);
+
+            Set<MenuPriceDTO> menuPriceDTOS = new HashSet<>();
+            for (MenuPrice menuPrice : menuPriceRepository.findAllById_MenuId(menu.getId())) {
+                MenuPriceDTO menuPriceDTO = new MenuPriceDTO();
+                menuPriceDTO.setMenuName(menuPrice.getMenu().getName());
+                menuPriceDTO.setRegionName(menuPrice.getRegion().getName());
+                menuPriceDTO.setPriceValue(String.valueOf(menuPrice.getPriceValue()));
+                menuPriceDTO.setCurrencyCode(menuPrice.getRegion().getCountry().getCurrency().getCode());
+                menuPriceDTOS.add(menuPriceDTO);
+            }
+            menuDTO.setMenuPriceDTOS(menuPriceDTOS);
             return menuDTO;
         } else {
             return null;
