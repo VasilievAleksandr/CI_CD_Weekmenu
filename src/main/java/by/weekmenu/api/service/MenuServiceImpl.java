@@ -30,6 +30,7 @@ public class MenuServiceImpl implements MenuService{
     private final MenuRecipeRepository menuRecipeRepository;
     private final MenuCalculations menuCalculations;
     private final RecycleBinRepository recycleBinRepository;
+    private final MenuPriceRepository menuPriceRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -39,6 +40,7 @@ public class MenuServiceImpl implements MenuService{
             Menu menu = menuRecipe.getMenu();
             MenuDTO menuDTO = convertToDTO(menu);
             menuCalculations.calculateCPFC(menuDTO, menu);
+            menuCalculations.calculateMenuPrice(menuDTO, menu);
             menuRepository.save(menu);
         });
     }
@@ -47,7 +49,7 @@ public class MenuServiceImpl implements MenuService{
     @Transactional
     public void delete(Long id) {
         menuRecipeRepository.deleteAllByMenu_Id(id);
-        //TODO delete recipePrices
+        menuPriceRepository.deleteAllById_MenuId(id);
         menuRepository.deleteById(id);
     }
 
@@ -56,13 +58,14 @@ public class MenuServiceImpl implements MenuService{
     public MenuDTO save(MenuDTO menuDTO) {
         if (menuDTO.getId()!=null) {
             menuRecipeRepository.deleteAllByMenu_Id(menuDTO.getId());
+            menuPriceRepository.deleteAllById_MenuId(menuDTO.getId());
         }
         Menu menu = convertToEntity(menuDTO);
         menuRepository.save(menu);
         if (menuDTO.getMenuRecipeDTOS()!=null) {
             saveMenuRecipes(menuDTO, menu);
-            //TODO do calculations
             menuCalculations.calculateCPFC(menuDTO, menu);
+            menuCalculations.calculateMenuPrice(menuDTO, menu);
             menuRepository.save(menu);
         }
         return convertToDTO(menu);

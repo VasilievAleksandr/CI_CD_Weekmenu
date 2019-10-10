@@ -1,7 +1,6 @@
 package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.RecipeDTO;
-import by.weekmenu.api.service.MenuService;
 import by.weekmenu.api.service.RecipeService;
 import by.weekmenu.api.utils.UrlConsts;
 import io.swagger.annotations.Api;
@@ -22,7 +21,6 @@ import java.util.List;
 public class RecipeController {
 
     private final RecipeService recipeService;
-    private final MenuService menuService;
     private final ModelMapper modelMapper;
 
     @GetMapping
@@ -42,9 +40,7 @@ public class RecipeController {
     public ResponseEntity<RecipeDTO> updateRecipe(@RequestBody RecipeDTO updatedRecipeDTO, @PathVariable ("id") Long id) {
         RecipeDTO recipeDto = recipeService.findById(id);
         if (recipeDto!=null) {
-            RecipeDTO recipeDTO = recipeService.save(modelMapper.map(updatedRecipeDTO, RecipeDTO.class));
-            menuService.updateMenus(recipeDTO.getId());
-            return new ResponseEntity<>(recipeDTO, HttpStatus.OK);
+            return new ResponseEntity<>(recipeService.save(modelMapper.map(updatedRecipeDTO, RecipeDTO.class)), HttpStatus.OK);
         } else {
             return new ResponseEntity<>( HttpStatus.NOT_FOUND);
         }

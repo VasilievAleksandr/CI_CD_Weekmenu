@@ -32,6 +32,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeCategoryRepository recipeCategoryRepository;
     private final RecipeSubcategoryRepository recipeSubcategoryRepository;
     private final RecipeCalculation recipeCalculation;
+    private final MenuService menuService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -54,6 +55,7 @@ public class RecipeServiceImpl implements RecipeService {
         if (entityDto.getCookingSteps()!=null) {
             saveCookingSteps(entityDto, recipe);
         }
+        menuService.updateMenus(recipe.getId());
         return convertToDto(recipe);
     }
 
