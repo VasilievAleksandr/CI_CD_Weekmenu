@@ -1,9 +1,6 @@
 package by.weekmenu.api.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -23,36 +20,19 @@ public class MenuPrice implements Serializable {
 
     private static final long serialVersionUID = -5276633775282339542L;
 
-    @Embeddable
-    @Getter
+    @Data
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Embeddable
     public static class Id implements Serializable {
 
         private static final long serialVersionUID = 5836478275051504090L;
 
-        @Column(name = "MENU__ID")
+        @Column(name = "MENU_ID")
         private Long menuId;
 
         @Column(name = "REGION_ID")
         private Long regionId;
-
-        public Id(Long menuId, Long regionId) {
-            this.menuId = menuId;
-            this.regionId = regionId;
-        }
-
-        public boolean equals(Object o) {
-            if (o != null && o instanceof Id) {
-                Id that = (Id) o;
-                return this.menuId.equals(that.menuId) && this.regionId.equals(that.regionId);
-            }
-
-            return false;
-        }
-
-        public int hashCode() {
-            return menuId.hashCode() + regionId.hashCode();
-        }
     }
 
     @EmbeddedId
