@@ -76,12 +76,15 @@ public class Menu implements Serializable {
     private boolean isArchived;
 
     @Column(name = "AUTHOR_NAME")
+    @Size(max = 255, message = "Author name's length of the menu '${validatedValue}' mustn't be more than '{max}' characters long.")
     private String authorName;
 
     @Column(name = "AUTHOR_IMAGE_LINK")
+    @Size(max = 255, message = "Author image link's length of the menu '${validatedValue}' mustn't be more than '{max}' characters long.")
     private String authorImageLink;
 
     @Column(name = "MENU_DESCRIPTION")
+    @Size(max = 1000, message = "Menu description's length '${validatedValue}' mustn't be more than '{max}' characters long.")
     private String menuDescription;
 
     @ManyToOne
