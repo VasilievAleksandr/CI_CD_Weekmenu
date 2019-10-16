@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -140,7 +141,7 @@ public class RecipeCalculation {
                 }
             }
         }
-        recipe.setGramsPerPortion(totalGrams.divide(new BigDecimal(recipe.getPortions()))
-                .setScale(1, BigDecimal.ROUND_HALF_UP));
+        recipe.setGramsPerPortion(totalGrams.divide(new BigDecimal(recipe.getPortions()),
+                1, RoundingMode.HALF_UP));
     }
 }
