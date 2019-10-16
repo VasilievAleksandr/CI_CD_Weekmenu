@@ -68,6 +68,15 @@ public class RecipeController {
         }
     }
 
+    @GetMapping("/filter")
+    @ApiOperation("Возвращает список рецептов в соответствии с фильтром")
+    public List<RecipeDTO> filter(@RequestParam (required = false) String recipeName,
+                                  @RequestParam (required = false) Short totalCookingTime,
+                                  @RequestParam (required = false) String recipeCategoryName) {
+        return recipeService.findAllByFilter(recipeName, totalCookingTime, recipeCategoryName);
+    }
+
+
     @GetMapping("/checkConnectedElements/{id}")
     @ApiOperation("Проверяет наличие связанных элементов по Id")
     public List<String> checkConnectedElements(@PathVariable("id") Long id) {

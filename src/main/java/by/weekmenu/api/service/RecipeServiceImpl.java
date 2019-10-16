@@ -100,6 +100,17 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public List<RecipeDTO> findAllByFilter(String recipeName, Short totalCookingTime,
+                                           String recipeCategoryName) {
+        List<Recipe> allByFilter = recipeRepository.findAllByFilter(recipeName, totalCookingTime,
+                recipeCategoryName);
+        return recipeRepository.findAllByFilter(recipeName, totalCookingTime, recipeCategoryName).stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<RecipeDTO> findAll() {
         return recipeRepository.findAllByIsArchivedIsFalse().stream()
                 .filter(Objects::nonNull)
