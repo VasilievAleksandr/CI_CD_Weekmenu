@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(UrlConsts.PATH_RECIPESUBCATEGORIES)
-@Api(description = "REST API для сущности Recipesubcategory")
+@Api(description = "REST API для сущности RecipeSubcategory")
 public class RecipeSubcategoryController {
 
     private final RecipeSubcategoryService recipeSubcategoryService;
@@ -43,7 +43,7 @@ public class RecipeSubcategoryController {
         RecipeSubcategoryDTO recipeSubcategoryDTO = recipeSubcategoryService.findById(id);
         if (recipeSubcategoryDTO != null) {
             recipeSubcategoryDTO.setName(updatedRecipeSubcategoryDTO.getName());
-            return new ResponseEntity<>(recipeSubcategoryDTO, HttpStatus.OK);
+            return new ResponseEntity<>(recipeSubcategoryService.save(recipeSubcategoryDTO), HttpStatus.OK);
         }
         else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
