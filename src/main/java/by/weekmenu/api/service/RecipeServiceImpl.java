@@ -6,6 +6,7 @@ import by.weekmenu.api.repository.*;
 import by.weekmenu.api.utils.EntityNamesConsts;
 import by.weekmenu.api.utils.RecipeCalculation;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -102,12 +103,19 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeDTO> findAllByFilter(String recipeName, Short totalCookingTime,
                                            String recipeCategoryName) {
-        List<Recipe> allByFilter = recipeRepository.findAllByFilter(recipeName, totalCookingTime,
-                recipeCategoryName);
-        return recipeRepository.findAllByFilter(recipeName, totalCookingTime, recipeCategoryName).stream()
+        List<RecipeDTO> allByRecipeCategory = recipeRepository.findAllByRecipeCategory(recipeCategoryName)
+                .stream()
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+        List<RecipeDTO> byRecipeFilter = recipeRepository.findAllByFilter(recipeName, totalCookingTime).stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+        if (allByRecipeCategory.size()!=0) {
+            byRecipeFilter.retainAll(allByRecipeCategory);
+        }
+        return byRecipeFilter;
     }
 
     @Override

@@ -73,7 +73,8 @@ public class RecipeController {
     public List<RecipeDTO> filter(@RequestParam (required = false) String recipeName,
                                   @RequestParam (required = false) Short totalCookingTime,
                                   @RequestParam (required = false) String recipeCategoryName) {
-        return recipeService.findAllByFilter(recipeName, totalCookingTime, recipeCategoryName);
+        return recipeService.findAllByFilter(recipeName, totalCookingTime,
+                 recipeCategoryName);
     }
 
 

@@ -25,11 +25,13 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
     void restore(@Param("recipeId") Long recipeId);
 
     @Query("select recipe from Recipe recipe " +
-            "join recipe.recipeCategories recipeCategoryName " +
             "where ( :recipeName is null or lower(recipe.name) like %:recipeName%) " +
-            "and ( :totalCookingTime is null or (recipe.cookingTime + recipe.preparingTime) <= :totalCookingTime) " +
-            "and (:recipeCategoryName is null or recipeCategoryName.name = :recipeCategoryName)")
+            "and ( :totalCookingTime is null or (recipe.cookingTime + recipe.preparingTime) <= :totalCookingTime)")
     List<Recipe> findAllByFilter(@Param("recipeName") String recipeName,
-                                 @Param("totalCookingTime") Short totalCookingTime,
-                                 @Param("recipeCategoryName") String recipeCategoryName);
+                                 @Param("totalCookingTime") Short totalCookingTime);
+
+    @Query("select recipe from Recipe recipe " +
+            "join recipe.recipeCategories recipeCategories " +
+            "where recipeCategories.name = :recipeCategoryName")
+    List<Recipe> findAllByRecipeCategory(@Param("recipeCategoryName") String recipeCategoryName);
 }
