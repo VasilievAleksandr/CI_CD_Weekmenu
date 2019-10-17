@@ -12,5 +12,5 @@ public interface RecipeService extends CrudService<RecipeDTO, Long> {
     List<String> checkConnectedElements(Long id);
     void delete (Long id);
     List<RecipeDTO> findAllByFilter(String recipeName, Short totalCookingTime,
-                                    String recipeCategoryName);
+                                    String recipeCategoryName, String recipeSubcategoryName);
 }

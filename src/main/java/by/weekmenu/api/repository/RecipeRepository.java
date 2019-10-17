@@ -33,5 +33,10 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
     @Query("select recipe from Recipe recipe " +
             "join recipe.recipeCategories recipeCategories " +
             "where recipeCategories.name = :recipeCategoryName")
-    List<Recipe> findAllByRecipeCategory(@Param("recipeCategoryName") String recipeCategoryName);
+    List<Recipe> findAllByRecipeCategoryName(@Param("recipeCategoryName") String recipeCategoryName);
+
+    @Query("select recipe from Recipe recipe " +
+            "join  recipe.recipeSubcategories recipeSubcategories " +
+            "where recipeSubcategories.name = :recipeSubcategoryName")
+    List<Recipe> findAllByRecipeSubcategoryName(@Param("recipeSubcategoryName") String recipeSubcategoryName);
 }

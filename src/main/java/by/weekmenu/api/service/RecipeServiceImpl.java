@@ -102,9 +102,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeDTO> findAllByFilter(String recipeName, Short totalCookingTime,
-                                           String recipeCategoryName) {
+                                           String recipeCategoryName, String recipeSubcategoryName) {
         List<RecipeDTO> result = new ArrayList<>();
-        List<RecipeDTO> allByRecipeCategory = recipeRepository.findAllByRecipeCategory(recipeCategoryName)
+        List<RecipeDTO> allByRecipeCategory = recipeRepository.findAllByRecipeCategoryName(recipeCategoryName)
                 .stream()
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
@@ -113,13 +113,29 @@ public class RecipeServiceImpl implements RecipeService {
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-        if (StringUtils.isEmpty(recipeName) && totalCookingTime == null) {
+        List<RecipeDTO> allByRecipeSubcategory = recipeRepository.findAllByRecipeSubcategoryName(recipeSubcategoryName)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+        if (StringUtils.isEmpty(recipeName) && totalCookingTime == null && StringUtils.isEmpty(recipeSubcategoryName)) {
             result.addAll(allByRecipeCategory);
-        } else if (StringUtils.isEmpty(recipeCategoryName)) {
+        } else if (StringUtils.isEmpty(recipeCategoryName) && StringUtils.isEmpty(recipeSubcategoryName)) {
             result.addAll(byRecipeFilter);
+        } else if (StringUtils.isEmpty(recipeName) && totalCookingTime == null && StringUtils.isEmpty(recipeCategoryName)) {
+            result.addAll(allByRecipeSubcategory);
+        } else if (StringUtils.isEmpty(recipeCategoryName)) {
+            result.addAll(byRecipeFilter.stream()
+                    .filter(allByRecipeSubcategory::contains)
+                    .collect(Collectors.toList()));
+        } else if(StringUtils.isEmpty(recipeSubcategoryName)) {
+            result.addAll(byRecipeFilter.stream()
+                    .filter(allByRecipeCategory::contains)
+                    .collect(Collectors.toList()));
         } else {
             result.addAll(byRecipeFilter.stream()
                     .filter(allByRecipeCategory::contains)
+                    .filter(allByRecipeSubcategory::contains)
                     .collect(Collectors.toList()));
         }
         return result;

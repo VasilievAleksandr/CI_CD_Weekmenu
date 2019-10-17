@@ -72,9 +72,10 @@ public class RecipeController {
     @ApiOperation("Возвращает список рецептов в соответствии с фильтром")
     public List<RecipeDTO> filter(@RequestParam (required = false) String recipeName,
                                   @RequestParam (required = false) Short totalCookingTime,
-                                  @RequestParam (required = false) String recipeCategoryName) {
+                                  @RequestParam (required = false) String recipeCategoryName,
+                                  @RequestParam (required = false) String recipeSubcategoryName) {
         return recipeService.findAllByFilter(recipeName, totalCookingTime,
-                 recipeCategoryName);
+                 recipeCategoryName, recipeSubcategoryName);
     }
 
 
