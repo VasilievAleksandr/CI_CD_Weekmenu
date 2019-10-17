@@ -6,11 +6,13 @@ import by.weekmenu.api.repository.*;
 import by.weekmenu.api.utils.EntityNamesConsts;
 import by.weekmenu.api.utils.RecipeCalculation;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -97,6 +99,50 @@ public class RecipeServiceImpl implements RecipeService {
         recipeIngredientRepository.deleteById_RecipeId(id);
         recipePriceRepository.deleteById_RecipeId(id);
         recipeRepository.deleteById(id);
+    }
+
+    @Override
+    public List<RecipeDTO> findAllByFilter(String recipeName, Short totalCookingTime,
+                                           String recipeCategoryName, String recipeSubcategoryName,
+                                           BigDecimal recipeCalories) {
+        List<RecipeDTO> result = new ArrayList<>();
+        List<RecipeDTO> allByRecipeCategory = recipeRepository.findAllByRecipeCategoryName(recipeCategoryName)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+        List<RecipeDTO> byRecipeFilter = recipeRepository.findAllByFilter(recipeName, totalCookingTime, recipeCalories).stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+        List<RecipeDTO> allByRecipeSubcategory = recipeRepository.findAllByRecipeSubcategoryName(recipeSubcategoryName)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+        if (StringUtils.isEmpty(recipeName) && totalCookingTime == null &&
+                recipeCalories == null && StringUtils.isEmpty(recipeSubcategoryName)) {
+            result.addAll(allByRecipeCategory);
+        } else if (StringUtils.isEmpty(recipeCategoryName) && StringUtils.isEmpty(recipeSubcategoryName)) {
+            result.addAll(byRecipeFilter);
+        } else if (StringUtils.isEmpty(recipeName) && totalCookingTime == null &&
+                recipeCalories == null && StringUtils.isEmpty(recipeCategoryName)) {
+            result.addAll(allByRecipeSubcategory);
+        } else if (StringUtils.isEmpty(recipeCategoryName)) {
+            result.addAll(byRecipeFilter.stream()
+                    .filter(allByRecipeSubcategory::contains)
+                    .collect(Collectors.toList()));
+        } else if(StringUtils.isEmpty(recipeSubcategoryName)) {
+            result.addAll(byRecipeFilter.stream()
+                    .filter(allByRecipeCategory::contains)
+                    .collect(Collectors.toList()));
+        } else {
+            result.addAll(byRecipeFilter.stream()
+                    .filter(allByRecipeCategory::contains)
+                    .filter(allByRecipeSubcategory::contains)
+                    .collect(Collectors.toList()));
+        }
+        return result;
     }
 
     @Override

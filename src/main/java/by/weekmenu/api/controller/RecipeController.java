@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -67,6 +68,18 @@ public class RecipeController {
             return 0;
         }
     }
+
+    @GetMapping("/filter")
+    @ApiOperation("Возвращает список рецептов в соответствии с фильтром")
+    public List<RecipeDTO> filter(@RequestParam (required = false) String recipeName,
+                                  @RequestParam (required = false) Short totalCookingTime,
+                                  @RequestParam (required = false) String recipeCategoryName,
+                                  @RequestParam (required = false) String recipeSubcategoryName,
+                                  @RequestParam (required = false) BigDecimal recipeCalories) {
+        return recipeService.findAllByFilter(recipeName, totalCookingTime,
+                 recipeCategoryName, recipeSubcategoryName, recipeCalories);
+    }
+
 
     @GetMapping("/checkConnectedElements/{id}")
     @ApiOperation("Проверяет наличие связанных элементов по Id")
