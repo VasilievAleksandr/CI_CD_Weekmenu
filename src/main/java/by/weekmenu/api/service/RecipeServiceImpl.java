@@ -103,6 +103,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeDTO> findAllByFilter(String recipeName, Short totalCookingTime,
                                            String recipeCategoryName) {
+        List<RecipeDTO> result = new ArrayList<>();
         List<RecipeDTO> allByRecipeCategory = recipeRepository.findAllByRecipeCategory(recipeCategoryName)
                 .stream()
                 .filter(Objects::nonNull)
@@ -112,10 +113,16 @@ public class RecipeServiceImpl implements RecipeService {
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-        if (allByRecipeCategory.size()!=0) {
-            byRecipeFilter.retainAll(allByRecipeCategory);
+        if (StringUtils.isEmpty(recipeName) && totalCookingTime == null) {
+            result.addAll(allByRecipeCategory);
+        } else if (StringUtils.isEmpty(recipeCategoryName)) {
+            result.addAll(byRecipeFilter);
+        } else {
+            result.addAll(byRecipeFilter.stream()
+                    .filter(allByRecipeCategory::contains)
+                    .collect(Collectors.toList()));
         }
-        return byRecipeFilter;
+        return result;
     }
 
     @Override
