@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.CurrencyDTO;
 import by.weekmenu.api.entity.Currency;
+import by.weekmenu.api.repository.MealTypeRepository;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.CurrencyService;
@@ -44,6 +45,9 @@ public class CurrencyControllerTest {
 
     @MockBean
     private OwnershipRepository ownershipRepository;
+
+    @MockBean
+    private MealTypeRepository mealTypeRepository;
 
     @MockBean
     private UnitOfMeasureRepository unitOfMeasureRepository;

@@ -1,8 +1,10 @@
 package by.weekmenu.api;
 
+import by.weekmenu.api.entity.MealType;
 import by.weekmenu.api.entity.Ownership;
 import by.weekmenu.api.entity.OwnershipName;
 import by.weekmenu.api.entity.UnitOfMeasure;
+import by.weekmenu.api.repository.MealTypeRepository;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import com.fasterxml.jackson.databind.Module;
@@ -32,15 +34,22 @@ public class ApiApplication extends SpringBootServletInitializer {
     }
 
     @Bean
-    public CommandLineRunner initOwnershipAndBaseUOM (OwnershipRepository ownershipRepository,
-                                                      UnitOfMeasureRepository unitOfMeasureRepository) {
+    public CommandLineRunner initOwnershipAndBaseUOM(OwnershipRepository ownershipRepository,
+                                                     UnitOfMeasureRepository unitOfMeasureRepository,
+                                                     MealTypeRepository mealTypeRepository) {
         return (args) -> {
-            if (ownershipRepository.findAll().spliterator().getExactSizeIfKnown()==0) {
+            if (ownershipRepository.findAll().spliterator().getExactSizeIfKnown() == 0) {
                 ownershipRepository.save(new Ownership(OwnershipName.ADMIN));
                 ownershipRepository.save(new Ownership(OwnershipName.USER));
             }
             if (!unitOfMeasureRepository.findByFullNameIgnoreCase("Грамм").isPresent()) {
-                unitOfMeasureRepository.save(new UnitOfMeasure("Гр", "Грамм"));
+                unitOfMeasureRepository.save(new UnitOfMeasure("гр", "Грамм"));
+            }
+            if (!mealTypeRepository.findByNameIgnoreCase("Завтрак").isPresent()) {
+                mealTypeRepository.save(new MealType("Завтрак", 10));
+                mealTypeRepository.save(new MealType("Обед", 20));
+                mealTypeRepository.save(new MealType("Полдник", 30));
+                mealTypeRepository.save(new MealType("Ужин", 40));
             }
         };
     }

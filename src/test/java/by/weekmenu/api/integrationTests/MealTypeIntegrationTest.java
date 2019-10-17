@@ -60,9 +60,8 @@ public class MealTypeIntegrationTest {
         cookingMethodRepository.deleteAll();
     }
 
-    private MealTypeDTO createMealTypeDTO(Short id, String name, Integer priority) {
+    private MealTypeDTO createMealTypeDTO(String name, Integer priority) {
         MealTypeDTO mealTypeDTO = new MealTypeDTO();
-        mealTypeDTO.setId(id);
         mealTypeDTO.setName(name);
         mealTypeDTO.setPriority(priority);
         mealTypeDTO.setArchived(false);
@@ -72,34 +71,35 @@ public class MealTypeIntegrationTest {
     @Test
     @Transactional
     public void saveMealTypeIntegrationTest() throws Exception {
-        MealTypeDTO mealTypeDTO = createMealTypeDTO(new Short("1"), "Завтрак", 5);
+        MealTypeDTO mealTypeDTO = createMealTypeDTO("Завтракккк", 5);
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(post(UrlConsts.PATH_MEAL_TYPES)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(mealTypeDTO)));
         Iterable<MealType> mealTypes = mealTypeRepository.findAll();
-        assertThat(mealTypes).extracting(MealType::getName).containsOnly("Завтрак");
+        assertThat(mealTypes).extracting(MealType::getName).contains("Завтракккк");
     }
 
     @Test
     public void getAllMealTypeIntegrationTest() throws Exception {
-        MealType mealType1 = new MealType( "Завтрак",  false);
-        MealType mealType2 = new MealType( "Обед",  false);
+        MealType mealType1 = new MealType( "Завтракккк",  1);
+        MealType mealType2 = new MealType( "Обедддд",  1);
         mealTypeRepository.save(mealType1);
         mealTypeRepository.save(mealType2);
         mockMvc.perform(get(UrlConsts.PATH_MEAL_TYPES)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("Завтрак")))
-                .andExpect(jsonPath("$[1].name", is("Обед")));
+                .andExpect(jsonPath("$", hasSize(6)))
+                .andExpect(jsonPath("$[4].name", is("Завтракккк")))
+                .andExpect(jsonPath("$[5].name", is("Обедддд")));
     }
 
     @Test
     public void updateMealTypeIntegrationTest() throws Exception {
-        MealType mealType = new MealType( "Завтрак", false);
+        MealType mealType = new MealType( "Завтрак", 1);
         mealTypeRepository.save(mealType);
-        MealTypeDTO mealTypeDTO = createMealTypeDTO(mealType.getId(), "Обед", 3);
+        MealTypeDTO mealTypeDTO = createMealTypeDTO( "Обед", 3);
+        mealTypeDTO.setId(mealType.getId());
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(put(UrlConsts.PATH_MEAL_TYPES + "/" + mealType.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -110,7 +110,7 @@ public class MealTypeIntegrationTest {
 
     @Test
     public void deleteMealTypeIntegrationTest() throws Exception {
-        MealType mealType = new MealType( "Завтрак", false);
+        MealType mealType = new MealType( "Завтрак", 1);
         mealTypeRepository.save(mealType);
         mockMvc.perform(delete(UrlConsts.PATH_MEAL_TYPES + "/" + mealType.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -138,7 +138,7 @@ public class MealTypeIntegrationTest {
     @Test
     @Transactional
     public void checkConnectedElementsTest() throws Exception {
-        MealType mealType = new MealType("Завтрак",  false);
+        MealType mealType = new MealType("Завтрак",  1);
         mealTypeRepository.save(mealType);
 
         CookingMethod cookingMethod = new CookingMethod("Жарка");

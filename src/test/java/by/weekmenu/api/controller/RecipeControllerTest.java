@@ -4,6 +4,7 @@ import by.weekmenu.api.dto.RecipeDTO;
 import by.weekmenu.api.entity.Recipe;
 import by.weekmenu.api.entity.RecipeCategory;
 import by.weekmenu.api.entity.RecipeSubcategory;
+import by.weekmenu.api.repository.MealTypeRepository;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.RecipeService;
@@ -43,6 +44,9 @@ public class RecipeControllerTest {
 
     @MockBean
     private UnitOfMeasureRepository unitOfMeasureRepository;
+
+    @MockBean
+    private MealTypeRepository mealTypeRepository;
 
     @MockBean
     private ModelMapper modelMapper;

@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.MenuCategoryDTO;
 import by.weekmenu.api.entity.MenuCategory;
+import by.weekmenu.api.repository.MealTypeRepository;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.MenuCategoryService;
@@ -43,6 +44,9 @@ public class MenuCategoryControllerTest {
 
     @MockBean
     private UnitOfMeasureRepository unitOfMeasureRepository;
+
+    @MockBean
+    private MealTypeRepository mealTypeRepository;
 
     private MenuCategoryDTO createMenuCategoryDTO(Integer id, String name) {
         MenuCategoryDTO menuCategoryDTO = new MenuCategoryDTO();

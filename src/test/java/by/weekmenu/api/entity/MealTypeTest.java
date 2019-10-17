@@ -27,7 +27,7 @@ public class MealTypeTest {
 
     @Test
     public void testMealTypeNameIsNull() {
-        MealType mealType = new MealType(null, true);
+        MealType mealType = new MealType(null, 1);
         Set<ConstraintViolation<MealType>> violations = validator.validate(mealType);
         assertEquals(violations.size(), 1);
         assertEquals("MealType must have name.",
@@ -36,7 +36,7 @@ public class MealTypeTest {
 
     @Test
     public void testMealTypeNameIsBlank() {
-        MealType mealType = new MealType("   ", true);
+        MealType mealType = new MealType("   ", 1);
         Set<ConstraintViolation<MealType>> violations = validator.validate(mealType);
         assertEquals(violations.size(), 1);
         assertEquals("MealType must have name.",
@@ -45,7 +45,7 @@ public class MealTypeTest {
 
     @Test
     public void testMealTypeNameIsEmpty() {
-        MealType mealType = new MealType("", true);
+        MealType mealType = new MealType("", 1);
         Set<ConstraintViolation<MealType>> violations = validator.validate(mealType);
         assertEquals(violations.size(), 1);
         assertEquals("MealType must have name.",
@@ -54,7 +54,7 @@ public class MealTypeTest {
 
     @Test
     public void testNameIsTooLong() {
-        MealType mealType = new MealType("", true);
+        MealType mealType = new MealType("", 1);
         String name = StringUtils.repeat("очень_длинное_название_блюда", 20);
         mealType.setName(name);
         Set<ConstraintViolation<MealType>> violations = validator.validate(mealType);
@@ -65,18 +65,16 @@ public class MealTypeTest {
 
     @Test
     public void testMealTypePriorityIsNegative() {
-        MealType mealType = new MealType("Обед", true);
-        mealType.setPriority(-100);
+        MealType mealType = new MealType("Обед", -1);
         Set<ConstraintViolation<MealType>> violations = validator.validate(mealType);
         assertEquals(violations.size(), 1);
-        assertEquals("MealType's priority '-100' must be positive.",
+        assertEquals("MealType's priority '-1' must be positive.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
     public void testMealTypePriorityIsZero() {
-        MealType mealType = new MealType("Обед", true);
-        mealType.setPriority(0);
+        MealType mealType = new MealType("Обед", 0);
         Set<ConstraintViolation<MealType>> violations = validator.validate(mealType);
         assertEquals(violations.size(), 1);
         assertEquals("MealType's priority '0' must be positive.",
@@ -84,9 +82,17 @@ public class MealTypeTest {
     }
 
     @Test
+    public void testMealTypePriorityIsNull() {
+        MealType mealType = new MealType("Завтрак", null);
+        Set<ConstraintViolation<MealType>> violations = validator.validate(mealType);
+        assertEquals(violations.size(), 1);
+        assertEquals("MealType must have priority.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
     public void testMealTypeIsValid() {
-        MealType mealType = new MealType("Обед", true);
-        mealType.setPriority(200);
+        MealType mealType = new MealType("Обед", 1);
         Set<ConstraintViolation<MealType>> violations = validator.validate(mealType);
         assertEquals(violations.size(), 0);
     }

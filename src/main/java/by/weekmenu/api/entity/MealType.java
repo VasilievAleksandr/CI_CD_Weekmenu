@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -32,15 +33,21 @@ public class MealType implements Serializable {
     private String name;
 
     @Column(name = "PRIORITY")
+    @NotNull(message = "MealType must have priority.")
     @Positive(message = "MealType's priority '${validatedValue}' must be positive.")
     private Integer priority;
 
     @Column(name = "IS_ARCHIVED")
     private boolean isArchived;
 
-    public MealType(String name, boolean isArchived) {
+//    public MealType(String name, boolean isArchived) {
+//        this.name = name;
+//        this.isArchived = isArchived;
+//    }
+
+    public MealType(String name, Integer priority) {
         this.name = name;
-        this.isArchived = isArchived;
+        this.priority = priority;
     }
 
     public MealType(Short id, String name, Integer priority, boolean isArchived) {
