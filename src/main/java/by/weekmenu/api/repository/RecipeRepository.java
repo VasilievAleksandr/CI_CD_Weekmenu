@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,9 +27,11 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     @Query("select recipe from Recipe recipe " +
             "where ( :recipeName is null or lower(recipe.name) like %:recipeName%) " +
-            "and ( :totalCookingTime is null or (recipe.cookingTime + recipe.preparingTime) <= :totalCookingTime)")
+            "and ( :totalCookingTime is null or (recipe.cookingTime + recipe.preparingTime) <= :totalCookingTime) " +
+            "and ( :recipeCalories is null or (recipe.calories <= :recipeCalories))")
     List<Recipe> findAllByFilter(@Param("recipeName") String recipeName,
-                                 @Param("totalCookingTime") Short totalCookingTime);
+                                 @Param("totalCookingTime") Short totalCookingTime,
+                                 @Param("recipeCalories") BigDecimal recipeCalories);
 
     @Query("select recipe from Recipe recipe " +
             "join recipe.recipeCategories recipeCategories " +

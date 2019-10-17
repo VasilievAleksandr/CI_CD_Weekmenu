@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -102,14 +103,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeDTO> findAllByFilter(String recipeName, Short totalCookingTime,
-                                           String recipeCategoryName, String recipeSubcategoryName) {
+                                           String recipeCategoryName, String recipeSubcategoryName,
+                                           BigDecimal recipeCalories) {
         List<RecipeDTO> result = new ArrayList<>();
         List<RecipeDTO> allByRecipeCategory = recipeRepository.findAllByRecipeCategoryName(recipeCategoryName)
                 .stream()
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-        List<RecipeDTO> byRecipeFilter = recipeRepository.findAllByFilter(recipeName, totalCookingTime).stream()
+        List<RecipeDTO> byRecipeFilter = recipeRepository.findAllByFilter(recipeName, totalCookingTime, recipeCalories).stream()
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -118,11 +120,13 @@ public class RecipeServiceImpl implements RecipeService {
                 .filter(Objects::nonNull)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-        if (StringUtils.isEmpty(recipeName) && totalCookingTime == null && StringUtils.isEmpty(recipeSubcategoryName)) {
+        if (StringUtils.isEmpty(recipeName) && totalCookingTime == null &&
+                recipeCalories == null && StringUtils.isEmpty(recipeSubcategoryName)) {
             result.addAll(allByRecipeCategory);
         } else if (StringUtils.isEmpty(recipeCategoryName) && StringUtils.isEmpty(recipeSubcategoryName)) {
             result.addAll(byRecipeFilter);
-        } else if (StringUtils.isEmpty(recipeName) && totalCookingTime == null && StringUtils.isEmpty(recipeCategoryName)) {
+        } else if (StringUtils.isEmpty(recipeName) && totalCookingTime == null &&
+                recipeCalories == null && StringUtils.isEmpty(recipeCategoryName)) {
             result.addAll(allByRecipeSubcategory);
         } else if (StringUtils.isEmpty(recipeCategoryName)) {
             result.addAll(byRecipeFilter.stream()
