@@ -1,6 +1,7 @@
 package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.RegionDTO;
+import by.weekmenu.api.repository.MealTypeRepository;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.RegionService;
@@ -41,6 +42,9 @@ public class RegionControllerTest {
 
     @MockBean
     private UnitOfMeasureRepository unitOfMeasureRepository;
+
+    @MockBean
+    private MealTypeRepository mealTypeRepository;
 
     @Test
     public void getAllRegionsTest() throws Exception {

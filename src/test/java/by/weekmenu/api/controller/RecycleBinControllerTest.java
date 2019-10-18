@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.RecycleBinDTO;
 import by.weekmenu.api.entity.RecycleBin;
+import by.weekmenu.api.repository.MealTypeRepository;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.RecycleBinService;
@@ -43,6 +44,9 @@ public class RecycleBinControllerTest {
 
     @MockBean
     private UnitOfMeasureRepository unitOfMeasureRepository;
+
+    @MockBean
+    private MealTypeRepository mealTypeRepository;
 
     private RecycleBin createRecycleBin(Long id, String elementName, String entityName, LocalDateTime deleteDate) {
         RecycleBin recycleBin = new RecycleBin();

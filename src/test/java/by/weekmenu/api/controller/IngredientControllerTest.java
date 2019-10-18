@@ -2,6 +2,7 @@ package by.weekmenu.api.controller;
 
 import by.weekmenu.api.dto.IngredientDTO;
 import by.weekmenu.api.entity.Ingredient;
+import by.weekmenu.api.repository.MealTypeRepository;
 import by.weekmenu.api.repository.OwnershipRepository;
 import by.weekmenu.api.repository.UnitOfMeasureRepository;
 import by.weekmenu.api.service.IngredientService;
@@ -45,6 +46,9 @@ public class IngredientControllerTest {
 
     @MockBean
     private UnitOfMeasureRepository unitOfMeasureRepository;
+
+    @MockBean
+    private MealTypeRepository mealTypeRepository;
 
     @MockBean
     private ModelMapper modelMapper;
