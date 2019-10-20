@@ -35,23 +35,24 @@ public class MenuCalculations {
         Set<DayOfWeek> daysOfWeek = menuRecipeDTOS.stream()
                 .map(MenuRecipeDTO::getDayOfWeek).collect(Collectors.toSet());
         BigDecimal daysCount = BigDecimal.valueOf(daysOfWeek.size());
-
-        //sum of calories, proteins, fats and carbs from each recipe which is present in menu
-        for (MenuRecipeDTO menuRecipeDTO : menuRecipeDTOS) {
-            Optional<Recipe> recipe = recipeRepository.findByNameIgnoreCase(menuRecipeDTO.getRecipeName());
-            if (recipe.isPresent()) {
-                totalCalories = totalCalories.add(recipe.get().getCalories());
-                totalProteins = totalProteins.add(recipe.get().getProteins());
-                totalFats = totalFats.add(recipe.get().getFats());
-                totalCarbs = totalCarbs.add(recipe.get().getCarbs());
+        if (!daysCount.equals(BigDecimal.ZERO)) {
+            //sum of calories, proteins, fats and carbs from each recipe which is present in menu
+            for (MenuRecipeDTO menuRecipeDTO : menuRecipeDTOS) {
+                Optional<Recipe> recipe = recipeRepository.findByNameIgnoreCase(menuRecipeDTO.getRecipeName());
+                if (recipe.isPresent()) {
+                    totalCalories = totalCalories.add(recipe.get().getCalories());
+                    totalProteins = totalProteins.add(recipe.get().getProteins());
+                    totalFats = totalFats.add(recipe.get().getFats());
+                    totalCarbs = totalCarbs.add(recipe.get().getCarbs());
+                }
             }
-        }
 
-        //daily average sum of calories, proteins, fats and carbs
-        menu.setCalories(totalCalories.divide(daysCount, 1, RoundingMode.HALF_UP));
-        menu.setProteins(totalProteins.divide(daysCount, 1, RoundingMode.HALF_UP));
-        menu.setFats(totalFats.divide(daysCount, 1, RoundingMode.HALF_UP));
-        menu.setCarbs(totalCarbs.divide(daysCount, 1, RoundingMode.HALF_UP));
+            //daily average sum of calories, proteins, fats and carbs
+            menu.setCalories(totalCalories.divide(daysCount, 1, RoundingMode.HALF_UP));
+            menu.setProteins(totalProteins.divide(daysCount, 1, RoundingMode.HALF_UP));
+            menu.setFats(totalFats.divide(daysCount, 1, RoundingMode.HALF_UP));
+            menu.setCarbs(totalCarbs.divide(daysCount, 1, RoundingMode.HALF_UP));
+        }
     }
 
     public void calculateMenuPrice(MenuDTO menuDTO, Menu menu) {
