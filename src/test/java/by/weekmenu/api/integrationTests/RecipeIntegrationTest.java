@@ -106,9 +106,6 @@ public class RecipeIntegrationTest {
     private RecipeSubcategoryRepository recipeSubcategoryRepository;
 
     @Autowired
-    private DayOfWeekRepository dayOfWeekRepository;
-
-    @Autowired
     private RecipeService recipeService;
 
     @Before
