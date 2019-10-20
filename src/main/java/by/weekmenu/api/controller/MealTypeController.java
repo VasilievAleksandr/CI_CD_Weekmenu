@@ -69,6 +69,16 @@ public class MealTypeController {
         }
     }
 
+    @GetMapping("/checkMealTypeUniquePriority")
+    @ApiOperation("Проверяет поле priority у MealType на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
+    public Integer checkMealTypeUniquePriority(@RequestParam Integer priority) {
+        if (mealTypeService.findByPriority(priority) != null) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
     @GetMapping("/checkConnectedElements/{id}")
     @ApiOperation("Проверяет наличие связанных элементов по Id")
     public List<String> checkConnectedElements(@PathVariable("id") Short id) {

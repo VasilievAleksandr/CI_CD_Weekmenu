@@ -8,6 +8,7 @@ import java.util.List;
 public interface MealTypeService extends CrudService<MealTypeDTO, Short> {
 
     MealType findByName(String name);
+    MealType findByPriority (Integer priority);
     List<String> checkConnectedElements(Short id);
 
 }
