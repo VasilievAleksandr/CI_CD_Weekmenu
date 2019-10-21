@@ -83,15 +83,15 @@ public class MealTypeIntegrationTest {
     @Test
     public void getAllMealTypeIntegrationTest() throws Exception {
         MealType mealType1 = new MealType( "Завтракккк",  1);
-        MealType mealType2 = new MealType( "Обедддд",  1);
+        MealType mealType2 = new MealType( "Обедддд",  2);
         mealTypeRepository.save(mealType1);
         mealTypeRepository.save(mealType2);
         mockMvc.perform(get(UrlConsts.PATH_MEAL_TYPES)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(6)))
-                .andExpect(jsonPath("$[4].name", is("Завтракккк")))
-                .andExpect(jsonPath("$[5].name", is("Обедддд")));
+                .andExpect(jsonPath("$", hasSize(5)))
+                .andExpect(jsonPath("$[3].name", is("Завтракккк")))
+                .andExpect(jsonPath("$[4].name", is("Обедддд")));
     }
 
     @Test
