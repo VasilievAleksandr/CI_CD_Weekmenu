@@ -108,7 +108,7 @@ public class MenuControllerTest {
     }
 
     @Test
-    public void findAllMenus() throws Exception{
+    public void findAllMenusTest() throws Exception{
         List<MenuDTO> menus = new ArrayList<>();
         menus.add(createMenuDTO(1L, "Вкусное меню"));
         menus.add(createMenuDTO(2L, "Праздничное меню"));
@@ -141,7 +141,7 @@ public class MenuControllerTest {
     }
 
     @Test
-    public void addMenu() throws Exception{
+    public void addMenuTest() throws Exception{
         MenuDTO menuDTO = createMenuDTO(1L, "Вкусное меню");
         when(menuService.save(any(MenuDTO.class))).thenReturn(menuDTO);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -162,7 +162,7 @@ public class MenuControllerTest {
     }
 
     @Test
-    public void getMenu() throws Exception{
+    public void getMenuTest() throws Exception{
         MenuDTO menuDTO = createMenuDTO(1L, "Вкусное меню");
         when(menuService.findById(1L)).thenReturn(menuDTO);
         when(menuService.findById(2L)).thenReturn(null);
@@ -187,7 +187,7 @@ public class MenuControllerTest {
     }
 
     @Test
-    public void updateMenu() throws Exception{
+    public void updateMenuTest() throws Exception{
         MenuDTO menuDTO = createMenuDTO(1L, "Вкусное меню");
         when(menuService.findById(menuDTO.getId())).thenReturn(menuDTO);
         menuDTO.setName("Вегетарианское меню");
@@ -212,7 +212,7 @@ public class MenuControllerTest {
     }
 
     @Test
-    public void deleteMenu() throws Exception{
+    public void deleteMenuTest() throws Exception{
         MenuDTO menuDTO = createMenuDTO(1L, "Вкусное меню");
         when(menuService.findById(menuDTO.getId())).thenReturn(menuDTO);
         when(menuService.findById(2L)).thenReturn(null);
