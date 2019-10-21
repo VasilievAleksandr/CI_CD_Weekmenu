@@ -48,8 +48,7 @@ public class ApiApplication extends SpringBootServletInitializer {
             if (mealTypeRepository.findAll().spliterator().getExactSizeIfKnown() == 0) {
                 mealTypeRepository.save(new MealType("Завтрак", 10));
                 mealTypeRepository.save(new MealType("Обед", 20));
-                mealTypeRepository.save(new MealType("Полдник", 30));
-                mealTypeRepository.save(new MealType("Ужин", 40));
+                mealTypeRepository.save(new MealType("Ужин", 30));
             }
         };
     }
