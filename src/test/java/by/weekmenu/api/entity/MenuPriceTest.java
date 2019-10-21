@@ -44,7 +44,7 @@ public class MenuPriceTest {
     }
 
     @Test
-    public void menuPricePriceValueHasTooManyFractionDigits() {
+    public void testMenuPricePriceValueHasTooManyFractionDigits() {
         MenuPrice menuPrice = new MenuPrice(getMenu(), getRegion());
         menuPrice.setPriceValue(new BigDecimal("111.123"));
         Set<ConstraintViolation<MenuPrice>> violations = validator.validate(menuPrice);
