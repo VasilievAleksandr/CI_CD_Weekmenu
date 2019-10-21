@@ -54,6 +54,9 @@ public class MealTypeServiceImpl implements MealTypeService {
     }
 
     @Override
+    public  MealType findByPriority (Integer priority){ return mealTypeRepository.findByPriority(priority).orElse(null);}
+
+    @Override
     public List<String> checkConnectedElements(Short id) {
         List<String> list = new ArrayList<>();
         Optional<MealType> mealType = mealTypeRepository.findById(id);

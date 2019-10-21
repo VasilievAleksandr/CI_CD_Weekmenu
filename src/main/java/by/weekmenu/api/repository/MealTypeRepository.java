@@ -15,6 +15,7 @@ public interface MealTypeRepository extends CrudRepository<MealType, Short> {
 
     Optional<MealType> findByNameIgnoreCase(String name);
     List<MealType> findAllByIsArchivedIsFalse();
+    Optional<MealType> findByPriority(Integer priority);
 
     @Modifying
     @Query("update MealType e set e.isArchived = true where e.id = :mealTypeId")

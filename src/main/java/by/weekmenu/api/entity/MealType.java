@@ -32,7 +32,7 @@ public class MealType implements Serializable {
     @Size(max = 255, message = "MealType's name '${validatedValue}' must be '{max}' characters long")
     private String name;
 
-    @Column(name = "PRIORITY")
+    @Column(name = "PRIORITY", unique = true)
     @NotNull(message = "MealType must have priority.")
     @Positive(message = "MealType's priority '${validatedValue}' must be positive.")
     private Integer priority;
