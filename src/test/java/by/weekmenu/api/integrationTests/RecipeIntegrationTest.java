@@ -413,7 +413,6 @@ public class RecipeIntegrationTest {
             mealType = mealTypeRepository.save(new MealType("Завтрак", 50));
         }
 
-//        MealType mealType = mealTypeRepository.findByNameIgnoreCase("Обед").orElse(null);
         Menu menu = menuRepository.save(new Menu("Бюджетное", true,
                 ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null)));
         MenuRecipe menuRecipe = new MenuRecipe(menu, recipe, mealType, DayOfWeek.MONDAY);

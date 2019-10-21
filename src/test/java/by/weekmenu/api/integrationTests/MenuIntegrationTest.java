@@ -158,6 +158,7 @@ public class MenuIntegrationTest {
         recycleBinRepository.deleteAll();
         menuRepository.deleteAll();
         menuCategoryRepository.deleteAll();
+        mealTypeRepository.deleteAll();
     }
 
     private void createUnitOfMeasureDtos() {
