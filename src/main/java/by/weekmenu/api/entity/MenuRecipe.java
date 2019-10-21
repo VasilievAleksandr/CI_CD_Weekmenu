@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.DayOfWeek;
 
 @NoArgsConstructor
 @Getter
@@ -41,5 +42,13 @@ public class MenuRecipe implements Serializable {
     private MealType mealType;
 
     @Column(name = "DAY_OF_WEEK")
+    @NotNull(message = "MenuRecipe must have dayOfWeek.")
     private java.time.DayOfWeek dayOfWeek;
+
+    public MenuRecipe(Menu menu, Recipe recipe, MealType mealType, DayOfWeek dayOfWeek) {
+        this.menu = menu;
+        this.recipe = recipe;
+        this.mealType = mealType;
+        this.dayOfWeek = dayOfWeek;
+    }
 }

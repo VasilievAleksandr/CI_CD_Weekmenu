@@ -44,7 +44,7 @@ public class MenuPriceTest {
     }
 
     @Test
-    public void dailyMenuPricePriceValueHasTooManyFractionDigits() {
+    public void testMenuPricePriceValueHasTooManyFractionDigits() {
         MenuPrice menuPrice = new MenuPrice(getMenu(), getRegion());
         menuPrice.setPriceValue(new BigDecimal("111.123"));
         Set<ConstraintViolation<MenuPrice>> violations = validator.validate(menuPrice);
@@ -121,7 +121,7 @@ public class MenuPriceTest {
     }
 
     @Test
-    public void testDailyMenuStatisticsIsValid() {
+    public void testMenuPriceIsValid() {
         MenuPrice menuCurrency = new MenuPrice(getMenu(), getRegion());
         menuCurrency.setPriceValue(new BigDecimal("111.12"));
         Set<ConstraintViolation<MenuPrice>> violations = validator.validate(menuCurrency);

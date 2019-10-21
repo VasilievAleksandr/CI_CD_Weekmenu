@@ -68,10 +68,4 @@ public class MenuController {
             return new ResponseEntity<>( HttpStatus.NOT_FOUND);
         }
     }
-
-    @GetMapping("/checkConnectedElements/{id}")
-    @ApiOperation("Проверяет наличие связанных элементов по Id")
-    public List<String> checkConnectedElements(@PathVariable("id") Long id) {
-        return menuService.checkConnectedElements(id);
-    }
 }

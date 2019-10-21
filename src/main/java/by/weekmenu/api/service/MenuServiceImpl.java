@@ -143,9 +143,4 @@ public class MenuServiceImpl implements MenuService{
             return null;
         }
     }
-
-    @Override
-    public List<String> checkConnectedElements(Long id) {
-        return new ArrayList<>();
-    }
 }
