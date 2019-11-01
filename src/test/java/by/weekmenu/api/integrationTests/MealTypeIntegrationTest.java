@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,6 +51,9 @@ public class MealTypeIntegrationTest {
 
     @Autowired
     private CookingMethodRepository cookingMethodRepository;
+
+    @Autowired
+    private MenuRepository menuRepository;
 
     @After
     public void cleanDB() {
@@ -127,7 +131,7 @@ public class MealTypeIntegrationTest {
 
     @Test
     public void checkUniqueNameMealTypeIntegrationTest() throws Exception {
-        MealType mealType = new MealType(new Short("1"), "Завтрак", 5, false);
+        MealType mealType = new MealType(Short.valueOf("1"), "Завтрак", 5, false);
         mealTypeRepository.save(mealType);
         mockMvc.perform(get(UrlConsts.PATH_MEAL_TYPES + "/checkMealTypeUniqueName?name=" + mealType.getName())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -144,28 +148,30 @@ public class MealTypeIntegrationTest {
         CookingMethod cookingMethod = new CookingMethod("Жарка");
         cookingMethodRepository.save(cookingMethod);
 
+        Optional<Ownership> ownership = ownershipRepository.findByName(OwnershipName.ADMIN.name());
+
         Recipe recipe = new Recipe();
         recipe.setName("Рецепт");
-        recipe.setCookingTime(new Short("30"));
-        recipe.setPreparingTime(new Short("15"));
+        recipe.setCookingTime(Short.valueOf("30"));
+        recipe.setPreparingTime(Short.valueOf("15"));
         recipe.setPortions((short) 2);
         recipe.setImageLink("images/image.png");
         recipe.setSource("http://bestrecipes.com/best-recipe");
         recipe.setCookingMethod(cookingMethod);
-        recipe.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
+        ownership.ifPresent(recipe::setOwnership);
         recipeRepository.save(recipe);
 
-        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
-//        TODO
-//        menuRepository.save(menu);
-
-//        MenuRecipe menuRecipe = new MenuRecipe(menu, recipe, mealType, new DayOfWeek("Понедельник", "ПН"));
-//        TODO
-//        menuRecipeRepository.save(menuRecipe);
+        Menu menu = new Menu();
+        menu.setName("Бюджетное");
+        menu.setIsActive(true);
+        ownership.ifPresent(menu::setOwnership);
+        menuRepository.save(menu);
+        MenuRecipe menuRecipe = new MenuRecipe(menu, recipe, mealType, DayOfWeek.MONDAY);
+        menuRecipeRepository.save(menuRecipe);
 
         mockMvc.perform(get(UrlConsts.PATH_MEAL_TYPES + "/checkConnectedElements/" + mealType.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }

@@ -42,6 +42,9 @@ public class MenuCategoryIntegrationTest {
     @Autowired
     private OwnershipRepository ownershipRepository;
 
+    @Autowired
+    private MenuRepository menuRepository;
+
     @After
     public void cleanDB() {
         menuCategoryRepository.deleteAll();
@@ -131,13 +134,15 @@ public class MenuCategoryIntegrationTest {
     public void checkConnectedElementsTest() throws Exception {
         MenuCategory menuCategory = new MenuCategory("Постное", false);
         menuCategoryRepository.save(menuCategory);
-        Menu menu = new Menu("Бюджетное", true, new Ownership(OwnershipName.USER));
+        Menu menu = new Menu();
+        menu.setName("Бюджетное");
+        menu.setIsActive(true);
         menu.setMenuCategory(menuCategory);
-//        TODO
-//        menuRepository.save(menu);
+        ownershipRepository.findByName(OwnershipName.ADMIN.name()).ifPresent(menu::setOwnership);
+        menuRepository.save(menu);
         mockMvc.perform(get(UrlConsts.PATH_MENU_CATEGORIES + "/checkConnectedElements/" + menuCategory.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }
