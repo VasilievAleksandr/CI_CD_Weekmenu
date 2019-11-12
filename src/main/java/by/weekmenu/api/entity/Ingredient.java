@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -101,5 +102,11 @@ public class Ingredient implements Serializable {
     public Ingredient(String name, Ownership ownership) {
         this.name = name;
         this.ownership = ownership;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void ingredientNameFirstCapitalLetter(){
+        this.name = name == null ? null : StringUtils.capitalize(name);
     }
 }
