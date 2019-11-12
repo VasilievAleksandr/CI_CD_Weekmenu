@@ -33,10 +33,10 @@ public class IngredientUnitOfMeasureTest {
     @Test
     public void testEquivalentHasTooManyFractionDigits() {
         IngredientUnitOfMeasure ingredientUnitOfMeasure = new IngredientUnitOfMeasure();
-        ingredientUnitOfMeasure.setEquivalent(new BigDecimal("12.123"));
+        ingredientUnitOfMeasure.setEquivalent(new BigDecimal("12.1234567"));
         Set<ConstraintViolation<IngredientUnitOfMeasure>> violations = validator.validate(ingredientUnitOfMeasure);
         assertEquals(violations.size(), 1);
-        assertEquals("Equivalent '12.123' must have up to '7' integer digits and '2' fraction digits.",
+        assertEquals("Equivalent '12.1234567' must have up to '7' integer digits and '6' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 
@@ -46,7 +46,7 @@ public class IngredientUnitOfMeasureTest {
         ingredientUnitOfMeasure.setEquivalent(new BigDecimal("12345678.12"));
         Set<ConstraintViolation<IngredientUnitOfMeasure>> violations = validator.validate(ingredientUnitOfMeasure);
         assertEquals(violations.size(), 1);
-        assertEquals("Equivalent '12345678.12' must have up to '7' integer digits and '2' fraction digits.",
+        assertEquals("Equivalent '12345678.12' must have up to '7' integer digits and '6' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 
