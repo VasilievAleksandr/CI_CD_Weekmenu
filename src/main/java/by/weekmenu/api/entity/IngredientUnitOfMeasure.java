@@ -52,7 +52,7 @@ public class IngredientUnitOfMeasure implements Serializable {
     @NotNull(message = "IngredientUnitOfMeasure must have equivalent")
     @Digits(
             integer = 7,
-            fraction = 2,
+            fraction = 6,
             message = "Equivalent '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
     @Positive(message = "Equivalent '${validatedValue}' must be positive.")
