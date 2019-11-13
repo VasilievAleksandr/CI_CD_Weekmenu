@@ -40,7 +40,7 @@ public class Ingredient implements Serializable {
             fraction = 1,
             message = "Calories '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
-    @Positive(message = "Ingredient's calories '${validatedValue}' must be positive.")
+    @PositiveOrZero(message = "Ingredient's calories '${validatedValue}' must be positive or '0'.")
     private BigDecimal calories;
 
     @Column(name = "PROTEINS")

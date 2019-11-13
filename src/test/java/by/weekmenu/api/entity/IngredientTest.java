@@ -80,16 +80,7 @@ public class IngredientTest {
         Ingredient ingredient = createIngredientWithProperties("-100", "100", "100", "100");
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 1);
-        assertEquals("Ingredient's calories '-100' must be positive.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testIngredientCaloriesAreZero() {
-        Ingredient ingredient = createIngredientWithProperties("0", "100", "100", "100");
-        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
-        assertEquals(violations.size(), 1);
-        assertEquals("Ingredient's calories '0' must be positive.",
+        assertEquals("Ingredient's calories '-100' must be positive or '0'.",
                 violations.iterator().next().getMessage());
     }
 
