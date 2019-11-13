@@ -15,8 +15,8 @@ public interface IngredientCategoryRepository extends CrudRepository<IngredientC
     List<IngredientCategory> findAllByIsArchivedIsFalse();
 
     @Modifying
-    @Query("update IngredientCategory e set e.isArchived = true where e.id = :ingredientCategoryyId")
-    void softDelete(@Param("ingredientCategoryyId") Integer ingredientCategoryyId);
+    @Query("update IngredientCategory e set e.isArchived = true where e.id = :ingredientCategoryId")
+    void softDelete(@Param("ingredientCategoryId") Integer ingredientCategoryId);
 
     @Modifying
     @Query("update IngredientCategory ingredientCategory set ingredientCategory.isArchived = false " +

@@ -1,7 +1,6 @@
 package by.weekmenu.api.service;
 
 import by.weekmenu.api.dto.IngredientCategoryDTO;
-import by.weekmenu.api.dto.MenuCategoryDTO;
 import by.weekmenu.api.entity.IngredientCategory;
 import by.weekmenu.api.entity.RecycleBin;
 import by.weekmenu.api.repository.IngredientCategoryRepository;
