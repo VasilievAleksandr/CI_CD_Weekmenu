@@ -2,6 +2,7 @@ package by.weekmenu.api.entity;
 
 
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -111,5 +112,11 @@ public class Menu implements Serializable {
         this.authorName = authorName == null ? "" : authorName;
         this.authorImageLink = authorImageLink == null ? "" : authorImageLink;
         this.menuDescription = menuDescription == null ? "" : menuDescription;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void nameFirstCapitalLetter(){
+        this.name = name == null ? null : StringUtils.capitalize(name);
     }
 }

@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -146,6 +147,12 @@ public class Recipe implements Serializable {
         this.proteins = proteins == null ? BigDecimal.ZERO : proteins;
         this.portions = portions == null ? 1 : portions;
         this.gramsPerPortion = gramsPerPortion == null ? BigDecimal.ZERO : gramsPerPortion;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void nameFirstCapitalLetter(){
+        this.name = name == null ? null : StringUtils.capitalize(name);
     }
 
     public void addRecipeCategory(RecipeCategory recipeCategory) {

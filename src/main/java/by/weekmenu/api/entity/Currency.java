@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -48,7 +49,8 @@ public class Currency implements Serializable {
 
     @PrePersist
     @PreUpdate
-    private void capitalizeCode() {
+    private void capitalizeNameAndCode() {
+        this.name = name == null ? null : StringUtils.capitalize(name);
         this.code = code == null ? null : code.toUpperCase();
     }
 }
