@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -47,5 +48,11 @@ public class RecipeCategory implements Serializable {
     public RecipeCategory(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void nameFirstCapitalLetter(){
+        this.name = name == null ? null : StringUtils.capitalize(name);
     }
 }
