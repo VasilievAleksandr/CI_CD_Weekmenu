@@ -82,6 +82,11 @@ public class Ingredient implements Serializable {
     @NotNull(message = "Ingredient's ownership mustn't be null.")
     private Ownership ownership;
 
+    @OneToOne
+    @JoinColumn(name = "INGREDIENT_CATEGORY_ID")
+    @Valid
+    private IngredientCategory ingredientCategory;
+
     public Ingredient(String name, BigDecimal calories, BigDecimal proteins, BigDecimal fats, BigDecimal carbs,
                       Ownership ownership) {
         this.name = name;
