@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
 
 @NoArgsConstructor
 @Getter
@@ -54,5 +55,11 @@ public class UnitOfMeasure implements Serializable {
         this.id = id;
         this.shortName = shortName;
         this.fullName = fullName;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void fullNameFirstCapitalLetter(){
+        this.fullName = fullName == null ? null : StringUtils.capitalize(fullName);
     }
 }
