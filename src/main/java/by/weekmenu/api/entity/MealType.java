@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -50,5 +51,11 @@ public class MealType implements Serializable {
         this.name = name;
         this.priority = priority;
         this.isArchived = isArchived;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void nameFirstCapitalLetter(){
+        this.name = name == null ? null : StringUtils.capitalize(name);
     }
 }
