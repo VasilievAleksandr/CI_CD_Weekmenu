@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -97,8 +98,7 @@ public class IngredientControllerTest {
                 .andExpect(jsonPath("$[1].calories", is(100)))
                 .andExpect(jsonPath("$[1].carbs", is(100)))
                 .andExpect(jsonPath("$[1].fats", is(100)))
-                .andExpect(jsonPath("$[1].proteins", is(100)))
-                .andDo(print());
+                .andExpect(jsonPath("$[1].proteins", is(100)));
     }
 
     @Test
@@ -181,5 +181,23 @@ public class IngredientControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    public void findIngredientByNameContainingTest() throws Exception {
+        IngredientDTO ingredient1 = createIngredientDto(1L, "Курица");
+        IngredientDTO ingredient2 = createIngredientDto(2L, "Огурец");
+        List<IngredientDTO> ingredients = Arrays.asList(ingredient1, ingredient2);
+        String name = "ур";
+        when(ingredientService.findIngredientByName(name)).thenReturn(ingredients);
+
+        mockMvc.perform(get(UrlConsts.PATH_INGREDIENTS + "/search?name=" + name)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is("Курица")))
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].name", is("Огурец")));
     }
 }
