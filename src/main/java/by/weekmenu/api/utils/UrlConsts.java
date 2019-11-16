@@ -15,4 +15,6 @@ public class UrlConsts {
     public static final String PATH_MENU_CATEGORIES = "/menuCategories";
     public static final String PATH_MEAL_TYPES = "/mealTypes";
     public static final String PATH_MENUS = "/menus";
+    public static final String PATH_INGREDIENT_CATEGORIES = "/ingredientCategories";
+
 }

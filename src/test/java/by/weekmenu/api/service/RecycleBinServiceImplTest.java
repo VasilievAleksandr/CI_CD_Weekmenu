@@ -55,6 +55,8 @@ public class RecycleBinServiceImplTest {
     @MockBean
     private MenuService menuService;
     @MockBean
+    private IngredientCategoryRepository ingredientCategoryRepository;
+    @MockBean
     private ModelMapper modelMapper;
 
     private RecycleBinService recycleBinService;
@@ -62,9 +64,9 @@ public class RecycleBinServiceImplTest {
     @Before
     public void setup() {
         recycleBinService = new RecycleBinServiceImpl(recycleBinRepository, unitOfMeasureRepository, currencyRepository,
-                countryRepository, regionRepository,ingredientRepository, ingredientService, recipeRepository, recipeService,
-                recipeCategoryRepository, cookingMethodRepository, recipeSubcategoryRepository,menuCategoryRepository,
-                mealTypeRepository, menuRepository, menuService, modelMapper);
+                countryRepository, regionRepository, ingredientRepository, ingredientService, recipeRepository, recipeService,
+                recipeCategoryRepository, cookingMethodRepository, recipeSubcategoryRepository, menuCategoryRepository,
+                mealTypeRepository, menuRepository, menuService, ingredientCategoryRepository, modelMapper);
     }
 
     private RecycleBin createRecycleBin(String elementName, String entityName, LocalDateTime deleteDate) {
@@ -107,7 +109,7 @@ public class RecycleBinServiceImplTest {
 
     @Test
     public void restoreElement_Region() {
-        RecycleBin recycleBin = createRecycleBin("Минск",EntityNamesConsts.REGION, LocalDateTime.now());
+        RecycleBin recycleBin = createRecycleBin("Минск", EntityNamesConsts.REGION, LocalDateTime.now());
         when(recycleBinRepository.findById(anyLong())).thenReturn(Optional.of(recycleBin));
         Region region = mock(Region.class);
         when(regionRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(region));
@@ -196,6 +198,16 @@ public class RecycleBinServiceImplTest {
     }
 
     @Test
+    public void restoreElement_IngredientCategory() {
+        RecycleBin recycleBin = createRecycleBin("Milk", EntityNamesConsts.INGREDIENT_CATEGORY, LocalDateTime.now());
+        when(recycleBinRepository.findById(anyLong())).thenReturn(Optional.of(recycleBin));
+        IngredientCategory ingredientCategory = mock(IngredientCategory.class);
+        when(ingredientCategoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(ingredientCategory));
+        recycleBinService.restoreElement(1L);
+        verify(ingredientCategoryRepository, times(1)).restore(0);
+    }
+
+    @Test
     public void findAll() {
         List<RecycleBin> list = new ArrayList<>();
         list.add(createRecycleBin("Гречневая каша", "Рецепт", LocalDateTime.now()));
@@ -237,7 +249,7 @@ public class RecycleBinServiceImplTest {
 
     @Test
     public void deleteElement_Region() {
-        RecycleBin recycleBin = createRecycleBin("Минск",EntityNamesConsts.REGION, LocalDateTime.now());
+        RecycleBin recycleBin = createRecycleBin("Минск", EntityNamesConsts.REGION, LocalDateTime.now());
         when(recycleBinRepository.findById(anyLong())).thenReturn(Optional.of(recycleBin));
         Region region = mock(Region.class);
         when(regionRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(region));
@@ -323,6 +335,16 @@ public class RecycleBinServiceImplTest {
         when(menuRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(menu));
         recycleBinService.deleteElement(1L);
         verify(menuService, times(1)).delete(menu.getId());
+    }
+
+    @Test
+    public void deleteElement_IngredientCategory() {
+        RecycleBin recycleBin = createRecycleBin("Milk", EntityNamesConsts.INGREDIENT_CATEGORY, LocalDateTime.now());
+        when(recycleBinRepository.findById(anyLong())).thenReturn(Optional.of(recycleBin));
+        IngredientCategory ingredientCategory = mock(IngredientCategory.class);
+        when(ingredientCategoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(ingredientCategory));
+        recycleBinService.deleteElement(1L);
+        verify(ingredientCategoryRepository, times(1)).deleteById(0);
     }
 
     @Test
