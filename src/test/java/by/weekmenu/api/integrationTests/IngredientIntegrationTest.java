@@ -227,8 +227,7 @@ public class IngredientIntegrationTest {
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(post(UrlConsts.PATH_INGREDIENTS)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(ingredientDto)))
-                .andDo(print());
+                .content(objectMapper.writeValueAsBytes(ingredientDto)));
 
         Iterable<Ingredient> ingredients = ingredientRepository.findAll();
         assertThat(ingredients).extracting(Ingredient::getName).containsOnly("Курица");
@@ -267,8 +266,7 @@ public class IngredientIntegrationTest {
                 .andExpect(jsonPath("$[1].calories", is(100.0)))
                 .andExpect(jsonPath("$[1].carbs", is(100.0)))
                 .andExpect(jsonPath("$[1].fats", is(100.0)))
-                .andExpect(jsonPath("$[1].proteins", is(100.0)))
-                .andDo(print());
+                .andExpect(jsonPath("$[1].proteins", is(100.0)));
     }
 
     @Test
@@ -364,5 +362,19 @@ public class IngredientIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    public void findIngredientByNameContaining() throws Exception {
+        createIngredientDto("Курица");
+        createIngredientDto("Огурец");
+        String search = "ур";
+
+        mockMvc.perform(get(UrlConsts.PATH_INGREDIENTS + "/search?name=" + search)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].name", is("Курица")))
+                .andExpect(jsonPath("$[1].name", is("Огурец")));
     }
 }

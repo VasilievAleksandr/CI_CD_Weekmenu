@@ -147,6 +147,21 @@ public class IngredientServiceImplTest {
     }
 
     @Test
+    public void findIngredientByNameContainingTest() {
+        Ingredient ingredient1 = createIngredient("Курица");
+        Ingredient ingredient2 = createIngredient("Огурец");
+        List<Ingredient> ingredients = Arrays.asList(ingredient1, ingredient2);
+        IngredientDTO ingredientDTO1 = createIngredientDto("Курица");
+        IngredientDTO ingredientDTO2 = createIngredientDto("Огурец");
+        when(modelMapper.map(ingredient1, IngredientDTO.class)).thenReturn(ingredientDTO1);
+        when(modelMapper.map(ingredient2, IngredientDTO.class)).thenReturn(ingredientDTO2);
+        when(ingredientRepository.findAllByNameContainingIgnoreCaseAndIsArchivedIsFalse("ур"))
+                .thenReturn(ingredients);
+        List<IngredientDTO> result = ingredientService.findIngredientByName("ур");
+        assertThat(result).size().isEqualTo(2);
+    }
+
+    @Test
     public void moveToRecycleBinTest() {
         IngredientDTO ingredientDto = createIngredientDto("Курица");
         when(recycleBinRepository.save(any(RecycleBin.class))).thenReturn(new RecycleBin());

@@ -14,6 +14,7 @@ public interface IngredientRepository extends CrudRepository<Ingredient, Long> {
 
     Optional<Ingredient> findByNameIgnoreCase(String name);
     List<Ingredient> findAllByIsArchivedIsFalse();
+    List<Ingredient> findAllByNameContainingIgnoreCaseAndIsArchivedIsFalse(String name);
     List<Ingredient> findAllByIngredientCategory_IdAndIsArchivedIsFalse(Integer ingredientCategoryId);
 
     @Modifying
