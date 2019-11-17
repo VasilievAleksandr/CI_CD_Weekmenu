@@ -48,6 +48,9 @@ public class IngredientServiceImplTest {
     private RecipeIngredientRepository recipeIngredientRepository;
 
     @MockBean
+    private IngredientCategoryRepository ingredientCategoryRepository;
+
+    @MockBean
     private ModelMapper modelMapper;
 
     private IngredientService ingredientService;
@@ -57,7 +60,7 @@ public class IngredientServiceImplTest {
         ingredientService = new IngredientServiceImpl(ingredientRepository, ownershipRepository,
                 unitOfMeasureRepository, ingredientUnitOfMeasureRepository,
                 regionRepository, ingredientPriceRepository, recipeService,
-                recycleBinRepository, recipeIngredientRepository, modelMapper);
+                recycleBinRepository, recipeIngredientRepository, ingredientCategoryRepository, modelMapper);
     }
 
     private Ingredient createIngredient(String name) {

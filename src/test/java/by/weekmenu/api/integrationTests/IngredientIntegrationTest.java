@@ -87,6 +87,9 @@ public class IngredientIntegrationTest {
     private RecipeIngredientRepository recipeIngredientRepository;
 
     @Autowired
+    private IngredientCategoryRepository ingredientCategoryRepository;
+
+    @Autowired
     private RecipeService recipeService;
 
     @Before
@@ -97,6 +100,9 @@ public class IngredientIntegrationTest {
         }
         if (unitOfMeasureRepository.findAll().spliterator().getExactSizeIfKnown()==1) {
             createUnitOfMeasureDtos();
+        }
+        if (ingredientCategoryRepository.findAll().spliterator().getExactSizeIfKnown()==0){
+            ingredientCategoryRepository.save(new IngredientCategory("Milk", false));
         }
         createRegion("Минск");
     }
@@ -114,6 +120,7 @@ public class IngredientIntegrationTest {
         recipeRepository.deleteAll();
         cookingMethodRepository.deleteAll();
         recycleBinRepository.deleteAll();
+        ingredientCategoryRepository.deleteAll();
     }
 
     private IngredientDTO createIngredientDto(String name) {
@@ -123,7 +130,7 @@ public class IngredientIntegrationTest {
         ingredientDto.setCarbs(new BigDecimal("100"));
         ingredientDto.setFats(new BigDecimal("100"));
         ingredientDto.setProteins(new BigDecimal("100"));
-
+        ingredientDto.setIngredientCategoryName("Milk");
         Map<String, BigDecimal> map = new HashMap<>();
         map.put("Стакан", new BigDecimal(100));
         map.put("Ложка", new BigDecimal(20));
@@ -165,6 +172,7 @@ public class IngredientIntegrationTest {
         ingredient.setFats(new BigDecimal("100"));
         ingredient.setProteins(new BigDecimal("100"));
         ingredient.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
+        ingredient.setIngredientCategory((ingredientCategoryRepository.findByNameIgnoreCase("Milk")).orElse(null));
         return ingredientRepository.save(ingredient);
     }
 
@@ -218,6 +226,7 @@ public class IngredientIntegrationTest {
         ingredientDto.setCarbs(new BigDecimal("100"));
         ingredientDto.setFats(new BigDecimal("100"));
         ingredientDto.setProteins(new BigDecimal("100"));
+        ingredientDto.setIngredientCategoryName("Milk");
         Map<String, BigDecimal> map = new HashMap<>();
         map.put("Стакан", new BigDecimal(100));
         map.put("Ложка", new BigDecimal(20));

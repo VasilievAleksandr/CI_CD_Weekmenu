@@ -27,13 +27,16 @@ public class IngredientTest {
     }
 
     private Ingredient createIngredient(String name) {
-        return new Ingredient(name, new Ownership(OwnershipName.USER));
+        Ingredient ingredient = new Ingredient(name, new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("Milk", false));
+        return ingredient;
     }
 
     private Ingredient createIngredientWithProperties(String calories, String proteins, String fats, String carbs) {
         Ingredient ingredient = new Ingredient(new BigDecimal(calories), new BigDecimal(proteins), new BigDecimal(fats), new BigDecimal(carbs));
         ingredient.setName("молоко");
         ingredient.setOwnership(new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("Milk", false));
         return ingredient;
     }
 
@@ -189,6 +192,7 @@ public class IngredientTest {
     @Test
     public void testOwnershipIsNull() {
         Ingredient ingredient = new Ingredient("курица", null);
+        ingredient.setIngredientCategory(new IngredientCategory("Milk", false));
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 1);
         assertEquals("Ingredient's ownership mustn't be null.",
@@ -196,9 +200,19 @@ public class IngredientTest {
     }
 
     @Test
+    public void testIngredientCategoryIsNull() {
+        Ingredient ingredient = new Ingredient("курица",  new Ownership(OwnershipName.USER));
+        Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
+        assertEquals(violations.size(), 1);
+        assertEquals("Ingredient's category mustn't be null.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
     public void testIngredientIsValid() {
         Ingredient ingredient = new Ingredient("молоко", new BigDecimal("100"), new BigDecimal("100"),
                 new BigDecimal("100"), new BigDecimal("100"), new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("Milk", false));
         Set<ConstraintViolation<Ingredient>> violations = validator.validate(ingredient);
         assertEquals(violations.size(), 0);
     }

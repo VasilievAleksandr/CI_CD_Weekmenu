@@ -22,4 +22,5 @@ public class IngredientDTO {
     //key - uom name, Value - equivalent
     private Map<String, BigDecimal> unitOfMeasureEquivalent;
     private Set<IngredientPriceDTO> ingredientPrices;
+    private String ingredientCategoryName;
 }
