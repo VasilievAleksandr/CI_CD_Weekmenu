@@ -82,9 +82,10 @@ public class Ingredient implements Serializable {
     @NotNull(message = "Ingredient's ownership mustn't be null.")
     private Ownership ownership;
 
-    @OneToOne
+    @ManyToOne (cascade = CascadeType.MERGE)
     @JoinColumn(name = "INGREDIENT_CATEGORY_ID")
     @Valid
+    @NotNull(message = "Ingredient's category mustn't be null.")
     private IngredientCategory ingredientCategory;
 
     public Ingredient(String name, BigDecimal calories, BigDecimal proteins, BigDecimal fats, BigDecimal carbs,

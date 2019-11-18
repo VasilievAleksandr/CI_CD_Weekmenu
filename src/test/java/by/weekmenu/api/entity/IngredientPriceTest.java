@@ -39,7 +39,9 @@ public class IngredientPriceTest {
     }
 
     private Ingredient getIngredient() {
-        return new Ingredient("Курица", new Ownership(OwnershipName.USER));
+        Ingredient ingredient = new Ingredient("Курица", new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("Milk", false));
+        return ingredient;
     }
 
     private UnitOfMeasure getUnitOfMeasure() {

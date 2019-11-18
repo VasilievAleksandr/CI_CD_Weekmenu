@@ -117,14 +117,20 @@ public class MenuIntegrationTest {
     @Autowired
     private MenuPriceRepository menuPriceRepository;
 
+    @Autowired
+    IngredientCategoryRepository ingredientCategoryRepository;
+
     @Before
     public void createBaseData() {
-        if (unitOfMeasureRepository.findAll().spliterator().getExactSizeIfKnown()==1) {
+        if (unitOfMeasureRepository.findAll().spliterator().getExactSizeIfKnown() == 1) {
             createUnitOfMeasureDtos();
         }
-        if (mealTypeRepository.findAll().spliterator().getExactSizeIfKnown()==0) {
+        if (mealTypeRepository.findAll().spliterator().getExactSizeIfKnown() == 0) {
             mealTypeRepository.save(new MealType("Завтрак", 10));
             mealTypeRepository.save(new MealType("Обед", 20));
+        }
+        if (ingredientCategoryRepository.findAll().spliterator().getExactSizeIfKnown() == 0) {
+            ingredientCategoryRepository.save(new IngredientCategory("Milk", false));
         }
         recipeCategoryRepository.save(new RecipeCategory("Обед"));
         recipeCategoryRepository.save(new RecipeCategory("Ужин"));
@@ -159,6 +165,7 @@ public class MenuIntegrationTest {
         menuRepository.deleteAll();
         menuCategoryRepository.deleteAll();
         mealTypeRepository.deleteAll();
+        ingredientCategoryRepository.deleteAll();
     }
 
     private void createUnitOfMeasureDtos() {
@@ -197,7 +204,7 @@ public class MenuIntegrationTest {
         ingredientDto.setCarbs(new BigDecimal("100"));
         ingredientDto.setFats(new BigDecimal("100"));
         ingredientDto.setProteins(new BigDecimal("100"));
-
+        ingredientDto.setIngredientCategoryName("Milk");
         Map<String, BigDecimal> map = new HashMap<>();
         map.put("Стакан", new BigDecimal(100));
         map.put("Ложка", new BigDecimal(20));
@@ -225,7 +232,7 @@ public class MenuIntegrationTest {
         recipeDto.setName(name);
         recipeDto.setCookingTime("30");
         recipeDto.setPreparingTime("15");
-        recipeDto.setPortions((short)2);
+        recipeDto.setPortions((short) 2);
         recipeDto.setImageLink("images/image.png");
         recipeDto.setSource("http://bestrecipes.com/best-recipe");
         recipeDto.setCookingMethodName("Варка");
@@ -358,7 +365,7 @@ public class MenuIntegrationTest {
                 .andExpect(jsonPath("$[0].authorName", is("Повар")))
                 .andExpect(jsonPath("$[0].authorImageLink", is("/images/photo.jpg")))
                 .andExpect(jsonPath("$[0].menuDescription", is("Очень вкусно")))
-                .andExpect(jsonPath("$[0].isActive", is (true)))
+                .andExpect(jsonPath("$[0].isActive", is(true)))
                 .andExpect(jsonPath("$[0].ownershipName", is("ADMIN")))
                 .andExpect(jsonPath("$[0].menuRecipeDTOS", iterableWithSize(2)))
                 .andExpect(jsonPath("$[0].menuPriceDTOS", iterableWithSize(1)))
@@ -371,7 +378,7 @@ public class MenuIntegrationTest {
                 .andExpect(jsonPath("$[1].authorName", is("Повар")))
                 .andExpect(jsonPath("$[1].authorImageLink", is("/images/photo.jpg")))
                 .andExpect(jsonPath("$[1].menuDescription", is("Очень вкусно")))
-                .andExpect(jsonPath("$[1].isActive", is (true)))
+                .andExpect(jsonPath("$[1].isActive", is(true)))
                 .andExpect(jsonPath("$[1].ownershipName", is("ADMIN")))
                 .andExpect(jsonPath("$[1].menuRecipeDTOS", iterableWithSize(2)))
                 .andExpect(jsonPath("$[1].menuPriceDTOS", iterableWithSize(1)))
@@ -397,7 +404,7 @@ public class MenuIntegrationTest {
                 .andExpect(jsonPath("$.authorName", is("Повар")))
                 .andExpect(jsonPath("$.authorImageLink", is("/images/photo.jpg")))
                 .andExpect(jsonPath("$.menuDescription", is("Супер вкусно!")))
-                .andExpect(jsonPath("$.isActive", is (true)))
+                .andExpect(jsonPath("$.isActive", is(true)))
                 .andExpect(jsonPath("$.ownershipName", is("ADMIN")))
                 .andExpect(jsonPath("$.menuRecipeDTOS", iterableWithSize(2)))
                 .andExpect(jsonPath("$.menuPriceDTOS", iterableWithSize(1)))
@@ -408,7 +415,7 @@ public class MenuIntegrationTest {
     }
 
     @Test
-    public void deleteMenuTest() throws Exception{
+    public void deleteMenuTest() throws Exception {
         MenuDTO menuDTO = menuService.save(createMenuDTO("Вкусное меню"));
         mockMvc.perform(delete(UrlConsts.PATH_MENUS + "/" + menuDTO.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))

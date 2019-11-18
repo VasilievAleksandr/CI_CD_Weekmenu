@@ -26,8 +26,10 @@ public class RecipeIngredientTest {
 
     @Test
     public void testRecipeIngredientQtyHasTooManyFractionDigits() {
+        Ingredient ingredient = new Ingredient("курица", new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("milk", false));
         RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111.123"));
-        recipeIngredient.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER)));
+        recipeIngredient.setIngredient(ingredient);
         recipeIngredient.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
                 new Ownership(OwnershipName.USER)));
         recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
@@ -39,8 +41,10 @@ public class RecipeIngredientTest {
 
     @Test
     public void testRecipeIngredientQtyIsTooHigh() {
+        Ingredient ingredient = new Ingredient("курица", new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("milk", false));
         RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("1111111.12"));
-        recipeIngredient.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER)));
+        recipeIngredient.setIngredient(ingredient);
         recipeIngredient.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
                 new Ownership(OwnershipName.USER)));
         recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
@@ -52,8 +56,10 @@ public class RecipeIngredientTest {
 
     @Test
     public void testRecipeIngredientQtyIsNegative() {
+        Ingredient ingredient = new Ingredient("курица", new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("milk", false));
         RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("-111"));
-        recipeIngredient.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER)));
+        recipeIngredient.setIngredient(ingredient);
         recipeIngredient.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
                 new Ownership(OwnershipName.USER)));
         recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
@@ -76,8 +82,9 @@ public class RecipeIngredientTest {
 
     @Test
     public void testIngredientIsInvalid() {
-        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"),
-                new Ingredient(null, new Ownership(OwnershipName.USER)),
+        Ingredient ingredient = new Ingredient(" ", new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("milk", false));
+        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"), ingredient,
                 new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership(OwnershipName.USER)));
         recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
@@ -88,9 +95,9 @@ public class RecipeIngredientTest {
 
     @Test
     public void testRecipeIsNull() {
-        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"),
-                new Ingredient("курица", new Ownership(OwnershipName.USER)),
-                null);
+        Ingredient ingredient = new Ingredient("курица", new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("milk", false));
+        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"), ingredient,null);
         recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
         assertEquals(violations.size(), 1);
@@ -100,8 +107,9 @@ public class RecipeIngredientTest {
 
     @Test
     public void testRecipeIsInvalid() {
-        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"),
-                new Ingredient("курица", new Ownership(OwnershipName.USER)),
+        Ingredient ingredient = new Ingredient("курица", new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("milk", false));
+        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"), ingredient,
                 new Recipe(null, true, new CookingMethod("жарка"), new Ownership(OwnershipName.USER)));
         recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);
@@ -113,7 +121,9 @@ public class RecipeIngredientTest {
     @Test
     public void testUnitOfMeasureIsNull() {
         RecipeIngredient recipeIngredient = new RecipeIngredient();
-        recipeIngredient.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER)));
+        Ingredient ingredient = new Ingredient("курица", new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("milk", false));
+        recipeIngredient.setIngredient(ingredient);
         recipeIngredient.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
                 new Ownership(OwnershipName.USER)));
         recipeIngredient.setUnitOfMeasure(null);
@@ -126,7 +136,9 @@ public class RecipeIngredientTest {
     @Test
     public void testUnitOfMeasureIsInvalid() {
         RecipeIngredient recipeIngredient = new RecipeIngredient();
-        recipeIngredient.setIngredient(new Ingredient("курица", new Ownership(OwnershipName.USER)));
+        Ingredient ingredient = new Ingredient("курица", new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("milk", false));
+        recipeIngredient.setIngredient(ingredient);
         recipeIngredient.setRecipe(new Recipe("рецепт", true, new CookingMethod("жарка"),
                 new Ownership(OwnershipName.USER)));
         recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", null));
@@ -138,8 +150,9 @@ public class RecipeIngredientTest {
 
     @Test
     public void testRecipeIngredientIsValid() {
-        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"),
-                new Ingredient("курица", new Ownership(OwnershipName.USER)),
+        Ingredient ingredient = new Ingredient("курица", new Ownership(OwnershipName.USER));
+        ingredient.setIngredientCategory(new IngredientCategory("milk", false));
+        RecipeIngredient recipeIngredient = new RecipeIngredient(new BigDecimal("111"), ingredient,
                 new Recipe("рецепт", true, new CookingMethod("жарка"), new Ownership(OwnershipName.USER)));
         recipeIngredient.setUnitOfMeasure(new UnitOfMeasure("Гр", "Грамм"));
         Set<ConstraintViolation<RecipeIngredient>> violations = validator.validate(recipeIngredient);

@@ -70,6 +70,9 @@ public class UnitOfMeasureIntegrationTest {
     @Autowired
     RecipeIngredientRepository recipeIngredientRepository;
 
+    @Autowired
+    IngredientCategoryRepository ingredientCategoryRepository;
+
     @After
     public void cleanDB() {
         ingredientPriceRepository.deleteAll();
@@ -180,6 +183,9 @@ public class UnitOfMeasureIntegrationTest {
         ingredient.setFats(new BigDecimal("100"));
         ingredient.setProteins(new BigDecimal("100"));
         ingredient.setOwnership(ownershipRepository.findByName(OwnershipName.ADMIN.name()).orElse(null));
+        IngredientCategory ingredientCategory = new IngredientCategory("Milk", false);
+        ingredientCategoryRepository.save(ingredientCategory);
+        ingredient.setIngredientCategory(ingredientCategory);
         ingredientRepository.save(ingredient);
         IngredientUnitOfMeasure ingredientUnitOfMeasure = new IngredientUnitOfMeasure(new BigDecimal(3));
         ingredientUnitOfMeasure.setId(new IngredientUnitOfMeasure.Id(ingredient.getId(), unitOfMeasure.getId()));

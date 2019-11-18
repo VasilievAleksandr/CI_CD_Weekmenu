@@ -29,6 +29,7 @@ public class IngredientServiceImpl implements IngredientService {
     private final RecipeService recipeService;
     private final RecycleBinRepository recycleBinRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
+    private final IngredientCategoryRepository ingredientCategoryRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -40,6 +41,7 @@ public class IngredientServiceImpl implements IngredientService {
         }
         Ingredient ingredient = convertToEntity(entityDto);
         ownershipRepository.findByName("ADMIN").ifPresent(ingredient::setOwnership);
+        ingredient.setIngredientCategory(ingredientCategoryRepository.findByNameIgnoreCase(entityDto.getIngredientCategoryName()).orElse(null));
         ingredientRepository.save(ingredient);
         if (entityDto.getUnitOfMeasureEquivalent() != null) {
             saveIngredientUOM(entityDto, ingredient);
