@@ -188,7 +188,6 @@ public class RegionIntegrationTest {
         UnitOfMeasure unitOfMeasure = unitOfMeasureRepository.save(new UnitOfMeasure("Кг", "Килограмм"));
         Ownership ownership = ownershipRepository.findByName("USER").orElse(null);
         Ingredient ingredient = new Ingredient("Курица", ownership);
-        ingredient.setIngredientCategory(new IngredientCategory("Milk", false));
         IngredientCategory ingredientCategory = new IngredientCategory("Milk", false);
         ingredientCategoryRepository.save(ingredientCategory);
         ingredient.setIngredientCategory(ingredientCategory);
