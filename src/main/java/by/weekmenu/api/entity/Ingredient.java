@@ -82,7 +82,7 @@ public class Ingredient implements Serializable {
     @NotNull(message = "Ingredient's ownership mustn't be null.")
     private Ownership ownership;
 
-    @ManyToOne (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne (cascade = CascadeType.MERGE)
     @JoinColumn(name = "INGREDIENT_CATEGORY_ID")
     @Valid
     @NotNull(message = "Ingredient's category mustn't be null.")

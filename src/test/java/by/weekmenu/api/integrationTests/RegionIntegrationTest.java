@@ -68,6 +68,9 @@ public class RegionIntegrationTest {
     @Autowired
     private CookingMethodRepository cookingMethodRepository;
 
+    @Autowired
+    IngredientCategoryRepository ingredientCategoryRepository;
+
     @Before
     public void createCountry() {
         Currency currency = new Currency("Бел. руб.", "BYN", false);
@@ -184,7 +187,12 @@ public class RegionIntegrationTest {
         Region region = createRegion("Минск");
         UnitOfMeasure unitOfMeasure = unitOfMeasureRepository.save(new UnitOfMeasure("Кг", "Килограмм"));
         Ownership ownership = ownershipRepository.findByName("USER").orElse(null);
-        Ingredient ingredient = ingredientRepository.save(new Ingredient("Курица", ownership));
+        Ingredient ingredient = new Ingredient("Курица", ownership);
+        ingredient.setIngredientCategory(new IngredientCategory("Milk", false));
+        IngredientCategory ingredientCategory = new IngredientCategory("Milk", false);
+        ingredientCategoryRepository.save(ingredientCategory);
+        ingredient.setIngredientCategory(ingredientCategory);
+        ingredientRepository.save(ingredient);
         IngredientPrice ingredientPrice = new IngredientPrice();
         ingredientPrice.setId(new IngredientPrice.Id(ingredient.getId(), Objects.requireNonNull(region).getId()));
         ingredientPrice.setUnitOfMeasure(unitOfMeasure);

@@ -106,16 +106,22 @@ public class RecipeIntegrationTest {
     private RecipeSubcategoryRepository recipeSubcategoryRepository;
 
     @Autowired
+    private IngredientCategoryRepository ingredientCategoryRepository;
+
+    @Autowired
     private RecipeService recipeService;
 
     @Before
     public void createBaseData() {
-        if (ownershipRepository.findAll().spliterator().getExactSizeIfKnown()==0) {
+        if (ownershipRepository.findAll().spliterator().getExactSizeIfKnown() == 0) {
             ownershipRepository.save(new Ownership(OwnershipName.ADMIN));
             ownershipRepository.save(new Ownership(OwnershipName.USER));
         }
-        if (unitOfMeasureRepository.findAll().spliterator().getExactSizeIfKnown()==1) {
+        if (unitOfMeasureRepository.findAll().spliterator().getExactSizeIfKnown() == 1) {
             createUnitOfMeasureDtos();
+        }
+        if (ingredientCategoryRepository.findAll().spliterator().getExactSizeIfKnown() == 0) {
+            ingredientCategoryRepository.save(new IngredientCategory("Milk", false));
         }
         recipeCategoryRepository.save(new RecipeCategory("Обед"));
         recipeCategoryRepository.save(new RecipeCategory("Ужин"));
@@ -142,6 +148,7 @@ public class RecipeIntegrationTest {
         recipeSubcategoryRepository.deleteAll();
         cookingMethodRepository.deleteAll();
         recycleBinRepository.deleteAll();
+        ingredientCategoryRepository.deleteAll();
     }
 
     private void createUnitOfMeasureDtos() {
@@ -180,7 +187,7 @@ public class RecipeIntegrationTest {
         ingredientDto.setCarbs(new BigDecimal("100"));
         ingredientDto.setFats(new BigDecimal("100"));
         ingredientDto.setProteins(new BigDecimal("100"));
-
+        ingredientDto.setIngredientCategoryName("Milk");
         Map<String, BigDecimal> map = new HashMap<>();
         map.put("Стакан", new BigDecimal(100));
         map.put("Ложка", new BigDecimal(20));
@@ -208,7 +215,7 @@ public class RecipeIntegrationTest {
         recipeDto.setName(name);
         recipeDto.setCookingTime("30");
         recipeDto.setPreparingTime("15");
-        recipeDto.setPortions((short)2);
+        recipeDto.setPortions((short) 2);
         recipeDto.setImageLink("images/image.png");
         recipeDto.setSource("http://bestrecipes.com/best-recipe");
         recipeDto.setCookingMethodName("Варка");
@@ -229,7 +236,7 @@ public class RecipeIntegrationTest {
         recipe.setName(name);
         recipe.setCookingTime(new Short("30"));
         recipe.setPreparingTime(new Short("15"));
-        recipe.setPortions((short)2);
+        recipe.setPortions((short) 2);
         recipe.setImageLink("images/image.png");
         recipe.setSource("http://bestrecipes.com/best-recipe");
         recipe.setCookingMethod(cookingMethodRepository.findByNameIgnoreCase("Варка").orElse(null));
@@ -270,9 +277,9 @@ public class RecipeIntegrationTest {
 
         Iterable<Recipe> recipes = recipeRepository.findAll();
         assertThat(recipes).extracting(Recipe::getName).containsOnly("Гречневая каша");
-        assertThat(recipes).extracting(Recipe::getPortions).containsOnly((short)2);
-        assertThat(recipes).extracting(Recipe::getCookingTime).containsOnly((short)30);
-        assertThat(recipes).extracting(Recipe::getPreparingTime).containsOnly((short)15);
+        assertThat(recipes).extracting(Recipe::getPortions).containsOnly((short) 2);
+        assertThat(recipes).extracting(Recipe::getCookingTime).containsOnly((short) 30);
+        assertThat(recipes).extracting(Recipe::getPreparingTime).containsOnly((short) 15);
         assertThat(recipes).extracting(Recipe::getSource).containsOnly("http://bestrecipes.com/best-recipe");
         assertThat(recipes).extracting(Recipe::getImageLink).containsOnly("images/image.png");
         assertThat(recipes).extracting(Recipe::getRecipeCategories)
@@ -360,7 +367,7 @@ public class RecipeIntegrationTest {
     public void updateRecipeTest() throws Exception {
         RecipeDTO recipeDto = recipeService.save(createRecipeDto("Гречневая каша"));
         recipeDto.setName("Гречка с овощами");
-        recipeDto.setPortions((short)4);
+        recipeDto.setPortions((short) 4);
         ObjectMapper objectMapper = new ObjectMapper();
 
         mockMvc.perform(put(UrlConsts.PATH_RECIPES + "/" + recipeDto.getId().toString())
@@ -387,7 +394,7 @@ public class RecipeIntegrationTest {
     }
 
     @Test
-    public void deleteRecipeTest() throws Exception{
+    public void deleteRecipeTest() throws Exception {
         RecipeDTO recipeDto = recipeService.save(createRecipeDto("Гречневая каша"));
         mockMvc.perform(delete(UrlConsts.PATH_RECIPES + "/" + recipeDto.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON))
