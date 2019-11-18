@@ -9,5 +9,6 @@ public interface IngredientCategoryService extends CrudService<IngredientCategor
 
     IngredientCategory findByName(String name);
     List<String> checkConnectedElements(Integer id);
+    IngredientCategory findByPriority (Integer priority);
 
 }

@@ -76,4 +76,15 @@ public class IngredientCategoryController {
     public List<String> checkConnectedElements(@PathVariable("id") Integer id) {
         return ingredientCategoryService.checkConnectedElements(id);
     }
+
+    @GetMapping("/checkIngredientCategoryUniquePriority")
+    @ApiOperation("Проверяет поле priority у IngredientCategory на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
+    public Integer checkIngredientCategoryUniquePriority(@RequestParam String priority) {
+        Integer intPriority = Integer.parseInt(priority);
+        if (ingredientCategoryService.findByPriority(intPriority) != null) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
 }

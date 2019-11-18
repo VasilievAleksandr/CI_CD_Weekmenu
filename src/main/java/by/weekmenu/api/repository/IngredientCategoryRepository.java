@@ -13,6 +13,7 @@ public interface IngredientCategoryRepository extends CrudRepository<IngredientC
 
     Optional<IngredientCategory> findByNameIgnoreCase(String name);
     List<IngredientCategory> findAllByIsArchivedIsFalse();
+    Optional<IngredientCategory> findByPriority(Integer priority);
 
     @Modifying
     @Query("update IngredientCategory e set e.isArchived = true where e.id = :ingredientCategoryId")
