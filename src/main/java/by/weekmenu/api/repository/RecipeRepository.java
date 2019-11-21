@@ -42,6 +42,4 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
             "join  recipe.recipeSubcategories recipeSubcategories " +
             "where recipeSubcategories.name = :recipeSubcategoryName")
     List<Recipe> findAllByRecipeSubcategoryName(@Param("recipeSubcategoryName") String recipeSubcategoryName);
-
-    List<Recipe> findAllByNameContainingIgnoreCaseAndIsArchivedIsFalse(String name);
 }

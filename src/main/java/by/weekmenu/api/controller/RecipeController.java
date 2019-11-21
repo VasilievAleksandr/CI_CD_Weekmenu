@@ -69,12 +69,6 @@ public class RecipeController {
         }
     }
 
-    @GetMapping("/search")
-    @ApiOperation("Возвращает список ингредиентов, у которых в названии содержится параметр {name}")
-    public ResponseEntity<List<RecipeDTO>> findIngredientByName(@RequestParam String name) {
-        return new ResponseEntity<>(recipeService.findIngredientByName(name), HttpStatus.OK);
-    }
-
     @GetMapping("/filter")
     @ApiOperation("Возвращает список рецептов в соответствии с фильтром")
     public List<RecipeDTO> filter(@RequestParam (required = false) String recipeName,

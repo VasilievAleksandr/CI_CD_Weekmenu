@@ -15,5 +15,4 @@ public interface RecipeService extends CrudService<RecipeDTO, Long> {
     List<RecipeDTO> findAllByFilter(String recipeName, Short totalCookingTime,
                                     String recipeCategoryName, String recipeSubcategoryName,
                                     BigDecimal recipeCalories);
-    List<RecipeDTO> findIngredientByName(String name);
 }

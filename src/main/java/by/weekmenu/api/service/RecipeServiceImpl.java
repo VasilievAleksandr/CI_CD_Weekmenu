@@ -146,15 +146,6 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeDTO> findIngredientByName(String name) {
-        return recipeRepository.findAllByNameContainingIgnoreCaseAndIsArchivedIsFalse(name)
-                .stream()
-                .filter(Objects::nonNull)
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<RecipeDTO> findAll() {
         return recipeRepository.findAllByIsArchivedIsFalse().stream()
                 .filter(Objects::nonNull)
