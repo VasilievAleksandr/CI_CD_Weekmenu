@@ -81,13 +81,6 @@ public class IngredientController {
         }
     }
 
-    @GetMapping("/search")
-    @ApiOperation("Возвращает список ингредиентов, у которых в названии содержится параметр {name}")
-    public ResponseEntity<List<IngredientDTO>> findIngredientByName(@RequestParam String name) {
-        return new ResponseEntity<>(ingredientService.findIngredientByName(name), HttpStatus.OK);
-    }
-
-
     @GetMapping("/getUnitOfMeasures")
     @ApiOperation("Возвращает список всех единиц измерения для данного названия ингредиента")
     public ResponseEntity<List<String>> getAllUnitsOfMeasure(@RequestParam String name) {

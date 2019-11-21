@@ -11,5 +11,4 @@ public interface IngredientService extends CrudService<IngredientDTO, Long> {
     List<String> findAllUnitsOfMeasure(String name);
     List<String> checkConnectedElements(Long id);
     void delete(Long id);
-    List<IngredientDTO> findIngredientByName(String name);
 }

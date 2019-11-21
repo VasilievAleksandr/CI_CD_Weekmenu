@@ -176,13 +176,4 @@ public class IngredientServiceImpl implements IngredientService {
         recycleBinRepository.save(recycleBin);
         ingredientRepository.softDelete(ingredientDto.getId());
     }
-
-    @Override
-    public List<IngredientDTO> findIngredientByName(String name) {
-        return ingredientRepository.findAllByNameContainingIgnoreCaseAndIsArchivedIsFalse(name)
-                .stream()
-                .filter(Objects::nonNull)
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
 }
