@@ -1,6 +1,7 @@
 package by.weekmenu.api.entity;
 
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -50,5 +51,11 @@ public class IngredientCategory implements Serializable {
         this.id = id;
         this.name = name;
         this.isArchived = isArchived;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void nameFirstCapitalLetter(){
+        this.name = name == null ? null : StringUtils.capitalize(name);
     }
 }

@@ -41,6 +41,9 @@ public class RecipeCategory implements Serializable {
     @ManyToMany(mappedBy = "recipeCategories")
     private Set<Recipe> recipes = new HashSet<>();
 
+    @Column(name = "PRIORITY")
+    private Integer priority;
+
     public RecipeCategory(String name) {
         this.name = name;
     }

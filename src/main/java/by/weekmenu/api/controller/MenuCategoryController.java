@@ -60,16 +60,6 @@ public class MenuCategoryController {
         }
     }
 
-    @GetMapping("/checkMenuCategoryUniqueName")
-    @ApiOperation("Проверяет поле name у MenuCategory на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
-    public Integer checkMenuCategoryUniqueName(@RequestParam String name) {
-        if (menuCategoryService.findByName(name) != null) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }
-
     @GetMapping("/checkConnectedElements/{id}")
     @ApiOperation("Проверяет наличие связанных элементов по Id")
     public List<String> checkConnectedElements(@PathVariable("id") Integer id) {

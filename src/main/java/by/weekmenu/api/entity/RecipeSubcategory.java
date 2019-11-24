@@ -41,6 +41,9 @@ public class RecipeSubcategory implements Serializable {
     @Column(name = "IS_ARCHIVED")
     private boolean isArchived;
 
+    @Column(name = "PRIORITY")
+    private Integer priority;
+
     public RecipeSubcategory(String name) {
         this.name = name;
     }
