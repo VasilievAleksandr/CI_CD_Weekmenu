@@ -13,7 +13,6 @@ public interface MenuCategoryRepository extends CrudRepository<MenuCategory, Int
 
     Optional<MenuCategory> findByNameIgnoreCase(String name);
     List<MenuCategory> findAllByIsArchivedIsFalse();
-    Optional<MenuCategory> findByPriority (Integer priority);
 
     @Modifying
     @Query("update MenuCategory e set e.isArchived = true where e.id = :menuCategoryId")
