@@ -75,12 +75,6 @@ public class IngredientCategoryServiceImpl implements IngredientCategoryService 
         ingredientCategoryRepository.softDelete(ingredientCategoryDTO.getId());
     }
 
-    @Override
-    @Transactional
-    public IngredientCategory findByPriority (Integer priority){
-        return ingredientCategoryRepository.findByPriority(priority).orElse(null);
-    }
-
     private IngredientCategory convertToEntity(IngredientCategoryDTO ingredientCategoryDTO) {
         return modelMapper.map(ingredientCategoryDTO, IngredientCategory.class);
     }
