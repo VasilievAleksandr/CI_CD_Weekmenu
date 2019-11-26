@@ -40,6 +40,7 @@ public class RecipeCategoryController {
         RecipeCategoryDTO recipeCategoryDTO = recipeCategoryService.findById(id);
         if (recipeCategoryDTO != null) {
             recipeCategoryDTO.setName(updatedRecipeCategoryDTO.getName());
+            recipeCategoryDTO.setPriority(updatedRecipeCategoryDTO.getPriority());
             return new ResponseEntity<>(recipeCategoryService.save(recipeCategoryDTO), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -55,16 +56,6 @@ public class RecipeCategoryController {
             return ResponseEntity.noContent().build();
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/checkRecipeCategoryUniqueName")
-    @ApiOperation("Проверяет поле name у RecipeCategory на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
-    public Integer checkRecipeCategoryUniqueName(@RequestParam String name) {
-        if (recipeCategoryService.findByName(name) != null) {
-            return -1;
-        } else {
-            return 0;
         }
     }
 

@@ -41,6 +41,7 @@ public class CookingMethodController {
         CookingMethodDTO cookingMethodDTO = cookingMethodService.findById(id);
         if (cookingMethodDTO != null) {
             cookingMethodDTO.setName(updatedCookingMethodDTO.getName());
+            cookingMethodDTO.setPriority(updatedCookingMethodDTO.getPriority());
             return new ResponseEntity<>(cookingMethodService.save(cookingMethodDTO), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -56,16 +57,6 @@ public class CookingMethodController {
             return ResponseEntity.noContent().build();
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/checkCookingMethodUniqueName")
-    @ApiOperation("Проверяет поле name у CookingMethod на уникальность. Возвращает -1, если поле есть в БД и 0, если нет.")
-    public Integer checkCookingMethodUniqueName(@RequestParam String name) {
-        if (cookingMethodService.findByName(name) != null) {
-            return -1;
-        } else {
-            return 0;
         }
     }
 
