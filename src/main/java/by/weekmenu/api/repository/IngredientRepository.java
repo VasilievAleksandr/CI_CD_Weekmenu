@@ -13,7 +13,7 @@ public interface IngredientRepository extends CrudRepository<Ingredient, Long> {
 
     Optional<Ingredient> findByNameIgnoreCase(String name);
     List<Ingredient> findAllByIsArchivedIsFalse();
-    List<Ingredient> findAllByIngredientCategory_IdAndIsArchivedIsFalse(Integer ingredientCategoryId);
+    List<Ingredient> findAllByIngredientCategory_Id(Integer ingredientCategoryId);
 
     @Modifying
     @Query("update Ingredient ingredient set ingredient.isArchived = true where ingredient.id = :ingredientId")

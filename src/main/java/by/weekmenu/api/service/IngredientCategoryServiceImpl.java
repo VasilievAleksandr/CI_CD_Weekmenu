@@ -57,7 +57,7 @@ public class IngredientCategoryServiceImpl implements IngredientCategoryService 
     public List<String> checkConnectedElements(Integer id) {
         List<String> list = new ArrayList<>();
         Optional<IngredientCategory> ingredientCategory = ingredientCategoryRepository.findById(id);
-        Integer size = ingredientRepository.findAllByIngredientCategory_IdAndIsArchivedIsFalse(id).size();
+        Integer size = ingredientRepository.findAllByIngredientCategory_Id(id).size();
         if (ingredientCategory.isPresent() && size > 0) {
             list.add("ингредиенты: " + size);
         }

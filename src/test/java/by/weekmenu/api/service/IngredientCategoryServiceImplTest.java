@@ -110,7 +110,7 @@ public class IngredientCategoryServiceImplTest {
         List<Ingredient> ingredients = new ArrayList();
         ingredients.add(ingredient);
         when(ingredientCategoryRepository.findById(ingredientCategory.getId())).thenReturn(Optional.of(ingredientCategory));
-        when(ingredientRepository.findAllByIngredientCategory_IdAndIsArchivedIsFalse(ingredientCategory.getId())).thenReturn(ingredients);
+        when(ingredientRepository.findAllByIngredientCategory_Id(ingredientCategory.getId())).thenReturn(ingredients);
         List<String> list = ingredientCategoryService.checkConnectedElements(ingredientCategory.getId());
         assertThat(list.size()).isEqualTo(1);
     }
