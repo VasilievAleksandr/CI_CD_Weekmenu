@@ -106,7 +106,7 @@ public class RecipeCalculation {
 
                     totalCalories = totalCalories
                             .add(ingredient.get().getCalories().multiply(rate))
-                            .setScale(1, BigDecimal.ROUND_HALF_UP);
+                            .setScale(0, BigDecimal.ROUND_HALF_UP);
                     totalProteins = totalProteins
                             .add(ingredient.get().getProteins().multiply(rate))
                             .setScale(1, BigDecimal.ROUND_HALF_UP);
