@@ -110,17 +110,6 @@ public class IngredientCategoryControllerTest {
     }
 
     @Test
-    public void checkUniqueNameIngredientCategoryTest() throws Exception {
-        IngredientCategory ingredientCategory = new IngredientCategory(1,"Milk", true);
-        String name = "Milk";
-        when(ingredientCategoryService.findByName(name)).thenReturn(ingredientCategory);
-        mockMvc.perform(get(UrlConsts.PATH_INGREDIENT_CATEGORIES + "/checkIngredientCategoryUniqueName?name=" + name)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(-1)));
-    }
-
-    @Test
     public void checkConnectedElementsTest() throws Exception {
         List<String> result = Collections.singletonList("ингредиенты: 1");
         when(ingredientCategoryService.checkConnectedElements(1)).thenReturn(result);

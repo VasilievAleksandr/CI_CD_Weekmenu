@@ -45,7 +45,7 @@ public class Recipe implements Serializable {
     @Column(name = "CALORIES")
     @Digits(
             integer = 7,
-            fraction = 1,
+            fraction = 0,
             message = "Calories '${validatedValue}' must have up to '{integer}' integer digits and '{fraction}' fraction digits."
     )
     @PositiveOrZero(message = "Recipe's calories '${validatedValue}' must be positive or '0'.")

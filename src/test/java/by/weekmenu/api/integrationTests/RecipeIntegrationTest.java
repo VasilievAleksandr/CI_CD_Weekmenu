@@ -291,7 +291,7 @@ public class RecipeIntegrationTest {
                         recipeSubcategoryRepository.findByNameIgnoreCase("Мясо").get())
                         .collect(Collectors.toSet()));
         //check calculations
-        assertThat(recipes).extracting(Recipe::getCalories).containsOnly(new BigDecimal("50.0"));
+        assertThat(recipes).extracting(Recipe::getCalories).containsOnly(new BigDecimal("50"));
         assertThat(recipes).extracting(Recipe::getProteins).containsOnly(new BigDecimal("50.0"));
         assertThat(recipes).extracting(Recipe::getFats).containsOnly(new BigDecimal("50.0"));
         assertThat(recipes).extracting(Recipe::getCarbs).containsOnly(new BigDecimal("50.0"));
@@ -333,7 +333,7 @@ public class RecipeIntegrationTest {
                 .andExpect(jsonPath("$[0].portions", is(2)))
                 .andExpect(jsonPath("$[0].imageLink", is("images/image.png")))
                 .andExpect(jsonPath("$[0].source", is("http://bestrecipes.com/best-recipe")))
-                .andExpect(jsonPath("$[0].calories", is(50.0)))
+                .andExpect(jsonPath("$[0].calories", is(50)))
                 .andExpect(jsonPath("$[0].carbs", is(50.0)))
                 .andExpect(jsonPath("$[0].proteins", is(50.0)))
                 .andExpect(jsonPath("$[0].fats", is(50.0)))
@@ -350,7 +350,7 @@ public class RecipeIntegrationTest {
                 .andExpect(jsonPath("$[1].portions", is(2)))
                 .andExpect(jsonPath("$[1].imageLink", is("images/image.png")))
                 .andExpect(jsonPath("$[1].source", is("http://bestrecipes.com/best-recipe")))
-                .andExpect(jsonPath("$[1].calories", is(50.0)))
+                .andExpect(jsonPath("$[1].calories", is(50)))
                 .andExpect(jsonPath("$[1].carbs", is(50.0)))
                 .andExpect(jsonPath("$[1].proteins", is(50.0)))
                 .andExpect(jsonPath("$[1].fats", is(50.0)))
@@ -380,7 +380,7 @@ public class RecipeIntegrationTest {
                 .andExpect(jsonPath("$.portions", is(4)))
                 .andExpect(jsonPath("$.imageLink", is("images/image.png")))
                 .andExpect(jsonPath("$.source", is("http://bestrecipes.com/best-recipe")))
-                .andExpect(jsonPath("$.calories", is(25.0)))
+                .andExpect(jsonPath("$.calories", is(25)))
                 .andExpect(jsonPath("$.carbs", is(25.0)))
                 .andExpect(jsonPath("$.proteins", is(25.0)))
                 .andExpect(jsonPath("$.fats", is(25.0)))

@@ -120,16 +120,6 @@ public class MenuCategoryIntegrationTest {
     }
 
     @Test
-    public void checkUniqueNameMenuCategoryIntegrationTest() throws Exception {
-        MenuCategory menuCategory = new MenuCategory("Постное", false);
-        menuCategoryRepository.save(menuCategory);
-        mockMvc.perform(get(UrlConsts.PATH_MENU_CATEGORIES + "/checkMenuCategoryUniqueName?name=" + menuCategory.getName())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(-1)));
-    }
-
-    @Test
     @Transactional
     public void checkConnectedElementsTest() throws Exception {
         MenuCategory menuCategory = new MenuCategory("Постное", false);

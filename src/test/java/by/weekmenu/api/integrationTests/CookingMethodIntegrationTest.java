@@ -114,16 +114,6 @@ public class CookingMethodIntegrationTest {
     }
 
     @Test
-    public void checkUniqueNameCookingMethodIntegrationTest() throws Exception {
-        CookingMethod cookingMethod = new CookingMethod("Жарка");
-        cookingMethodRepository.save(cookingMethod);
-        mockMvc.perform(get(UrlConsts.PATH_COOKINGMETHODS + "/checkCookingMethodUniqueName?name=" + cookingMethod.getName())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(-1)));
-    }
-
-    @Test
     @Transactional
     public void checkConnectedElementsTest() throws Exception {
         CookingMethod cookingMethod = new CookingMethod("Жарка");

@@ -97,20 +97,20 @@ public class RecipeTest {
     @Test
     public void testCaloriesHasTooManyFractionDigits() {
         Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
-        recipe.setCalories(new BigDecimal("123.12"));
+        recipe.setCalories(new BigDecimal("123.1"));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("Calories '123.12' must have up to '7' integer digits and '1' fraction digits.",
+        assertEquals("Calories '123.1' must have up to '7' integer digits and '0' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
     public void testCaloriesValueIsTooHigh() {
         Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
-        recipe.setCalories(new BigDecimal("12345678.1"));
+        recipe.setCalories(new BigDecimal("12345678"));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("Calories '12345678.1' must have up to '7' integer digits and '1' fraction digits.",
+        assertEquals("Calories '12345678' must have up to '7' integer digits and '0' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 

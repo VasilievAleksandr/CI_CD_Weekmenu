@@ -110,17 +110,6 @@ public class CookingMethodControllerTest {
     }
 
     @Test
-    public void checkUniqueNameCookingMethodTest() throws Exception {
-        CookingMethod cookingMethod = new CookingMethod(1, "Жарка");
-        String name = "Жарка";
-        when(cookingMethodService.findByName(name)).thenReturn(cookingMethod);
-        mockMvc.perform(get(UrlConsts.PATH_COOKINGMETHODS + "/checkCookingMethodUniqueName?name=" + name)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(-1)));
-    }
-
-    @Test
     public void checkConnectedElementsTest() throws Exception {
         List<String> result = Collections.singletonList("рецепты: 1");
         when(cookingMethodService.checkConnectedElements(1)).thenReturn(result);
