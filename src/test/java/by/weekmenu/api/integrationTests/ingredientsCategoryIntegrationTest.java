@@ -79,8 +79,8 @@ public class ingredientsCategoryIntegrationTest {
 
     @Test
     public void getAllIngredientCategoryIntegrationTest() throws Exception {
-        IngredientCategory ingredientCategory1 = new IngredientCategory( "Milk", false);
-        IngredientCategory ingredientCategory2 = new IngredientCategory( "Bread", false);
+        IngredientCategory ingredientCategory1 = new IngredientCategory("Milk", false);
+        IngredientCategory ingredientCategory2 = new IngredientCategory("Bread", false);
         ingredientCategoryRepository.save(ingredientCategory1);
         ingredientCategoryRepository.save(ingredientCategory2);
         mockMvc.perform(get(UrlConsts.PATH_INGREDIENT_CATEGORIES)
@@ -121,16 +121,6 @@ public class ingredientsCategoryIntegrationTest {
 
         Optional<IngredientCategory> ingredientCategoryAfterSoftDelete = ingredientCategoryRepository.findById(ingredientCategory.getId());
         assertThat(ingredientCategoryAfterSoftDelete.get().isArchived()).isTrue();
-    }
-
-    @Test
-    public void checkUniqueNameIngredientCategoryIntegrationTest() throws Exception {
-        IngredientCategory ingredientCategory = new IngredientCategory("Milk", false);
-        ingredientCategoryRepository.save(ingredientCategory);
-        mockMvc.perform(get(UrlConsts.PATH_INGREDIENT_CATEGORIES + "/checkIngredientCategoryUniqueName?name=" + ingredientCategory.getName())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(-1)));
     }
 
     @Test

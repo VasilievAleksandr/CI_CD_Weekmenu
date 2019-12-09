@@ -110,17 +110,6 @@ public class MenuCategoryControllerTest {
     }
 
     @Test
-    public void checkUniqueNameMenuCategoryTest() throws Exception {
-        MenuCategory menuCategory = new MenuCategory(1,"Постное", true);
-        String name = "Постное";
-        when(menuCategoryService.findByName(name)).thenReturn(menuCategory);
-        mockMvc.perform(get(UrlConsts.PATH_MENU_CATEGORIES + "/checkMenuCategoryUniqueName?name=" + name)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(-1)));
-    }
-
-    @Test
     public void checkConnectedElementsTest() throws Exception {
         List<String> result = Collections.singletonList("меню: 1");
         when(menuCategoryService.checkConnectedElements(1)).thenReturn(result);

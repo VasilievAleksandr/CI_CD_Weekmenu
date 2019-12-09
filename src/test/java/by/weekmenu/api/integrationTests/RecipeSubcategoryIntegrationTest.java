@@ -112,16 +112,6 @@ public class RecipeSubcategoryIntegrationTest {
     }
 
     @Test
-    public void checkUniqueNameRecipeSubcategoryIntegrationTest() throws Exception {
-        RecipeSubcategory recipeSubcategory = new RecipeSubcategory("Рыба");
-        recipeSubcategoryRepository.save(recipeSubcategory);
-        mockMvc.perform(get(UrlConsts.PATH_RECIPESUBCATEGORIES + "/checkRecipeSubcategoryUniqueName?name=" + recipeSubcategory.getName())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(-1)));
-    }
-
-    @Test
     @Transactional
     public void checkConnectedElementsTest() throws Exception {
         RecipeSubcategory recipeSubcategory = recipeSubcategoryRepository.save(new RecipeSubcategory("Рыба"));
@@ -129,7 +119,7 @@ public class RecipeSubcategoryIntegrationTest {
         recipe.setName("Гречневая каша");
         recipe.setCookingTime(new Short("30"));
         recipe.setPreparingTime(new Short("15"));
-        recipe.setPortions((short)2);
+        recipe.setPortions((short) 2);
         recipe.setImageLink("images/image.png");
         recipe.setSource("http://bestrecipes.com/best-recipe");
         recipe.setCookingMethod(cookingMethodRepository.save(new CookingMethod("Варка")));

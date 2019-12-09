@@ -102,23 +102,12 @@ public class RecipeSubcategoryControllerTest {
     }
 
     @Test
-    public void deleteRecipeSubcategoryTest() throws Exception{
+    public void deleteRecipeSubcategoryTest() throws Exception {
         RecipeSubcategoryDTO recipeSubcategoryDTO = createRecipeSubcategoryDTO(1L, "Курица");
         when(recipeSubcategoryService.findById(recipeSubcategoryDTO.getId())).thenReturn(recipeSubcategoryDTO);
         mockMvc.perform(delete(UrlConsts.PATH_RECIPESUBCATEGORIES + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
-    }
-
-    @Test
-    public void checkUniqueNameRecipeSubcategoryTest() throws Exception{
-        RecipeSubcategory recipeSubcategory = new RecipeSubcategory ( 1L, "Рыба");
-        String name = "Рыба";
-        when(recipeSubcategoryService.findByName(name)).thenReturn(recipeSubcategory);
-        mockMvc.perform(get(UrlConsts.PATH_RECIPESUBCATEGORIES + "/checkRecipeSubcategoryUniqueName?name=" + name)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(-1)));
     }
 
     @Test
