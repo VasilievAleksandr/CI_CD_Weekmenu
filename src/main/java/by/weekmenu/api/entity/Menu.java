@@ -96,6 +96,8 @@ public class Menu implements Serializable {
     @NotNull(message = "Menu's ownership mustn't be null.")
     private Ownership ownership;
 
+    private Integer weekNumber;
+
     public Menu(String name, Boolean isActive, Ownership ownership) {
         this.name = name;
         this.isActive = isActive;

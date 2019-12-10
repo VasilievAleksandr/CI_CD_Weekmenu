@@ -24,4 +24,5 @@ public class MenuDTO {
     private String ownershipName;
     private Set<MenuRecipeDTO> menuRecipeDTOS;
     private Set<MenuPriceDTO> menuPriceDTOS;
+    private Integer weekNumber;
 }
