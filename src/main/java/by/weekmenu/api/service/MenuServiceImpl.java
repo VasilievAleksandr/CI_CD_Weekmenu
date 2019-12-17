@@ -1,5 +1,6 @@
 package by.weekmenu.api.service;
 
+import by.weekmenu.adminka.ui.util.WeekMenuDatesUtils;
 import by.weekmenu.api.dto.MenuDTO;
 import by.weekmenu.api.dto.MenuPriceDTO;
 import by.weekmenu.api.dto.MenuRecipeDTO;
@@ -13,6 +14,7 @@ import by.weekmenu.api.utils.EntityNamesConsts;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -141,6 +143,21 @@ public class MenuServiceImpl implements MenuService{
             return menuDTO;
         } else {
             return null;
+        }
+    }
+
+    @Scheduled(cron = "0 01 00 01 01 ?")
+    public void scheduleFixedDelayTask() {
+        try {
+            menuRepository.findAllByIsActiveIsFalse().stream().forEach(menu -> {
+                menu.setName(menu.getMenuCategory().getName()
+                        .concat("  ")
+                        .concat(WeekMenuDatesUtils.getWeekDates(menu.getWeekNumber())));
+                menuRepository.save(menu);
+            });
+        }
+        catch (Exception e) {
+            // TODO create logging
         }
     }
 }
