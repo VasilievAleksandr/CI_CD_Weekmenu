@@ -147,7 +147,7 @@ public class MenuServiceImpl implements MenuService{
     }
 
     @Scheduled(cron = "0 01 00 01 01 ?")
-    public void cangeMenuNamesAtFirstDayOfTheYear() {
+    public void changeMenuNamesAtFirstDayOfTheYear() {
         try {
             menuRepository.findAllByIsActiveIsFalse().stream().forEach(menu -> {
                 menu.setName(menu.getMenuCategory().getName()
