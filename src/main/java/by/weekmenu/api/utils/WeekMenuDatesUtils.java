@@ -40,7 +40,7 @@ public class WeekMenuDatesUtils {
     private static ArrayList<String> getArrayOfWeeks(int year, int startMonth, int startDate) {
         int currentWeek = 1;
         ArrayList<String> arrayOfWeeks = new ArrayList<>();
-        arrayOfWeeks.add(null);
+        arrayOfWeeks.add("");
         LocalDate localDate = LocalDate.of(year, startMonth, startDate);
         while (currentWeek <= getNumberOfWeeksInTheYear()) {
             arrayOfWeeks.add((String.format("%02d", localDate.getDayOfMonth()) + "."
