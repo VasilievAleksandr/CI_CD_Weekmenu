@@ -16,13 +16,13 @@ public class SheduledTasks {
 
     @Scheduled(cron = "0 01 00 01 01 ?")
     public void changeMenuNamesAtFirstDayOfTheYear() {
-        String regex="\\d{2}\\D\\d{2}\\s\\D\\s\\d{2}\\D\\d{2}";
+        String regex = "\\d{2}\\D\\d{2}\\s\\D\\s\\d{2}\\D\\d{2}";
+        Pattern pattern = Pattern.compile(regex);
         try {
             menuRepository.findAllByIsActiveIsFalse().stream().forEach(menu -> {
                 String menuCurrentName = menu.getName();
-                Pattern pattern = Pattern.compile(regex);
                 Matcher matcher = pattern.matcher(menuCurrentName);
-                while(matcher.find()) {
+                while (matcher.find()) {
                     menu.setName(menuCurrentName.substring(0, matcher.start())
                             .concat(" ")
                             .concat(WeekMenuDatesUtils.getWeekDates(menu.getWeekNumber()))
@@ -31,8 +31,7 @@ public class SheduledTasks {
                     menuRepository.save(menu);
                 }
             });
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO create logging
             e.printStackTrace();
         }
@@ -43,16 +42,15 @@ public class SheduledTasks {
         try {
             int currentWeekNumber = WeekMenuDatesUtils.getCurrentWeekNumber();
             menuRepository.findAll().stream().forEach(menu -> {
-                if (menu.getIsActive()){
+                if (menu.getIsActive()) {
                     menu.setIsActive(false);
                 }
-                if (menu.getWeekNumber()== currentWeekNumber){
+                if (menu.getWeekNumber() == currentWeekNumber) {
                     menu.setIsActive(true);
                 }
                 menuRepository.save(menu);
             });
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO create logging
             e.printStackTrace();
         }
