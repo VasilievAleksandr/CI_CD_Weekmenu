@@ -43,11 +43,11 @@ public class WeekMenuDatesUtils {
         arrayOfWeeks.add(null);
         LocalDate localDate = LocalDate.of(year, startMonth, startDate);
         while (currentWeek <= getNumberOfWeeksInTheYear()) {
-            arrayOfWeeks.add((String.format("%02d",localDate.getDayOfMonth()) + "."
-                    + String.format("%02d",localDate.getMonth().getValue()))
+            arrayOfWeeks.add((String.format("%02d", localDate.getDayOfMonth()) + "."
+                    + String.format("%02d", localDate.getMonth().getValue()))
                     .concat(" - " +
-                            (String.format("%02d",localDate.plusWeeks(1).minusDays(1).getDayOfMonth())
-                                    + "." + String.format("%02d",localDate.plusWeeks(1).minusDays(1).getMonth().getValue()))));
+                            (String.format("%02d", localDate.plusWeeks(1).minusDays(1).getDayOfMonth())
+                                    + "." + String.format("%02d", localDate.plusWeeks(1).minusDays(1).getMonth().getValue()))));
             localDate = localDate.plusWeeks(1);
             currentWeek++;
         }
@@ -61,7 +61,7 @@ public class WeekMenuDatesUtils {
         return IsoFields.WEEK_OF_WEEK_BASED_YEAR.rangeRefinedBy(now).getMaximum();
     }
 
-    public static int getCurrentWeekNumber (){
+    public static int getCurrentWeekNumber() {
         ZoneId zoneId = ZoneId.of("Europe/Minsk");
         ZonedDateTime now = ZonedDateTime.now(zoneId);
         return now.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
