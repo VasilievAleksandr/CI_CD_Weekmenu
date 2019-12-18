@@ -1,4 +1,4 @@
-package by.weekmenu.adminka.ui.util;
+package by.weekmenu.api.utils;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -56,8 +56,14 @@ public class WeekMenuDatesUtils {
     }
 
     public static long getNumberOfWeeksInTheYear() {
-        ZoneId zoneId3 = ZoneId.of("Europe/Minsk");
-        ZonedDateTime now2 = ZonedDateTime.now(zoneId3);
-        return IsoFields.WEEK_OF_WEEK_BASED_YEAR.rangeRefinedBy(now2).getMaximum();
+        ZoneId zoneId = ZoneId.of("Europe/Minsk");
+        ZonedDateTime now = ZonedDateTime.now(zoneId);
+        return IsoFields.WEEK_OF_WEEK_BASED_YEAR.rangeRefinedBy(now).getMaximum();
+    }
+
+    public static int getCurrentWeekNumber (){
+        ZoneId zoneId = ZoneId.of("Europe/Minsk");
+        ZonedDateTime now = ZonedDateTime.now(zoneId);
+        return now.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
     }
 }
