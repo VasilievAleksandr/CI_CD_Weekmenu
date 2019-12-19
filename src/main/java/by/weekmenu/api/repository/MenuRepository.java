@@ -13,6 +13,8 @@ public interface MenuRepository extends CrudRepository<Menu, Long> {
 
       List<Menu> findAllByMenuCategory_IdAndIsArchivedIsFalse(Integer menuCategoryId);
       List<Menu> findAllByIsArchivedIsFalse();
+      List<Menu> findAllByIsActiveIsFalse();
+      List<Menu> findAll();
       Optional<Menu> findByNameIgnoreCase(String name);
 
       @Modifying
