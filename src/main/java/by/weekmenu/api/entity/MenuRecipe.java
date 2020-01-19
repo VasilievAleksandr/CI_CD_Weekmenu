@@ -45,6 +45,9 @@ public class MenuRecipe implements Serializable {
     @NotNull(message = "MenuRecipe must have dayOfWeek.")
     private java.time.DayOfWeek dayOfWeek;
 
+    @Column(name = "PRIORITY")
+    private Integer priority;
+
     public MenuRecipe(Menu menu, Recipe recipe, MealType mealType, DayOfWeek dayOfWeek) {
         this.menu = menu;
         this.recipe = recipe;

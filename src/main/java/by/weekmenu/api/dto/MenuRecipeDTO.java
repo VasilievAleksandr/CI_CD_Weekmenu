@@ -14,4 +14,5 @@ public class MenuRecipeDTO {
     private String mealTypeName;
     private DayOfWeek dayOfWeek;
     private String recipeImageLink;
+    private String priority;
 }
