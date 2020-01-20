@@ -80,6 +80,7 @@ public class MenuServiceImpl implements MenuService{
                 recipeRepository.findByNameIgnoreCase(menuRecipeDTO.getRecipeName()).ifPresent(menuRecipe::setRecipe);
                 mealTypeRepository.findByNameIgnoreCase(menuRecipeDTO.getMealTypeName()).ifPresent(menuRecipe::setMealType);
                 menuRecipe.setDayOfWeek(menuRecipeDTO.getDayOfWeek());
+                menuRecipe.setPriority(Integer.valueOf(menuRecipeDTO.getPriority()));
                 menuRecipeRepository.save(menuRecipe);
             });
     }
