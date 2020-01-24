@@ -205,7 +205,7 @@ public class UnitOfMeasureIntegrationTest {
         Recipe recipe = new Recipe();
         recipe.setName("Рецепт");
         recipe.setCookingTime((short) 3);
-        recipe.setPreparingTime((short) 5);
+        recipe.setActiveTime((short) 5);
         recipe.setPortions((short) 2);
         recipe.setImageLink("images/image.png");
         recipe.setSource("http://bestrecipes.com/best-recipe");

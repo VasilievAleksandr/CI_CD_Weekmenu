@@ -39,8 +39,8 @@ public class Recipe implements Serializable {
     private Short cookingTime;
 
     @Column(name = "PREPARING_TIME")
-    @PositiveOrZero(message = "Recipe's preparingTime '${validatedValue}' must be positive or '0'.")
-    private Short preparingTime;
+    @PositiveOrZero(message = "Recipe's activeTime '${validatedValue}' must be positive or '0'.")
+    private Short activeTime;
 
     @Column(name = "CALORIES")
     @Digits(
@@ -140,7 +140,7 @@ public class Recipe implements Serializable {
     @PreUpdate
     private void prepareData(){
         this.cookingTime = cookingTime == null ? 0 : cookingTime;
-        this.preparingTime = preparingTime == null ? 0 : preparingTime;
+        this.activeTime = activeTime == null ? 0 : activeTime;
         this.calories = calories == null ? BigDecimal.ZERO : calories;
         this.carbs = carbs == null ? BigDecimal.ZERO : carbs;
         this.fats = fats == null ? BigDecimal.ZERO : fats;

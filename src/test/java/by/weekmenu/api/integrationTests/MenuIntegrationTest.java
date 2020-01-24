@@ -231,7 +231,7 @@ public class MenuIntegrationTest {
         RecipeDTO recipeDto = new RecipeDTO();
         recipeDto.setName(name);
         recipeDto.setCookingTime("30");
-        recipeDto.setPreparingTime("15");
+        recipeDto.setActiveTime("15");
         recipeDto.setPortions((short) 2);
         recipeDto.setImageLink("images/image.png");
         recipeDto.setSource("http://bestrecipes.com/best-recipe");
@@ -298,12 +298,14 @@ public class MenuIntegrationTest {
         menuRecipeDTO.setRecipeName("Гречневая каша");
         menuRecipeDTO.setMealTypeName("Завтрак");
         menuRecipeDTO.setDayOfWeek(DayOfWeek.MONDAY);
+        menuRecipeDTO.setPriority("1");
         menuRecipeDTOS.add(menuRecipeDTO);
         MenuRecipeDTO menuRecipeDTO1 = new MenuRecipeDTO();
         menuRecipeDTO1.setRecipeName("Гречка с мясом");
         menuRecipeDTO1.setMealTypeName("Обед");
         menuRecipeDTO1.setDayOfWeek(DayOfWeek.WEDNESDAY);
         menuRecipeDTOS.add(menuRecipeDTO1);
+        menuRecipeDTO1.setPriority("2");
         return menuRecipeDTOS;
     }
 

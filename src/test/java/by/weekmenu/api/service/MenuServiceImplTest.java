@@ -86,6 +86,7 @@ public class MenuServiceImplTest {
         menuRecipeDTO.setRecipeName("Гречневая каша");
         menuRecipeDTO.setMealTypeName("Завтрак");
         menuRecipeDTO.setDayOfWeek(DayOfWeek.MONDAY);
+        menuRecipeDTO.setPriority("3");
         menuRecipeDTOS.add(menuRecipeDTO);
         return menuRecipeDTOS;
     }

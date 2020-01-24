@@ -70,7 +70,7 @@ public class RecipeServiceImplTest {
         RecipeDTO recipeDto = new RecipeDTO();
         recipeDto.setName(name);
         recipeDto.setCookingTime("30");
-        recipeDto.setPreparingTime("15");
+        recipeDto.setActiveTime("15");
         recipeDto.setPortions((short)2);
         recipeDto.setImageLink("images/image.png");
         recipeDto.setSource("http://bestrecipes.com/best-recipe");
@@ -110,7 +110,7 @@ public class RecipeServiceImplTest {
         Recipe recipe = new Recipe();
         recipe.setName(name);
         recipe.setCookingTime((short)30);
-        recipe.setPreparingTime((short)15);
+        recipe.setActiveTime((short)15);
         recipe.setPortions((short)2);
         recipe.setImageLink("images/image.png");
         recipe.setSource("http://bestrecipes.com/best-recipe");
@@ -154,7 +154,7 @@ public class RecipeServiceImplTest {
         assertThat(saved.getImageLink()).isEqualTo("images/image.png");
         assertThat(saved.getSource()).isEqualTo("http://bestrecipes.com/best-recipe");
         assertThat(saved.getCookingTime()).isEqualTo("30");
-        assertThat(saved.getPreparingTime()).isEqualTo("15");
+        assertThat(saved.getActiveTime()).isEqualTo("15");
         assertThat(saved.getPortions()).isEqualTo((short)2);
         assertThat(saved.getCategoryNames().size()).isEqualTo(2);
         assertThat(saved.getSubcategoryNames().size()).isEqualTo(2);
@@ -174,7 +174,7 @@ public class RecipeServiceImplTest {
         assertThat(found.getImageLink()).isEqualTo("images/image.png");
         assertThat(found.getSource()).isEqualTo("http://bestrecipes.com/best-recipe");
         assertThat(found.getCookingTime()).isEqualTo("30");
-        assertThat(found.getPreparingTime()).isEqualTo("15");
+        assertThat(found.getActiveTime()).isEqualTo("15");
         assertThat(found.getPortions()).isEqualTo((short)2);
         assertThat(found.getCategoryNames().size()).isEqualTo(2);
         assertThat(found.getSubcategoryNames().size()).isEqualTo(2);
