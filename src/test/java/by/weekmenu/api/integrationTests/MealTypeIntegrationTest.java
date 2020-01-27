@@ -153,7 +153,7 @@ public class MealTypeIntegrationTest {
         Recipe recipe = new Recipe();
         recipe.setName("Рецепт");
         recipe.setCookingTime(Short.valueOf("30"));
-        recipe.setPreparingTime(Short.valueOf("15"));
+        recipe.setActiveTime(Short.valueOf("15"));
         recipe.setPortions((short) 2);
         recipe.setImageLink("images/image.png");
         recipe.setSource("http://bestrecipes.com/best-recipe");

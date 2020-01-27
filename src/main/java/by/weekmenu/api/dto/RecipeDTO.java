@@ -15,7 +15,7 @@ public class RecipeDTO {
     private Long id;
     private String name;
     private String cookingTime;
-    private String preparingTime;
+    private String activeTime;
     private BigDecimal calories;
     private BigDecimal proteins;
     private BigDecimal fats;

@@ -118,7 +118,7 @@ public class RecipeSubcategoryIntegrationTest {
         Recipe recipe = new Recipe();
         recipe.setName("Гречневая каша");
         recipe.setCookingTime(new Short("30"));
-        recipe.setPreparingTime(new Short("15"));
+        recipe.setActiveTime(new Short("15"));
         recipe.setPortions((short) 2);
         recipe.setImageLink("images/image.png");
         recipe.setSource("http://bestrecipes.com/best-recipe");

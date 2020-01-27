@@ -157,7 +157,7 @@ public class RecipeServiceImpl implements RecipeService {
         if (recipe!=null) {
             RecipeDTO recipeDto = modelMapper.map(recipe, RecipeDTO.class);
             recipeDto.setCookingTime(recipe.getCookingTime().toString());
-            recipeDto.setPreparingTime(recipe.getPreparingTime().toString());
+            recipeDto.setActiveTime(recipe.getActiveTime().toString());
             recipeDto.setCookingMethodName(recipe.getCookingMethod().getName());
             recipeDto.setCategoryNames(recipe.getRecipeCategories()
                     .stream().map(RecipeCategory::getName).collect(Collectors.toSet()));

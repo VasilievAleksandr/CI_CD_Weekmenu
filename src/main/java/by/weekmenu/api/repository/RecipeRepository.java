@@ -27,7 +27,7 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     @Query("select recipe from Recipe recipe " +
             "where ( :recipeName is null or lower(recipe.name) like %:recipeName%) " +
-            "and ( :totalCookingTime is null or (recipe.cookingTime + recipe.preparingTime) <= :totalCookingTime) " +
+            "and ( :totalCookingTime is null or (recipe.cookingTime + recipe.activeTime) <= :totalCookingTime) " +
             "and ( :recipeCalories is null or (recipe.calories <= :recipeCalories))")
     List<Recipe> findAllByFilter(@Param("recipeName") String recipeName,
                                  @Param("totalCookingTime") Short totalCookingTime,

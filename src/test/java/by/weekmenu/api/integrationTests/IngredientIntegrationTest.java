@@ -192,7 +192,7 @@ public class IngredientIntegrationTest {
         RecipeDTO recipeDto = new RecipeDTO();
         recipeDto.setName(name);
         recipeDto.setCookingTime("30");
-        recipeDto.setPreparingTime("15");
+        recipeDto.setActiveTime("15");
         recipeDto.setPortions((short) 2);
         recipeDto.setImageLink("images/image.png");
         recipeDto.setSource("http://bestrecipes.com/best-recipe");

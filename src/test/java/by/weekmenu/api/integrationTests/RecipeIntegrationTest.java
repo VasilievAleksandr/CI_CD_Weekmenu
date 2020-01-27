@@ -214,7 +214,7 @@ public class RecipeIntegrationTest {
         RecipeDTO recipeDto = new RecipeDTO();
         recipeDto.setName(name);
         recipeDto.setCookingTime("30");
-        recipeDto.setPreparingTime("15");
+        recipeDto.setActiveTime("15");
         recipeDto.setPortions((short) 2);
         recipeDto.setImageLink("images/image.png");
         recipeDto.setSource("http://bestrecipes.com/best-recipe");
@@ -235,7 +235,7 @@ public class RecipeIntegrationTest {
         Recipe recipe = new Recipe();
         recipe.setName(name);
         recipe.setCookingTime(new Short("30"));
-        recipe.setPreparingTime(new Short("15"));
+        recipe.setActiveTime(new Short("15"));
         recipe.setPortions((short) 2);
         recipe.setImageLink("images/image.png");
         recipe.setSource("http://bestrecipes.com/best-recipe");
@@ -279,7 +279,7 @@ public class RecipeIntegrationTest {
         assertThat(recipes).extracting(Recipe::getName).containsOnly("Гречневая каша");
         assertThat(recipes).extracting(Recipe::getPortions).containsOnly((short) 2);
         assertThat(recipes).extracting(Recipe::getCookingTime).containsOnly((short) 30);
-        assertThat(recipes).extracting(Recipe::getPreparingTime).containsOnly((short) 15);
+        assertThat(recipes).extracting(Recipe::getActiveTime).containsOnly((short) 15);
         assertThat(recipes).extracting(Recipe::getSource).containsOnly("http://bestrecipes.com/best-recipe");
         assertThat(recipes).extracting(Recipe::getImageLink).containsOnly("images/image.png");
         assertThat(recipes).extracting(Recipe::getRecipeCategories)
@@ -329,7 +329,7 @@ public class RecipeIntegrationTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name", is("Гречневая каша")))
                 .andExpect(jsonPath("$[0].cookingTime", is("30")))
-                .andExpect(jsonPath("$[0].preparingTime", is("15")))
+                .andExpect(jsonPath("$[0].activeTime", is("15")))
                 .andExpect(jsonPath("$[0].portions", is(2)))
                 .andExpect(jsonPath("$[0].imageLink", is("images/image.png")))
                 .andExpect(jsonPath("$[0].source", is("http://bestrecipes.com/best-recipe")))
@@ -346,7 +346,7 @@ public class RecipeIntegrationTest {
 
                 .andExpect(jsonPath("$[1].name", is("Гречка с овощами")))
                 .andExpect(jsonPath("$[1].cookingTime", is("30")))
-                .andExpect(jsonPath("$[1].preparingTime", is("15")))
+                .andExpect(jsonPath("$[1].activeTime", is("15")))
                 .andExpect(jsonPath("$[1].portions", is(2)))
                 .andExpect(jsonPath("$[1].imageLink", is("images/image.png")))
                 .andExpect(jsonPath("$[1].source", is("http://bestrecipes.com/best-recipe")))
@@ -376,7 +376,7 @@ public class RecipeIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("Гречка с овощами")))
                 .andExpect(jsonPath("$.cookingTime", is("30")))
-                .andExpect(jsonPath("$.preparingTime", is("15")))
+                .andExpect(jsonPath("$.activeTime", is("15")))
                 .andExpect(jsonPath("$.portions", is(4)))
                 .andExpect(jsonPath("$.imageLink", is("images/image.png")))
                 .andExpect(jsonPath("$.source", is("http://bestrecipes.com/best-recipe")))

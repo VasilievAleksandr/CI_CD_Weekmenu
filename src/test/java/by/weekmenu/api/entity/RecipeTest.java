@@ -77,10 +77,10 @@ public class RecipeTest {
     @Test
     public void testPreparingTimeIsNegative() {
         Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
-        recipe.setPreparingTime((new Short("-15")));
+        recipe.setActiveTime((new Short("-15")));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("Recipe's preparingTime '-15' must be positive or '0'.",
+        assertEquals("Recipe's activeTime '-15' must be positive or '0'.",
                 violations.iterator().next().getMessage());
     }
 
@@ -311,7 +311,7 @@ public class RecipeTest {
         recipe.setCalories(new BigDecimal("300"));
         recipe.setFats(new BigDecimal("100"));
         recipe.setCookingTime(new Short("30"));
-        recipe.setPreparingTime(new Short("15"));
+        recipe.setActiveTime(new Short("15"));
         recipe.setImageLink("images/recipe.jpg");
         recipe.setPortions((short)2);
         recipe.setGramsPerPortion(new BigDecimal("123.1"));

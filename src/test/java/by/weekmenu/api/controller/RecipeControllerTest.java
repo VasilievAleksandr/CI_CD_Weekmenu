@@ -56,7 +56,7 @@ public class RecipeControllerTest {
         recipeDto.setId(id);
         recipeDto.setName(name);
         recipeDto.setCookingTime("30");
-        recipeDto.setPreparingTime("15");
+        recipeDto.setActiveTime("15");
         recipeDto.setPortions((short)2);
         recipeDto.setImageLink("images/image.png");
         recipeDto.setSource("http://bestrecipes.com/best-recipe");
@@ -71,7 +71,7 @@ public class RecipeControllerTest {
         recipe.setName(name);
         recipe.setName(name);
         recipe.setCookingTime((short)30);
-        recipe.setPreparingTime((short)15);
+        recipe.setActiveTime((short)15);
         recipe.setPortions((short)2);
         recipe.setImageLink("images/image.png");
         recipe.setSource("http://bestrecipes.com/best-recipe");
@@ -100,7 +100,7 @@ public class RecipeControllerTest {
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].name", is("Жареная курица")))
                 .andExpect(jsonPath("$[0].cookingTime", is("30")))
-                .andExpect(jsonPath("$[0].preparingTime", is("15")))
+                .andExpect(jsonPath("$[0].activeTime", is("15")))
                 .andExpect(jsonPath("$[0].portions", is(2)))
                 .andExpect(jsonPath("$[0].imageLink", is("images/image.png")))
                 .andExpect(jsonPath("$[0].source", is("http://bestrecipes.com/best-recipe")))
@@ -109,7 +109,7 @@ public class RecipeControllerTest {
                 .andExpect(jsonPath("$[1].id", is(2)))
                 .andExpect(jsonPath("$[1].name", is("Батон")))
                 .andExpect(jsonPath("$[1].cookingTime", is("30")))
-                .andExpect(jsonPath("$[1].preparingTime", is("15")))
+                .andExpect(jsonPath("$[1].activeTime", is("15")))
                 .andExpect(jsonPath("$[1].portions", is(2)))
                 .andExpect(jsonPath("$[1].imageLink", is("images/image.png")))
                 .andExpect(jsonPath("$[1].source", is("http://bestrecipes.com/best-recipe")))
@@ -130,7 +130,7 @@ public class RecipeControllerTest {
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.name", is("Шашлык")))
                 .andExpect(jsonPath("$.cookingTime", is("30")))
-                .andExpect(jsonPath("$.preparingTime", is("15")))
+                .andExpect(jsonPath("$.activeTime", is("15")))
                 .andExpect(jsonPath("$.portions", is(2)))
                 .andExpect(jsonPath("$.imageLink", is("images/image.png")))
                 .andExpect(jsonPath("$.source", is("http://bestrecipes.com/best-recipe")))
@@ -154,7 +154,7 @@ public class RecipeControllerTest {
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.name", is("Шашлык из курицы")))
                 .andExpect(jsonPath("$.cookingTime", is("30")))
-                .andExpect(jsonPath("$.preparingTime", is("15")))
+                .andExpect(jsonPath("$.activeTime", is("15")))
                 .andExpect(jsonPath("$.portions", is(3)))
                 .andExpect(jsonPath("$.imageLink", is("images/image.png")))
                 .andExpect(jsonPath("$.source", is("http://bestrecipes.com/best-recipe")))
