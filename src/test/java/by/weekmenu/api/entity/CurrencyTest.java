@@ -1,5 +1,6 @@
 package by.weekmenu.api.entity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class CurrencyTest {
 
     @Test
     public void testNameIsNull() {
-        Currency currency = new Currency(null, "BYN", true);
+        Currency currency = new Currency(null, "BYN", false);
         Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
         assertEquals(violations.size(), 1);
         assertEquals("Currency must have name.",
@@ -37,7 +38,7 @@ public class CurrencyTest {
 
     @Test
     public void testNameIsBlank() {
-        Currency currency = new Currency("   ", "BYN", true);
+        Currency currency = new Currency("   ", "BYN", false);
         Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
         assertEquals(violations.size(), 1);
         assertEquals("Currency must have name.",
@@ -50,6 +51,17 @@ public class CurrencyTest {
         Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
         assertEquals(violations.size(), 1);
         assertEquals("Currency must have name.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testNameIsTooLong() {
+        Currency currency = new Currency("", "BYN", true);
+        String name = StringUtils.repeat("очень_длинное_название_валюты", 20);
+        currency.setName(name);
+        Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
+        assertEquals(violations.size(), 1);
+        assertEquals("Currency's name '" + name +"' must be '255' characters long",
                 violations.iterator().next().getMessage());
     }
 
@@ -76,7 +88,7 @@ public class CurrencyTest {
         Currency currency = new Currency("руб.", "", true);
         Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
         List<String> messages = violations.stream()
-                .map((ConstraintViolation<Currency> violation) -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
         assertEquals(violations.size(), 2);
         assertTrue(messages.contains("Currency's code '' must be '3' characters long."));
@@ -93,28 +105,8 @@ public class CurrencyTest {
     }
 
     @Test
-    public void testSymbolIsInvalid() {
-        Currency currency = new Currency("руб.", "BYN", true);
-        currency.setSymbol("%");
-        Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
-        assertEquals(violations.size(), 1);
-        assertEquals("Currency's symbol '%' must match pattern.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testIsActiveIsNull() {
-        Currency currency = new Currency("руб.", "BYN", null);
-        Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
-        assertEquals(violations.size(), 1);
-        assertEquals("Currency must have field 'isActive' defined.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
     public void testIsValid() {
-        Currency currency = new Currency("руб.", "BYN", true);
-        currency.setSymbol("$");
+        Currency currency = new Currency("руб.", "BYN", false);
         Set<ConstraintViolation<Currency>> violations = validator.validate(currency);
         assertEquals(violations.size(), 0);
     }

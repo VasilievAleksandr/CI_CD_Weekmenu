@@ -31,25 +31,8 @@ public class OwnershipTest {
 
     @Test
     public void testNameIsNull() {
-        Ownership ownership = new Ownership(null);
-        Set<ConstraintViolation<Ownership>> violations = validator.validate(ownership);
-        assertEquals(violations.size(), 1);
-        assertEquals("Ownership must have name.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testNameIsBlank() {
-        Ownership ownership = new Ownership("  ");
-        Set<ConstraintViolation<Ownership>> violations = validator.validate(ownership);
-        assertEquals(violations.size(), 1);
-        assertEquals("Ownership must have name.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testNameIsEmpty() {
-        Ownership ownership = new Ownership("");
+        Ownership ownership = new Ownership();
+        ownership.setName(null);
         Set<ConstraintViolation<Ownership>> violations = validator.validate(ownership);
         assertEquals(violations.size(), 1);
         assertEquals("Ownership must have name.",
@@ -58,7 +41,7 @@ public class OwnershipTest {
 
     @Test
     public void testOwnershipIsValid() {
-        Ownership ownership = new Ownership("Пользователь");
+        Ownership ownership = new Ownership(OwnershipName.USER);
         Set<ConstraintViolation<Ownership>> violations = validator.validate(ownership);
         assertEquals(violations.size(), 0);
     }

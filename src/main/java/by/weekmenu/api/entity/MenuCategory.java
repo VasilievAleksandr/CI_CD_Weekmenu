@@ -4,10 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -29,6 +29,7 @@ public class MenuCategory implements Serializable {
 
     @Column(name = "NAME", unique = true)
     @NotBlank(message = "MenuCategory must have name.")
+    @Size(max = 255, message = "MenuCategory's name '${validatedValue}' must be '{max}' characters long")
     private String name;
 
     @Column(name = "PRIORITY")
@@ -42,12 +43,23 @@ public class MenuCategory implements Serializable {
     )
     private String imageLink;
 
-    @Column(name = "IS_ACTIVE")
-    @NotNull(message = "MenuCategory must have field 'isActive' defined.")
-    private Boolean isActive;
+    @Column(name = "IS_ARCHIVED")
+    private boolean isArchived;
 
-    public MenuCategory(String name, Boolean isActive) {
+    public MenuCategory(String name, boolean isArchived) {
         this.name = name;
-        this.isActive = isActive;
+        this.isArchived = isArchived;
+    }
+
+    public MenuCategory(Integer id, String name, boolean isArchived) {
+        this.id = id;
+        this.name = name;
+        this.isArchived = isArchived;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void nameFirstCapitalLetter(){
+        this.name = name == null ? null : StringUtils.capitalize(name);
     }
 }

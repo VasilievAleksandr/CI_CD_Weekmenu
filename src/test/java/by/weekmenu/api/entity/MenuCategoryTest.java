@@ -53,6 +53,17 @@ public class MenuCategoryTest {
     }
 
     @Test
+    public void testNameIsTooLong() {
+        MenuCategory menuCategory = new MenuCategory("", true);
+        String name = StringUtils.repeat("очень_длинное_название_категории_меню", 20);
+        menuCategory.setName(name);
+        Set<ConstraintViolation<MenuCategory>> violations = validator.validate(menuCategory);
+        assertEquals(violations.size(), 1);
+        assertEquals("MenuCategory's name '" + name + "' must be '255' characters long",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
     public void testMenuCategoryPriorityIsNegative() {
         MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", true);
         menuCategory.setPriority(-100);
@@ -80,15 +91,6 @@ public class MenuCategoryTest {
         Set<ConstraintViolation<MenuCategory>> violations = validator.validate(menuCategory);
         assertEquals(violations.size(), 1);
         assertEquals("ImageLink's length of the menuCategory '" + imageLink + "' mustn't be more than '255' characters long.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testMenuCategoryIsActiveIsNull() {
-        MenuCategory menuCategory = new MenuCategory("Бюджетное меню 1", null);
-        Set<ConstraintViolation<MenuCategory>> violations =validator.validate(menuCategory);
-        assertEquals(violations.size(), 1);
-        assertEquals("MenuCategory must have field 'isActive' defined.",
                 violations.iterator().next().getMessage());
     }
 

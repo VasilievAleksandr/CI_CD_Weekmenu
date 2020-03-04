@@ -1,14 +1,12 @@
 package by.weekmenu.api.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.DayOfWeek;
 
 @NoArgsConstructor
 @Getter
@@ -38,27 +36,22 @@ public class MenuRecipe implements Serializable {
     private Recipe recipe;
 
     @ManyToOne
-    @JoinColumn(name = "DISH_TYPE_ID")
+    @JoinColumn(name = "MEAL_TYPE_ID")
     @Valid
-    @NotNull(message = "MenuRecipe must have dishType.")
-    private DishType dishType;
+    @NotNull(message = "MenuRecipe must have mealType.")
+    private MealType mealType;
 
-    @ManyToOne
-    @JoinColumn(name = "DAY_OF_WEEK_ID")
-    @Valid
+    @Column(name = "DAY_OF_WEEK")
     @NotNull(message = "MenuRecipe must have dayOfWeek.")
-    private DayOfWeek dayOfWeek;
+    private java.time.DayOfWeek dayOfWeek;
 
-    public MenuRecipe(Menu menu, Recipe recipe, DishType dishType, DayOfWeek dayOfWeek) {
+    @Column(name = "PRIORITY")
+    private Integer priority;
+
+    public MenuRecipe(Menu menu, Recipe recipe, MealType mealType, DayOfWeek dayOfWeek) {
         this.menu = menu;
         this.recipe = recipe;
-        this.dishType = dishType;
-        this.dayOfWeek = dayOfWeek;
-    }
-
-    public MenuRecipe(Recipe recipe, DishType dishType, DayOfWeek dayOfWeek) {
-        this.recipe = recipe;
-        this.dishType = dishType;
+        this.mealType = mealType;
         this.dayOfWeek = dayOfWeek;
     }
 }

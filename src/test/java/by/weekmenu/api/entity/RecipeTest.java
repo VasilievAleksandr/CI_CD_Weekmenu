@@ -11,9 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -28,25 +26,9 @@ public class RecipeTest {
         validator = validatorFactory.getValidator();
     }
 
-    private Menu getValidMenu() {
-        return new Menu("Бюджетное", true, new Ownership("Пользователь"));
-    }
-
-    private DishType getValidDishType() {
-        return new DishType("Обед", true);
-    }
-
-    private DishType getInvalidDishType() {
-        return new DishType("Обед", null);
-    }
-
-    private DayOfWeek getValidDayOfWeek() {
-        return new DayOfWeek("Понедельник", "ПН");
-    }
-
     @Test
     public void testNameIsNull() {
-        Recipe recipe = new Recipe(null, true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe(null, true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe must have name.",
@@ -55,7 +37,7 @@ public class RecipeTest {
 
     @Test
     public void testNameIsBlank() {
-        Recipe recipe = new Recipe("   ", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("   ", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe must have name.",
@@ -64,7 +46,7 @@ public class RecipeTest {
 
     @Test
     public void testNameIsEmpty() {
-        Recipe recipe = new Recipe("", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe must have name.",
@@ -72,8 +54,19 @@ public class RecipeTest {
     }
 
     @Test
+    public void testNameIsTooLong() {
+        Recipe recipe = new Recipe("", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        String name = StringUtils.repeat("очень_длинное_название_рецепта", 20);
+        recipe.setName(name);
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        assertEquals(violations.size(), 1);
+        assertEquals("Recipe's name '" + name +"' must be '255' characters long",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
     public void testCookingTimeIsNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         recipe.setCookingTime((new Short("-30")));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
@@ -83,38 +76,48 @@ public class RecipeTest {
 
     @Test
     public void testPreparingTimeIsNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.setPreparingTime((new Short("-15")));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setActiveTime((new Short("-15")));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("Recipe's preparingTime '-15' must be positive or '0'.",
+        assertEquals("Recipe's activeTime '-15' must be positive or '0'.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
     public void testCaloriesAreNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.setCalories(-100);
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setCalories(new BigDecimal(-100));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("Recipe's calories '-100' must be positive.",
+        assertEquals("Recipe's calories '-100' must be positive or '0'.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
-    public void testCaloriesAreZero() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.setCalories(0);
+    public void testCaloriesHasTooManyFractionDigits() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setCalories(new BigDecimal("123.1"));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("Recipe's calories '0' must be positive.",
+        assertEquals("Calories '123.1' must have up to '7' integer digits and '0' fraction digits.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testCaloriesValueIsTooHigh() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setCalories(new BigDecimal("12345678"));
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        assertEquals(violations.size(), 1);
+        assertEquals("Calories '12345678' must have up to '7' integer digits and '0' fraction digits.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
     public void testProteinsAreNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.setProteins(-100);
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setProteins(new BigDecimal("-100"));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe's proteins '-100' must be positive or '0'.",
@@ -122,9 +125,29 @@ public class RecipeTest {
     }
 
     @Test
+    public void testProteinsHasTooManyFractionDigits() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setProteins(new BigDecimal("123.12"));
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        assertEquals(violations.size(), 1);
+        assertEquals("Proteins '123.12' must have up to '7' integer digits and '1' fraction digits.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testProteinsValueIsTooHigh() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setProteins(new BigDecimal("12345678.1"));
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        assertEquals(violations.size(), 1);
+        assertEquals("Proteins '12345678.1' must have up to '7' integer digits and '1' fraction digits.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
     public void testFatsAreNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.setFats(-100);
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setFats(new BigDecimal("-100"));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe's fats '-100' must be positive or '0'.",
@@ -132,9 +155,29 @@ public class RecipeTest {
     }
 
     @Test
+    public void testFatsHasTooManyFractionDigits() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setFats(new BigDecimal("123.12"));
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        assertEquals(violations.size(), 1);
+        assertEquals("Fats '123.12' must have up to '7' integer digits and '1' fraction digits.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testFatsValueIsTooHigh() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setFats(new BigDecimal("12345678.1"));
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        assertEquals(violations.size(), 1);
+        assertEquals("Fats '12345678.1' must have up to '7' integer digits and '1' fraction digits.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
     public void testCarbsAreNegative() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.setCarbs(-100);
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setCarbs(new BigDecimal("-100"));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe's carbs '-100' must be positive or '0'.",
@@ -142,8 +185,28 @@ public class RecipeTest {
     }
 
     @Test
+    public void testCarbsHasTooManyFractionDigits() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setCarbs(new BigDecimal("123.12"));
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        assertEquals(violations.size(), 1);
+        assertEquals("Carbs '123.12' must have up to '7' integer digits and '1' fraction digits.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testCarbsValueIsTooHigh() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setCarbs(new BigDecimal("12345678.1"));
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        assertEquals(violations.size(), 1);
+        assertEquals("Carbs '12345678.1' must have up to '7' integer digits and '1' fraction digits.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
     public void testImageLinkIsTooLong() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
         String imageLink = StringUtils.repeat("path_to_the_image", "/", 20);
         recipe.setImageLink(imageLink);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
@@ -153,65 +216,69 @@ public class RecipeTest {
     }
 
     @Test
-    public void testIsActiveIsNull() {
-        Recipe recipe = new Recipe("Курица с ананасами", null, new CookingMethod("Тушение"), new Ownership("Пользователь"));
+    public void testPortionsAreNegative() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setPortions((short)-1);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
-        assertEquals("Recipe must have field 'isActive' defined.",
+        assertEquals("Recipe's portions '-1' must be positive.",
                 violations.iterator().next().getMessage());
     }
 
     @Test
-    public void testHasInvalidRecipeCurrencies() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        RecipeCurrency recipeCurrency = new RecipeCurrency(new BigDecimal("-1.11"), recipe, new Currency("руб", "BYN", "$", true));
-        recipe.getRecipeCurrencies().add(recipeCurrency);
-        recipe.getRecipeCurrencies().add(null);
+    public void testPortionsAreZero() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setPortions((short)0);
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
-        List<String> messages = violations.stream()
-                .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
-                .collect(Collectors.toList());
-        assertEquals(violations.size(), 2);
-        assertTrue(messages.contains("Recipe must have list of recipeCurrencies without null elements."));
-        assertTrue(messages.contains("Recipe_Currency's Price_Value '-1.11' must be positive."));
+        assertEquals(violations.size(), 1);
+        assertEquals("Recipe's portions '0' must be positive.",
+                violations.iterator().next().getMessage());
     }
 
     @Test
-    public void testHasInvalidRecipeIngredients() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.getRecipeIngredients().add(
-                new RecipeIngredient(new BigDecimal("-100"),
-                        new Ingredient("курица", new Ownership("пользователь"),
-                                new UnitOfMeasure("литр")), recipe)
-        );
-        recipe.getRecipeIngredients().add(null);
+    public void testGramsPerProtionAreNegative() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setGramsPerPortion(new BigDecimal("-100"));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
-        List<String> messages = violations.stream()
-                .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
-                .collect(Collectors.toList());
-        assertEquals(violations.size(), 2);
-        assertTrue(messages.contains("RecipeIngredient's qty '-100' must be positive."));
-        assertTrue(messages.contains("Recipe must have list of recipeIngredients without null elements."));
+        assertEquals(violations.size(), 1);
+        assertEquals("Grams per portion '-100' must be positive or '0'.",
+                violations.iterator().next().getMessage());
     }
 
     @Test
-    public void testHasInvalidMenuRecipes() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.getMenuRecipes().add(new MenuRecipe(getValidMenu(), null, getInvalidDishType(), getValidDayOfWeek()));
-        recipe.getMenuRecipes().add(null);
+    public void testGramsPerPortionHasTooManyFractionDigits() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setGramsPerPortion(new BigDecimal("123.12"));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
-        List<String> messages = violations.stream()
-                .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
-                .collect(Collectors.toList());
-        assertEquals(violations.size(), 3);
-        assertTrue(messages.contains("MenuRecipe must have recipe."));
-        assertTrue(messages.contains("DishType must have field 'isActive' defined."));
-        assertTrue(messages.contains("Recipe must have list of menuRecipes without null elements."));
+        assertEquals(violations.size(), 1);
+        assertEquals("Grams per portion '123.12' must have up to '5' integer digits and '1' fraction digits.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testGramsPerPortionValueIsTooHigh() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setGramsPerPortion(new BigDecimal("123456.1"));
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        assertEquals(violations.size(), 1);
+        assertEquals("Grams per portion '123456.1' must have up to '5' integer digits and '1' fraction digits.",
+                violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testSourceIsTooLong() {
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        String source = StringUtils.repeat("source_name", "/", 30);
+        recipe.setSource(source);
+        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
+        assertEquals(violations.size(), 1);
+        assertEquals("Recipe's source length '" + source + "' mustn't be more than '255' characters long.",
+                violations.iterator().next().getMessage());
     }
 
     @Test
     public void testCookingMethodIsInvalid() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod(null), new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod(null), new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Cooking Method must have name.",
@@ -220,33 +287,10 @@ public class RecipeTest {
 
     @Test
     public void testCookingMethodIsNull() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, null, new Ownership("Пользователь"));
+        Recipe recipe = new Recipe("Курица с ананасами", true, null, new Ownership(OwnershipName.USER));
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 1);
         assertEquals("Recipe's cookingMethod mustn't be null.",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testHasInvalidCookingSteps() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.getCookingSteps().add(new CookingStep(100, null, "path/to/image"));
-        recipe.getMenuRecipes().add(null);
-        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
-        List<String> messages = violations.stream()
-                .map((ConstraintViolation<Recipe> violation) -> violation.getMessage())
-                .collect(Collectors.toList());
-        assertEquals(violations.size(), 2);
-        assertTrue(messages.contains("Cooking Step must have field 'description' filled."));
-        assertTrue(messages.contains("Recipe must have list of menuRecipes without null elements."));
-    }
-
-    @Test
-    public void testOwnershipIsInvalid() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("   "));
-        Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
-        assertEquals(violations.size(), 1);
-        assertEquals("Ownership must have name.",
                 violations.iterator().next().getMessage());
     }
 
@@ -261,23 +305,17 @@ public class RecipeTest {
 
     @Test
     public void testRecipeIsValid() {
-        Recipe recipe = new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь"));
-        recipe.setCarbs(100);
-        recipe.setProteins(100);
-        recipe.setCalories(300);
-        recipe.setFats(100);
+        Recipe recipe = new Recipe("Курица с ананасами", false, new CookingMethod("Тушение"), new Ownership(OwnershipName.USER));
+        recipe.setCarbs(new BigDecimal("100"));
+        recipe.setProteins(new BigDecimal("100"));
+        recipe.setCalories(new BigDecimal("300"));
+        recipe.setFats(new BigDecimal("100"));
         recipe.setCookingTime(new Short("30"));
-        recipe.setPreparingTime(new Short("15"));
+        recipe.setActiveTime(new Short("15"));
         recipe.setImageLink("images/recipe.jpg");
-        recipe.getRecipeIngredients().add(
-                new RecipeIngredient(new BigDecimal("100"),
-                        new Ingredient("курица", new Ownership("пользователь"),
-                                new UnitOfMeasure("литр")), recipe)
-        );
-        recipe.getRecipeCurrencies().add(new RecipeCurrency(new BigDecimal("1.11"),
-                new Recipe("Курица с ананасами", true, new CookingMethod("Тушение"), new Ownership("Пользователь")),
-                new Currency("руб", "BYN", "$", true)));
-        recipe.getCookingSteps().add(new CookingStep(100, "Нарезать курицу", "images/choped_chicken.jpg"));
+        recipe.setPortions((short)2);
+        recipe.setGramsPerPortion(new BigDecimal("123.1"));
+        recipe.setSource("http://bestrecipes.com/best-recipe");
         Set<ConstraintViolation<Recipe>> violations = validator.validate(recipe);
         assertEquals(violations.size(), 0);
     }

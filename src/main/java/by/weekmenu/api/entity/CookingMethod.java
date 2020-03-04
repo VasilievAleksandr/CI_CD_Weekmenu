@@ -5,19 +5,17 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id", "recipes"})
+@EqualsAndHashCode(exclude = {"id"})
 @Entity
 @Table(name = "COOKING_METHOD")
 public class CookingMethod implements Serializable {
@@ -31,16 +29,29 @@ public class CookingMethod implements Serializable {
 
     @Column(name = "NAME")
     @NotBlank(message = "Cooking Method must have name.")
+    @Size(max = 255,
+            message = "CookingMethod's name '${validatedValue}' mustn't be more than '{max}' characters long."
+    )
     private String name;
 
-    @OneToMany(mappedBy = "cookingMethod", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<
-            @Valid
-            @NotNull(message = "Cooking Method must have list of recipes without null elements")
-            Recipe> recipes = new HashSet<Recipe>();
+    @Column(name = "IS_ARCHIVED")
+    private boolean isArchived;
 
+    @Column(name = "PRIORITY")
+    private Integer priority;
 
     public CookingMethod(String name) {
         this.name = name;
+    }
+
+    public CookingMethod(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void nameFirstCapitalLetter(){
+        this.name = name == null ? null : StringUtils.capitalize(name);
     }
 }

@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-
 
 @NoArgsConstructor
 @Getter
@@ -33,6 +33,9 @@ public class CookingStep implements Serializable {
 
     @Column(name = "DESCRIPTION")
     @NotBlank(message = "Cooking Step must have field 'description' filled.")
+    @Size(max = 2000,
+            message = "CookingStep's description '${validatedValue}' mustn't be more than '{max}' characters long."
+    )
     private String description;
 
     @Column(name = "IMAGE_LINK")
@@ -41,6 +44,11 @@ public class CookingStep implements Serializable {
             message = "ImageLink's length of the cookingStep '${validatedValue}' mustn't be more than '{max}' characters long."
     )
     private String imageLink;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "RECIPE_ID")
+    @Valid
+    private Recipe recipe;
 
     public CookingStep(Integer priority, String description, String imageLink) {
         this.priority = priority;
