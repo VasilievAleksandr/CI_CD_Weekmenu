@@ -73,7 +73,6 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public List<String> getAllCountryNames() {
-
         return countryRepository.findAllByIsArchivedIsFalse()
                 .stream()
                 .filter(Objects::nonNull)
