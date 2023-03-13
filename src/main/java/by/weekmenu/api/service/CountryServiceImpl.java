@@ -71,6 +71,7 @@ public class CountryServiceImpl implements CountryService {
         return countryRepository.findByAlphaCode2IgnoreCase(alphaCode2).orElse(null);
     }
 
+
     @Override
     public List<String> getAllCountryNames() {
         return countryRepository.findAllByIsArchivedIsFalse()
@@ -79,6 +80,7 @@ public class CountryServiceImpl implements CountryService {
                 .map(Country::getName)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public List<String> checkConnectedElements(Long id) {
