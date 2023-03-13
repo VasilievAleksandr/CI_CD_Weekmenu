@@ -33,7 +33,6 @@ public class SheduledTasks {
             });
         } catch (Exception e) {
             // TODO create logging
-            e.printStackTrace();
         }
     }
 
@@ -52,7 +51,6 @@ public class SheduledTasks {
             });
         } catch (Exception e) {
             // TODO create logging
-            e.printStackTrace();
         }
     }
 }
