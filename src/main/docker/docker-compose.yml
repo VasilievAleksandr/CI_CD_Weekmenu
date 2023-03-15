@@ -3,8 +3,6 @@ version: '2'
 services:
   app:
     image: 'api:latest'
-    build:
-      context: .
     container_name: app
     depends_on:
       - db
