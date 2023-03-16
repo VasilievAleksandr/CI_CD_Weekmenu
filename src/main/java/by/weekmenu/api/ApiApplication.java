@@ -48,9 +48,6 @@ public class ApiApplication extends SpringBootServletInitializer {
             if (!unitOfMeasureRepository.findByFullNameIgnoreCase("Литр").isPresent()) {
                 unitOfMeasureRepository.save(new UnitOfMeasure("л", "Литр"));
             }
-            if (!unitOfMeasureRepository.findByFullNameIgnoreCase("Килограмм").isPresent()) {
-                unitOfMeasureRepository.save(new UnitOfMeasure("кг", "Килограмм"));
-            }
             if (mealTypeRepository.findAll().spliterator().getExactSizeIfKnown() == 0) {
                 mealTypeRepository.save(new MealType("Завтрак", 10));
                 mealTypeRepository.save(new MealType("Обед", 20));
