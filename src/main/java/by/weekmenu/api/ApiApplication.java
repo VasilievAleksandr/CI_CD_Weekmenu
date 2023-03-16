@@ -42,9 +42,6 @@ public class ApiApplication extends SpringBootServletInitializer {
                 ownershipRepository.save(new Ownership(OwnershipName.ADMIN));
                 ownershipRepository.save(new Ownership(OwnershipName.USER));
             }
-            if (!unitOfMeasureRepository.findByFullNameIgnoreCase("Грамм").isPresent()) {
-                unitOfMeasureRepository.save(new UnitOfMeasure("гр", "Грамм"));
-            }
             if (!unitOfMeasureRepository.findByFullNameIgnoreCase("Литр").isPresent()) {
                 unitOfMeasureRepository.save(new UnitOfMeasure("л", "Литр"));
             }
