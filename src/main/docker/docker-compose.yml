@@ -1,9 +1,11 @@
 version: '2'
 
 services:
-  app:
-    image: 'api:latest'
-    container_name: app
+  appp:
+    image: 'weekmenu:latest'
+    build:
+      context: .
+    container_name: appp
     depends_on:
       - db
     environment:
